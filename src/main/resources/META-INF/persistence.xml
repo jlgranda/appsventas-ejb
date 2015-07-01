@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="       http://java.sun.com/xml/ns/persistence       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+  <persistence-unit name="fede" transaction-type="JTA">
+    <!--
+			Uncomment one of the following to enable a non-default JPA provider
+		-->
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <!--
+			
+			<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		-->
+    <!--
+			Glassfish Default Datasource
+                -->
+    <!--    <jta-data-source>jdbc/__default</jta-data-source>-->
+    <!--Glassfish-->
+    <!--    	<jta-data-source>jdbc/fededb</jta-data-source>-->
+    <!--WildFly-->
+    <jta-data-source>java:/jdbc/fede-tx</jta-data-source>
+    <!--
+			JBoss Default Datasource
+			<jta-data-source>java:/DefaultDS</jta-data-source>
+		-->
+    <class>org.jpapi.model.BaseObject</class>
+    <class>org.jpapi.model.PersistentObject</class>
+    <class>org.jpapi.model.DeletableObject</class>
+    <class>org.jpapi.model.BussinesEntity</class>
+    <class>org.jpapi.model.BussinesEntityType</class>
+    <class>org.jpapi.model.BussinesEntityAttribute</class>
+    <class>org.jpapi.model.management.Organization</class>
+    <class>org.jpapi.model.management.Owner</class>
+    <class>org.jpapi.model.Group</class>
+    <class>org.jpapi.model.Membership</class>
+    <class>org.jpapi.model.Property</class>
+    <class>org.jpapi.model.Setting</class>
+    <class>org.jpapi.model.Structure</class>
+    <class>org.jpapi.model.profile.Subject</class>
+    <!-- Security persistence model from picketlink sample simple -->
+    <class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.AccountTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.RelationshipTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.AttributedTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.AttributeTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.AbstractCredentialTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.X509CredentialTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.GroupTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.OTPCredentialTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.TokenCredentialTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.RoleTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.PasswordCredentialTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.RelationshipIdentityTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.DigestCredentialTypeEntity</class>
+    <class>org.picketlink.idm.jpa.model.sample.simple.PermissionTypeEntity</class>
+    <class>org.jlgranda.fede.model.document.FacturaElectronica</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <!--https://coderwall.com/p/e5fxrw/use-hibernate-4-3-x-with-jta-on-glassfish-4-->
+      <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />-->
+      <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
+      <!--<property name="hibernate.transaction.flush_before_completion" value="true"/>-->
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <!-- Properties for EclipseLink (default provider for GlassFish) 
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.logging.level" value="FINE" />
+                        -->
+      <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true"/>
+      <property name="hibernate.transaction.flush_before_completion" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
