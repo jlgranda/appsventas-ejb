@@ -192,6 +192,9 @@ public class SetupService implements Serializable {
         
         //Groups
         props.put("fede.group.default", "fede");
+        
+        //dates patterns
+        props.put("fede.date.pattern", "dd/MM/yyyy");
         String value = null;
         for (String key : props.keySet()){
             value = props.get(key);
@@ -223,7 +226,7 @@ public class SetupService implements Serializable {
         } catch (NoResultException e) {
             java.util.Date now = Dates.now();
             singleResult = new Subject();
-            singleResult.setEmail("jlgranda81@gmail.com");
+            singleResult.setEmail("admin@fede.com");
             singleResult.setUsername("admin");
             singleResult.setPassword(new Password("f3d3").toString());
             singleResult.setUsernameConfirmed(true);

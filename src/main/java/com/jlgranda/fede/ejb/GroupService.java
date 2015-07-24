@@ -23,17 +23,17 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.jpapi.controller.BussinesEntityHome;
-import org.jpapi.model.management.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jpapi.model.Group;
+import org.jpapi.util.QuerySortOrder;
 
 /**
  *
  * @author jlgranda
  */
 @Stateless
-public class GroupService extends BussinesEntityHome<Organization>{
+public class GroupService extends BussinesEntityHome<Group>{
     
     private static final long serialVersionUID = 6625285171825651429L;
      
@@ -45,6 +45,7 @@ public class GroupService extends BussinesEntityHome<Organization>{
 
     @PostConstruct
     private void init(){
+        setEntityClass(Group.class);
         setEntityManager(em);
     }
     
@@ -54,5 +55,7 @@ public class GroupService extends BussinesEntityHome<Organization>{
         return groups.isEmpty() ? new Group(code, code) : groups.get(0);
     }
     
-    
+    public List<Group> findAll(){
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
+    }
 }

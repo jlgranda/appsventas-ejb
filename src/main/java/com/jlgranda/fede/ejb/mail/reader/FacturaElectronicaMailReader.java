@@ -32,7 +32,6 @@ import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import org.apache.commons.io.IOUtils;
 import org.jpapi.model.profile.Subject;
-import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
 import org.jlgranda.fede.util.FacturaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,12 +59,15 @@ public class FacturaElectronicaMailReader {
 
         List<FacturaReader> result = new ArrayList<>();
         String server = settingService.findByName("mail.imap.host").getValue();
-        String username = settingService.findByName("mail.user").getValue();
-        String password = settingService.findByName("mail.password").getValue();
+        //Todo definir una mejor forma de manejar la cuenta de correo
+        String username = _subject.getFedeEmail();
+        String password = _subject.getFedeEmailPassword();
         String port = settingService.findByName("mail.imap.port").getValue();
 
         String proto = "true".equalsIgnoreCase(settingService.findByName("mail.smtp.starttls.enable").getValue()) ? "TLS" : null;
 
+        logger.info("Conectanto a servidor de correo # {}:\n\t Username: {}\n\t Password: {}\n\t ", server, username, password);
+            
         IMAPClient client = new IMAPClient(server, username, password);
 
         String contentType = null;

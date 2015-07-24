@@ -19,15 +19,10 @@ package com.jlgranda.fede.ejb;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jlgranda.fede.model.document.FacturaElectronica_;
@@ -37,6 +32,7 @@ import org.jpapi.util.QuerySortOrder;
 import org.jpapi.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jpapi.model.profile.Subject;
 
 /**
  *
@@ -70,11 +66,19 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
     }
     
     /**
-     * Obtener el top de las facturas electrónicas para portada
+     * Obtener facturas electrónicas por tag
      * @return 
      */
     public List<FacturaElectronica> listarFacturasElectronicas(String tag) {
         return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTag", tag);
+    }
+    
+    /**
+     * Obtener facturas electrónicas por tag y dueño
+     * @return 
+     */
+    public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner) {
+        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwner", tag, owner);
     }
     
     /**

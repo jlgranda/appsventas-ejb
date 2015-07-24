@@ -42,7 +42,8 @@ import org.jpapi.model.BussinesEntity;
 @DiscriminatorValue(value = "FEDE")
 @PrimaryKeyJoinColumn(name = "facturaElectronicaId")
 @NamedQueries({
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision")
+    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC")
 })
 public class FacturaElectronica extends BussinesEntity {
 
