@@ -22,6 +22,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -29,6 +31,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.CodeType;
+import org.jpapi.model.SourceType;
 
 /**
  * Modelo de persistencia de factura electrónica fede, almacena datos básicos de
@@ -67,6 +71,13 @@ public class FacturaElectronica extends BussinesEntity {
     private Date fechaAutorizacion;
 
     /**
+     * Fuente de XML
+     */
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = true)
+    protected SourceType sourceType;
+    
+    /**
      * Nombre de archivo de donde se importó la factura
      */
     private String filename;
@@ -75,6 +86,8 @@ public class FacturaElectronica extends BussinesEntity {
      */
     @Column(columnDefinition = "TEXT")
     private String contenido;
+    
+    
 
     private String claveAcceso;
 
@@ -134,6 +147,14 @@ public class FacturaElectronica extends BussinesEntity {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public SourceType getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getContenido() {

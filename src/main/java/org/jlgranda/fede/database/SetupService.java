@@ -68,7 +68,7 @@ public class SetupService implements Serializable {
     public void validate() {
         //bussinesEntityHome.setEntityManager(bussinesEntityRepository);
         validateDB();
-        validateGroups();
+        //validateGroups(); Los grupos se crean por Subject
         //validateIdentityObjectTypes();
         validateSecurity();
         validateSetting();

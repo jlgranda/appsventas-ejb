@@ -17,7 +17,9 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,6 +28,9 @@ import org.jpapi.controller.BussinesEntityHome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jpapi.model.Group;
+import org.jpapi.model.StatusType;
+import org.jpapi.model.profile.Subject;
+import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 
 /**
@@ -57,5 +62,24 @@ public class GroupService extends BussinesEntityHome<Group>{
     
     public List<Group> findAll(){
         return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
+    }
+    
+    public List<Group> findAllByOwner(Subject owner){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("owner", owner);
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+    }
+    
+    @Override
+    public Group createInstance() {
+
+        Group _instance = new Group();
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setAuthor(null); //Establecer al usuario actual
+        return _instance;
     }
 }

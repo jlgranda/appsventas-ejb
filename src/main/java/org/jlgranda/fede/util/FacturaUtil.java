@@ -17,8 +17,9 @@
  */
 package org.jlgranda.fede.util;
 
+import com.jlgranda.fede.ejb.mail.reader.FacturaElectronicaMailReader;
+import java.io.Serializable;
 import java.io.StringReader;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -26,12 +27,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
 import org.jlgranda.fede.sri.jaxb.factura.v110.ObjectFactory;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author jlgranda
  */
-public class FacturaUtil {
+public class FacturaUtil implements Serializable {
     
     public static final String INICIO_TAG_COMPROBANTE = "<comprobante><![CDATA["; 
     public static final String FIN_TAG_COMPROBANTE = "]]></comprobante>"; 
@@ -54,6 +56,9 @@ public class FacturaUtil {
             if (comprobante != null){
                 StringReader reader = new StringReader(comprobante);
                 factura = (Factura) unmarshaller.unmarshal(reader);
+            } else {
+                Logger.getLogger(FacturaUtil.class.getName()).log(Level.INFO, "No se pudo obtener el contendio del comprobante. El contenido XML es: ");
+                Logger.getLogger(FacturaUtil.class.getName()).log(Level.INFO, xml);
             }
         } catch (JAXBException ex) {
             Logger.getLogger(FacturaUtil.class.getName()).log(Level.SEVERE, null, ex);
