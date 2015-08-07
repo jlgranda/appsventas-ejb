@@ -17,7 +17,6 @@
  */
 package org.jlgranda.fede.util;
 
-import com.jlgranda.fede.ejb.mail.reader.FacturaElectronicaMailReader;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.util.logging.Level;
@@ -27,7 +26,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
 import org.jlgranda.fede.sri.jaxb.factura.v110.ObjectFactory;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -39,6 +37,7 @@ public class FacturaUtil implements Serializable {
     public static final String FIN_TAG_COMPROBANTE = "]]></comprobante>"; 
     public static final String INICIO_TAG_COMPROBANTE_SIN_CDATA = "<comprobante>"; 
     public static final String FIN_TAG_COMPROBANTE_SIN_CDATA = "</comprobante>"; 
+    private static final long serialVersionUID = -2866847851945931341L;
     
        
     /**
