@@ -34,7 +34,7 @@ public class FacturaReader {
     public FacturaReader() {
     }
 
-    FacturaReader(Factura factura, String xml, String fileName) {
+    public FacturaReader(Factura factura, String xml, String fileName) {
         this.factura = factura;
         this.xml = xml;
         this.fileName = fileName;

@@ -35,23 +35,27 @@ import org.picketlink.idm.model.IdentityType;
 
 /**
  * Servicios relacionados con entidad Subject
+ *
  * @author jlgranda
  */
 @Stateless
 public class SubjectService extends BussinesEntityHome<Subject> {
+
     private static final long serialVersionUID = 4688557231355280889L;
 
     @PersistenceContext
     EntityManager em;
-    
-    @Inject private PartitionManager partitionManager;
-    
+
+    @Inject
+    private PartitionManager partitionManager;
+
     IdentityManager identityManager = null;
-    
+
     @PostConstruct
-    private void init(){
-       identityManager = partitionManager.createIdentityManager();
+    private void init() {
+        identityManager = partitionManager.createIdentityManager();
         setEntityManager(em);
+        setEntityClass(Subject.class);
     }
 
     public boolean usersExist() {
@@ -66,7 +70,7 @@ public class SubjectService extends BussinesEntityHome<Subject> {
     public void updateCredential(Account user, Password password) {
         identityManager.updateCredential(user, password);
     }
-    
+
     @Override
     public Subject createInstance() {
 

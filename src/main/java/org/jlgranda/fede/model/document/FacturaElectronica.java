@@ -30,6 +30,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.CodeType;
 import org.jpapi.model.SourceType;
@@ -47,8 +48,10 @@ import org.jpapi.model.SourceType;
 @PrimaryKeyJoinColumn(name = "facturaElectronicaId")
 @NamedQueries({
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC")
+    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC")
 })
+@XmlRootElement
 public class FacturaElectronica extends BussinesEntity {
 
     private static final long serialVersionUID = -1326570634296607679L;

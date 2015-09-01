@@ -19,6 +19,7 @@ package com.jlgranda.fede.ejb;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -70,23 +71,15 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
      * @return 
      */
     public List<FacturaElectronica> listarFacturasElectronicas(String tag) {
-        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTag", tag);
+        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwner", tag);
     }
     
     /**
-     * Obtener facturas electrónicas por tag y dueño
-     * @return 
+     * Obtener facturas electrónicas por tag, dueño entre fechas
+     * @return lista de facturas electrónicas que responden a los criterios dados.
      */
-    public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner) {
-        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwner", tag, owner);
-    }
-    
-    /**
-     * Obtener el top de las facturas electrónicas para portada
-     * @return 
-     */
-    public List<FacturaElectronica> listarFacturasElectronicas() {
-        return this.findAll(FacturaElectronica.class);
+    public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end) {
+        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", tag, owner, start, end);
     }
     
     @Override

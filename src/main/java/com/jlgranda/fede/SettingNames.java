@@ -28,7 +28,11 @@ public class SettingNames {
     //Popups
     public static final String POPUP_SUBIR_FACTURA_ELECTRONICA = "subir_factura_electronica";
     
+    public static final String POPUP_DESCARGAR_FACTURA_ELECTRONICA = "descargar_factura_electronica";
+    
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";
     
     public static final String TAG_NUMERO_AUTORIZACION = "fede.xml.tag.fechaAutorizacion";
+    
+    public static String DASHBOARD_RANGE = "fede.dasboard.range";
 }
