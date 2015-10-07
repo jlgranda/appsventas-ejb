@@ -32,7 +32,6 @@ import org.jpapi.model.Group;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
-import org.picketlink.idm.credential.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,11 +225,10 @@ public class SetupService implements Serializable {
                     Subject.class);
             singleResult = query.getSingleResult();
         } catch (NoResultException e) {
-            java.util.Date now = Dates.now();
             singleResult = new Subject();
             singleResult.setEmail("admin@fede.com");
             singleResult.setUsername("admin");
-            singleResult.setPassword(new Password("f3d3").toString());
+            //singleResult.setPassword(new Password("f3d3").toString());
             singleResult.setUsernameConfirmed(true);
             singleResult.setCreatedOn(Dates.now());
             singleResult.setLastUpdate(Dates.now());

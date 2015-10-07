@@ -14,7 +14,6 @@ import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Setting;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
-import org.picketlink.idm.IdentityManager;
 
 /**
  *
@@ -26,8 +25,6 @@ public class SettingService extends BussinesEntityHome<Setting> {
     
     @PersistenceContext
     EntityManager em;
-    
-    IdentityManager identityManager = null;
     
     @PostConstruct
     private void init(){

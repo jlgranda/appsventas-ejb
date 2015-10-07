@@ -25,13 +25,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
-import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.PartitionManager;
-import org.picketlink.idm.credential.Password;
-import org.picketlink.idm.model.Account;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
-import org.picketlink.idm.model.IdentityType;
 
 /**
  * Servicios relacionados con entidad Subject
@@ -46,14 +41,8 @@ public class SubjectService extends BussinesEntityHome<Subject> {
     @PersistenceContext
     EntityManager em;
 
-    @Inject
-    private PartitionManager partitionManager;
-
-    IdentityManager identityManager = null;
-
     @PostConstruct
     private void init() {
-        identityManager = partitionManager.createIdentityManager();
         setEntityManager(em);
         setEntityClass(Subject.class);
     }
@@ -61,14 +50,6 @@ public class SubjectService extends BussinesEntityHome<Subject> {
     public boolean usersExist() {
         Query q = em.createQuery("SELECT U FROM AccountTypeEntity U");
         return !q.getResultList().isEmpty();
-    }
-
-    public void addUser(IdentityType user) {
-        identityManager.add(user);
-    }
-
-    public void updateCredential(Account user, Password password) {
-        identityManager.updateCredential(user, password);
     }
 
     @Override

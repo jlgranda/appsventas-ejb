@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
@@ -28,6 +29,7 @@ import org.jpapi.controller.BussinesEntityHome;
 import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jlgranda.fede.model.document.FacturaElectronica_;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.management.Organization;
 import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 import org.jpapi.util.Strings;
@@ -80,6 +82,25 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
      */
     public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end) {
         return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", tag, owner, start, end);
+    }
+    
+    /**
+     * Obtener facturas electrónicas por tag, dueño entre fechas, con la relación indicada
+     * @return lista de facturas electrónicas que responden a los criterios dados, con la relación indicada
+     */
+    public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end, String relation) {
+        logger.info("Recuperando listado para los criterios {}, {}, {}, {}, {}", tag, owner, start, end, relation);
+        List<FacturaElectronica> lst = new ArrayList<>();
+        for (FacturaElectronica f : this.listarFacturasElectronicas(tag, owner, start, end)){
+            if (Organization.class.getName().equals(relation)){
+                f.getOrganization().getInitials(); //forzar llenado de organization
+                lst.add(f);
+            } else {
+                //Dummy
+            }
+        }
+        logger.info("Listado recuperado {}", lst);
+        return lst;
     }
     
     @Override

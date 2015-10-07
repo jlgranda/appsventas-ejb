@@ -30,9 +30,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.transaction.Transactional;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.jpapi.model.BussinesEntity;
-import org.jpapi.model.CodeType;
 import org.jpapi.model.SourceType;
 
 /**
