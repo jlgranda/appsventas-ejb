@@ -195,7 +195,7 @@ public class SetupService implements Serializable {
         //dates patterns
         props.put("fede.date.pattern", "dd/MM/yyyy");
         
-        props.put("fede.dasboard.range", "30"); //30 días
+        props.put("fede.dashboard.range", "364"); //364 días
         String value = null;
         for (String key : props.keySet()){
             value = props.get(key);

@@ -34,5 +34,5 @@ public class SettingNames {
     
     public static final String TAG_NUMERO_AUTORIZACION = "fede.xml.tag.fechaAutorizacion";
     
-    public static String DASHBOARD_RANGE = "fede.dasboard.range";
+    public static String DASHBOARD_RANGE = "fede.dashboard.range";
 }
