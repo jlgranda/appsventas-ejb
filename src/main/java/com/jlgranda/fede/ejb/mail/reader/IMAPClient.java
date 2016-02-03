@@ -35,20 +35,22 @@ public class IMAPClient {
         Properties prop = new Properties();
         prop.put("mail.imap.ssl.checkserveridentity", "false");
         prop.put("mail.imaps.ssl.trust", "*");
-
+        prop.put("mail.mime.encodeparameters", "false"); 
+        prop.put("mail.mime.encodefilename", "true"); 
+        
+        System.setProperty("mail.mime.encodeparameters", "false"); 
+        System.setProperty("mail.mime.encodefilename", "true"); 
+        
         session = Session.getDefaultInstance(prop);
 
         //session = Session.getDefaultInstance(System.getProperties(), null);
         session.setDebug(debug);
-        //System.out.println("get store..");
         store = session.getStore("imaps");
-        //System.out.println("connect..");
         store.connect(this.host, this.userName, this.password);
         //System.out.println("get default folder ..");
         Folder folder = store.getDefaultFolder();
         folder = folder.getFolder(folderName);
         folder.open(Folder.READ_ONLY);
-        //System.out.println("reading messages..");
         return folder.getMessages();
     }
     

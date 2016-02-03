@@ -30,9 +30,18 @@ public class SettingNames {
     
     public static final String POPUP_DESCARGAR_FACTURA_ELECTRONICA = "descargar_factura_electronica";
     
+    public static String POPUP_NUEVA_ETIQUETA = "nueva_etiqueta";
+
+    //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";
     
     public static final String TAG_NUMERO_AUTORIZACION = "fede.xml.tag.fechaAutorizacion";
     
+    //Properties
     public static String DASHBOARD_RANGE = "fede.dashboard.range";
+    public static String POPUP_WIDTH = "fede.popup.width";
+    public static String POPUP_HEIGHT = "fede.popup.height";
+    public static String POPUP_SMALL_WIDTH = "fede.popup.small.width";
+    public static String POPUP_SMALL_HEIGHT = "fede.popup.small.height";
+    
 }

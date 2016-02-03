@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Setting;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 
@@ -30,10 +31,14 @@ public class SettingService extends BussinesEntityHome<Setting> {
     private void init(){
         setEntityManager(em);
     }
-
+    
     public Setting findByName(String name){
+        return findByName(name, null);
+    }
+
+    public Setting findByName(String name, Subject owner){
         List<Setting> settings = this.findByNamedQuery("Setting.findByName", name);
-        return settings.isEmpty() ? new Setting(name, name) : settings.get(0);
+        return settings.isEmpty() ? null : settings.get(0);
     }
     
     

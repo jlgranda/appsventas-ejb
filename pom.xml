@@ -22,7 +22,12 @@
         <deltaspike.version>1.5.0</deltaspike.version>
     </properties>
 
-
+    <repositories>
+        <repository>
+            <id>org.apache.james</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
     <dependencies>
         
         <dependency>
@@ -106,14 +111,14 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-<!--   
-         JSF dependencies 
-        <dependency>  
-            <groupId>org.primefaces</groupId>  
-            <artifactId>primefaces</artifactId>  
-            <version>${primefaces.version}</version>
-        </dependency>  
-    -->
+        <!--   
+             JSF dependencies 
+            <dependency>  
+                <groupId>org.primefaces</groupId>  
+                <artifactId>primefaces</artifactId>  
+                <version>${primefaces.version}</version>
+            </dependency>  
+        -->
         <!--        <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
@@ -148,7 +153,22 @@
             <version>1.5.0-b01</version>
         </dependency>
   
-        
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-core</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-dom</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-storage</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+
         <!--XML bind dependencies-->
         <dependency>
             <groupId>javax.xml.bind</groupId>

@@ -89,8 +89,6 @@ public class FacturaElectronica extends BussinesEntity {
      */
     @Column(columnDefinition = "TEXT")
     private String contenido;
-    
-    
 
     private String claveAcceso;
 

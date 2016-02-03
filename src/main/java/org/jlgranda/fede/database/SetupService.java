@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import org.apache.commons.codec.digest.Md5Crypt;
 import org.jpapi.model.Setting;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.CodeType;
@@ -196,6 +197,11 @@ public class SetupService implements Serializable {
         props.put("fede.date.pattern", "dd/MM/yyyy");
         
         props.put("fede.dashboard.range", "364"); //364 días
+        
+        
+        props.put("fede.inbox.list.length", "50"); //364 días
+        
+        
         String value = null;
         for (String key : props.keySet()){
             value = props.get(key);
@@ -228,11 +234,13 @@ public class SetupService implements Serializable {
             singleResult = new Subject();
             singleResult.setEmail("admin@fede.com");
             singleResult.setUsername("admin");
-            //singleResult.setPassword(new Password("f3d3").toString());
+            singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("fede")));
             singleResult.setUsernameConfirmed(true);
             singleResult.setCreatedOn(Dates.now());
             singleResult.setLastUpdate(Dates.now());
             singleResult.setCodeType(CodeType.NONE);
+            singleResult.setSubjectType(Subject.Type.SYSTEM);
+            
             getEntityManager().persist(singleResult);
         }
     }

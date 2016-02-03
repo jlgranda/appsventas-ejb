@@ -54,51 +54,60 @@ public class FacturaElectronicaURLReader {
      * @param urls URLs hacia los archivo XML o ZIP a leer
      * @return una lista de instancias FacturaReader
      */
-    public static List<FacturaReader> getFacturasElectronicas(List<String> urls) throws Exception  {
+    public static List<FacturaReader> getFacturasElectronicas(List<String> urls) throws Exception {
         List<FacturaReader> result = new ArrayList<>();
-        FacturaReader facturaReader = null;
         for (String url : urls) {
-            if (url.endsWith(".xml")) {
-                String xml = FacturaElectronicaURLReader.read(url);
-                facturaReader = new FacturaReader(FacturaUtil.read(xml), xml, url);
-                result.add(facturaReader);
-            } else if (url.endsWith(".zip")) {
-                URL url_ = new URL(url);
-                InputStream is = url_.openStream();
-                ZipInputStream zis = new ZipInputStream(is);
-                try {
-                    
-                    ZipEntry entry = null;
-                    String tmp = null;
-                    ByteArrayOutputStream fout = null;
-                    while ((entry = zis.getNextEntry()) != null) {
-                        if (entry.getName().toLowerCase().endsWith(".xml")) {
-                            fout = new ByteArrayOutputStream();
-                            for (int c = zis.read(); c != -1; c = zis.read()) {
-                                fout.write(c);
-                            }
-
-                            tmp = new String(fout.toByteArray(), Charset.defaultCharset());
-                            facturaReader = new FacturaReader(FacturaUtil.read(tmp), tmp, url);
-                            result.add(facturaReader);
-                            fout.close();
-                        }
-                        zis.closeEntry();
-                    }
-                    zis.close();
-
-                } catch (IOException ioe){
-                    ioe.printStackTrace();
-                } finally {
-                    IOUtils.closeQuietly(is);
-                    IOUtils.closeQuietly(zis);
-                }
-            }
+            result.add((FacturaReader) FacturaElectronicaURLReader.getFacturaElectronica(url));
         }
-
         return result;
     }
 
+    /**
+     * Obtiene la lista de objetos factura para el sujeto en fede
+     *
+     * @param urls URLs hacia los archivo XML o ZIP a leer
+     * @return una lista de instancias FacturaReader
+     */
+    public static FacturaReader getFacturaElectronica(String url) throws Exception {
+        FacturaReader facturaReader = null;
+
+        if (url.endsWith(".xml")) {
+            String xml = FacturaElectronicaURLReader.read(url);
+            facturaReader = new FacturaReader(FacturaUtil.read(xml), xml, url);
+        } else if (url.endsWith(".zip")) {
+            URL url_ = new URL(url);
+            InputStream is = url_.openStream();
+            ZipInputStream zis = new ZipInputStream(is);
+            try {
+
+                ZipEntry entry = null;
+                String tmp = null;
+                ByteArrayOutputStream fout = null;
+                while ((entry = zis.getNextEntry()) != null) {
+                    if (entry.getName().toLowerCase().endsWith(".xml")) {
+                        fout = new ByteArrayOutputStream();
+                        for (int c = zis.read(); c != -1; c = zis.read()) {
+                            fout.write(c);
+                        }
+
+                        tmp = new String(fout.toByteArray(), Charset.defaultCharset());
+                        facturaReader = new FacturaReader(FacturaUtil.read(tmp), tmp, url);
+                        fout.close();
+                    }
+                    zis.closeEntry();
+                }
+                zis.close();
+
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(is);
+                IOUtils.closeQuietly(zis);
+            }
+        }
+
+        return facturaReader;
+    }
 
     /**
      * Leer contenido texto UTF-8 desde el URL dado
@@ -154,7 +163,7 @@ public class FacturaElectronicaURLReader {
 
     public static void main(String args[]) throws Exception {
         List<String> urls = new ArrayList<>();
-        urls.add("http://www.tecsicom.net/fet/docs/0708201501180145025300120010320000210141234567812.zip");
+        urls.add("http://www.tecsicom.net/fet/docs/2307201501180145025300120010320000195431234567811.zip");
         System.out.println(FacturaElectronicaURLReader.getFacturasElectronicas(urls));
     }
 }

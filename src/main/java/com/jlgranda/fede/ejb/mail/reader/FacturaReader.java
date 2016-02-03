@@ -30,6 +30,8 @@ public class FacturaReader {
     private String xml;
     
     private String fileName;
+    
+    private String from;
 
     public FacturaReader() {
     }
@@ -38,6 +40,13 @@ public class FacturaReader {
         this.factura = factura;
         this.xml = xml;
         this.fileName = fileName;
+    }
+    
+    public FacturaReader(Factura factura, String xml, String fileName, String from) {
+        this.factura = factura;
+        this.xml = xml;
+        this.fileName = fileName;
+        this.from = from;
     }
 
     public Factura getFactura() {
@@ -63,6 +72,12 @@ public class FacturaReader {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    
-    
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
 }

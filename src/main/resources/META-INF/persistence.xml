@@ -16,7 +16,7 @@
     <!--Glassfish-->
     <!--    	<jta-data-source>jdbc/fededb</jta-data-source>-->
     <!--WildFly-->
-    <jta-data-source>java:/jdbc/fede-tx</jta-data-source>
+    <jta-data-source>java:/FedeXADS</jta-data-source>
     <!--
 			JBoss Default Datasource
 			<jta-data-source>java:/DefaultDS</jta-data-source>
@@ -27,14 +27,13 @@
     <class>org.jpapi.model.BussinesEntity</class>
     <class>org.jpapi.model.BussinesEntityType</class>
     <class>org.jpapi.model.BussinesEntityAttribute</class>
-    <class>org.jpapi.model.management.Organization</class>
-    <class>org.jpapi.model.management.Owner</class>
     <class>org.jpapi.model.Group</class>
     <class>org.jpapi.model.Membership</class>
     <class>org.jpapi.model.Property</class>
     <class>org.jpapi.model.Setting</class>
     <class>org.jpapi.model.Structure</class>
     <class>org.jpapi.model.profile.Subject</class>
+
     <!-- Security persistence model from picketlink sample simple -->
     <class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class>
     <class>org.picketlink.idm.jpa.model.sample.simple.AccountTypeEntity</class>
@@ -52,7 +51,36 @@
     <class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class>
     <class>org.picketlink.idm.jpa.model.sample.simple.DigestCredentialTypeEntity</class>
     <class>org.picketlink.idm.jpa.model.sample.simple.PermissionTypeEntity</class>
+    
     <class>org.jlgranda.fede.model.document.FacturaElectronica</class>
+    
+    <class>org.jlgranda.fede.model.management.BalancedScorecard</class>
+    <class>org.jlgranda.fede.model.management.Diagnostic</class>
+    <class>org.jlgranda.fede.model.management.Initiative</class>
+    <class>org.jlgranda.fede.model.management.Linkage</class>
+    <class>org.jlgranda.fede.model.management.Macroprocess</class>
+    <class>org.jlgranda.fede.model.management.Measure</class>
+    <class>org.jlgranda.fede.model.management.Method</class>
+    <class>org.jlgranda.fede.model.management.Mission</class>
+    <class>org.jlgranda.fede.model.management.Objetive</class>
+    <class>org.jlgranda.fede.model.management.Organization</class>
+    <class>org.jlgranda.fede.model.management.Period</class>
+    <class>org.jlgranda.fede.model.management.Perspective</class>
+    <class>org.jlgranda.fede.model.management.Perspective</class>
+    <class>org.jlgranda.fede.model.management.Principle</class>
+    <class>org.jlgranda.fede.model.management.Process</class>
+    <class>org.jlgranda.fede.model.management.Proprietor</class>
+    <class>org.jlgranda.fede.model.management.Question</class>
+    <class>org.jlgranda.fede.model.management.Resource</class>
+    <class>org.jlgranda.fede.model.management.RevisionItem</class>
+    <class>org.jlgranda.fede.model.management.Scale</class>
+    <class>org.jlgranda.fede.model.management.Section</class>
+    <class>org.jlgranda.fede.model.management.Target</class>
+    <class>org.jlgranda.fede.model.management.TargetValue</class>
+    <class>org.jlgranda.fede.model.management.Theme</class>
+    <class>org.jlgranda.fede.model.management.Valuation</class>
+    <class>org.jlgranda.fede.model.management.Vision</class>
+    
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
@@ -71,6 +99,8 @@
       <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true"/>
       <property name="hibernate.transaction.flush_before_completion" value="true"/>
       <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+      <!--http://stackoverflow.com/questions/26591521/java-lang-illegalstateexception-multiple-representations-of-the-same-entity-wit-->
+      <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
     </properties>
   </persistence-unit>
 </persistence>

@@ -25,11 +25,13 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jlgranda.fede.model.document.FacturaElectronica_;
 import org.jpapi.model.StatusType;
-import org.jpapi.model.management.Organization;
 import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 import org.jpapi.util.Strings;
@@ -64,6 +66,7 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
      * Obtener el top de las facturas electrónicas para portada
      * @return 
      */
+    @Deprecated
     public List<FacturaElectronica> listarFacturasElectronicas(int max) {
         return this.find(0, Strings.toInt(max), FacturaElectronica_.fechaEmision.getName(), QuerySortOrder.DESC, new HashMap<String, Object>()).getResult();
     }
@@ -72,6 +75,7 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
      * Obtener facturas electrónicas por tag
      * @return 
      */
+    @Deprecated
     public List<FacturaElectronica> listarFacturasElectronicas(String tag) {
         return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwner", tag);
     }
@@ -80,6 +84,7 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
      * Obtener facturas electrónicas por tag, dueño entre fechas
      * @return lista de facturas electrónicas que responden a los criterios dados.
      */
+    @Deprecated
     public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end) {
         return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", tag, owner, start, end);
     }
@@ -88,12 +93,13 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
      * Obtener facturas electrónicas por tag, dueño entre fechas, con la relación indicada
      * @return lista de facturas electrónicas que responden a los criterios dados, con la relación indicada
      */
+    @Deprecated
     public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end, String relation) {
         logger.info("Recuperando listado para los criterios {}, {}, {}, {}, {}", tag, owner, start, end, relation);
         List<FacturaElectronica> lst = new ArrayList<>();
         for (FacturaElectronica f : this.listarFacturasElectronicas(tag, owner, start, end)){
-            if (Organization.class.getName().equals(relation)){
-                f.getOrganization().getInitials(); //forzar llenado de organization
+            if (Subject.class.getName().equals(relation)){
+                f.getAuthor().getInitials(); //forzar llenado de organization
                 lst.add(f);
             } else {
                 //Dummy
@@ -127,4 +133,29 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         return f;
     }
 
+    public long count() {
+        return super.count(FacturaElectronica.class); 
+    }
+    
+    public FacturaElectronica findByName(final String name) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<FacturaElectronica> query = builder.createQuery(FacturaElectronica.class);
+
+        Root<FacturaElectronica> bussinesEntity = query.from(FacturaElectronica.class);
+
+        query.where(builder.equal(bussinesEntity.get(FacturaElectronica_.name), name));
+
+        return getSingleResult(query);
+    }
+    
+    public List<FacturaElectronica> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<FacturaElectronica> query = builder.createQuery(FacturaElectronica.class);
+
+        Root<FacturaElectronica> from = query.from(FacturaElectronica.class);
+        query.select(from).orderBy(builder.desc(from.get(FacturaElectronica_.name)));
+        return getResultList(query, maxresults, firstresult);
+    }
 }
