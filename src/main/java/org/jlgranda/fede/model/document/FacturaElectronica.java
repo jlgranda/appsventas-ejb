@@ -49,7 +49,10 @@ import org.jpapi.model.SourceType;
 @NamedQueries({
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC")
+    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
+    @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOwner", query = "select count(f) FROM FacturaElectronica f WHERE f.owner = ?1")
+    
 })
 @XmlRootElement
 public class FacturaElectronica extends BussinesEntity {

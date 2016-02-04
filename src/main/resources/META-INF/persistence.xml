@@ -81,6 +81,8 @@
     <class>org.jlgranda.fede.model.management.Valuation</class>
     <class>org.jlgranda.fede.model.management.Vision</class>
     
+    <class>org.jlgranda.fede.model.config.Frequency</class>
+    
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

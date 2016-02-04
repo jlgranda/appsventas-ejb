@@ -348,60 +348,73 @@ public class FacturaElectronicaMailReader {
             //System.err.println("---------> " + emailHelper.getHtmlBody());
             //System.err.println("---------> " + emailHelper.getAttachments());
             //Obtener la factura en los adjuntos
-            for (Entity entity : emailHelper.getAttachments()) {
-                filename = EmailHelper.getFilename(entity);
+            if (emailHelper.getAttachments().isEmpty()) {
+                //If it's single part message, just get text body  
+                String text = emailHelper.getHtmlBody().toString();
+                emailHelper.getTxtBody().append(text);
+                if (mime4jMessage.getSubject().contains("Ghost")) {
 
-                //if (entity.getBody() instanceof BinaryBody) {
-                if (("application/octet-stream".equalsIgnoreCase(entity.getMimeType())
-                        || "application/xml".equalsIgnoreCase(entity.getMimeType())
-                        || "text/xml".equalsIgnoreCase(entity.getMimeType())
-                        || "text/plain".equalsIgnoreCase(entity.getMimeType()))
-                        && (filename != null && filename.endsWith(".xml"))) {
-                    //attachFiles += part.getFileName() + ", ";
-                    os = EmailHelper.writeBody(entity.getBody());
-                    factura = FacturaUtil.read(os.toString());
-                    if (factura != null) {
-                        result.add(new FacturaReader(factura, os.toString(), entity.getFilename(), mime4jMessage.getFrom().get(0).getAddress()));
-                        //System.err.println("---------> " + factura.getInfoTributaria().getSecuencial());
+                    String url = FacturaUtil.extraerURL(emailHelper.getHtmlBody().toString(), "<a href=\"", "\" target=\"_blank\">Descarga formato XML</a>");
+                    if (url != null) {
+                        result.add(FacturaElectronicaURLReader.getFacturaElectronica(url));
                     }
-                } else if (("application/octet-stream".equalsIgnoreCase(entity.getMimeType())
-                        || "aplication/xml".equalsIgnoreCase(entity.getMimeType())
-                        || "text/xml".equalsIgnoreCase(entity.getMimeType()))
-                        && (filename != null && filename.endsWith(".zip"))) {
-                    //http://www.java2s.com/Tutorial/Java/0180__File/UnzipusingtheZipInputStream.htm    
-                    os = EmailHelper.writeBody(entity.getBody());
-                    ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(os.toByteArray()));
-                    try {
-                        ZipEntry entry = null;
-                        String tmp = null;
-                        ByteArrayOutputStream fout = null;
-                        while ((entry = zis.getNextEntry()) != null) {
-                            if (entry.getName().endsWith(".xml")) {
-                                //logger.debug("Unzipping {}", entry.getFilename());
-                                fout = new ByteArrayOutputStream();
-                                for (int c = zis.read(); c != -1; c = zis.read()) {
-                                    fout.write(c);
-                                }
+                }
+            } else {
+                for (Entity entity : emailHelper.getAttachments()) {
+                    filename = EmailHelper.getFilename(entity);
 
-                                tmp = new String(fout.toByteArray(), Charset.defaultCharset());
-
-                                factura = FacturaUtil.read(tmp);
-                                if (factura != null) {
-                                    result.add(new FacturaReader(factura, tmp, entity.getFilename()));
-                                }
-                                fout.close();
-                            }
-                            zis.closeEntry();
+                    //if (entity.getBody() instanceof BinaryBody) {
+                    if (("application/octet-stream".equalsIgnoreCase(entity.getMimeType())
+                            || "application/xml".equalsIgnoreCase(entity.getMimeType())
+                            || "text/xml".equalsIgnoreCase(entity.getMimeType())
+                            || "text/plain".equalsIgnoreCase(entity.getMimeType()))
+                            && (filename != null && filename.endsWith(".xml"))) {
+                        //attachFiles += part.getFileName() + ", ";
+                        os = EmailHelper.writeBody(entity.getBody());
+                        factura = FacturaUtil.read(os.toString());
+                        if (factura != null) {
+                            result.add(new FacturaReader(factura, os.toString(), entity.getFilename(), mime4jMessage.getFrom().get(0).getAddress()));
+                            //System.err.println("---------> " + factura.getInfoTributaria().getSecuencial());
                         }
-                        zis.close();
+                    } else if (("application/octet-stream".equalsIgnoreCase(entity.getMimeType())
+                            || "aplication/xml".equalsIgnoreCase(entity.getMimeType())
+                            || "text/xml".equalsIgnoreCase(entity.getMimeType()))
+                            && (filename != null && filename.endsWith(".zip"))) {
+                        //http://www.java2s.com/Tutorial/Java/0180__File/UnzipusingtheZipInputStream.htm    
+                        os = EmailHelper.writeBody(entity.getBody());
+                        ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(os.toByteArray()));
+                        try {
+                            ZipEntry entry = null;
+                            String tmp = null;
+                            ByteArrayOutputStream fout = null;
+                            while ((entry = zis.getNextEntry()) != null) {
+                                if (entry.getName().endsWith(".xml")) {
+                                    //logger.debug("Unzipping {}", entry.getFilename());
+                                    fout = new ByteArrayOutputStream();
+                                    for (int c = zis.read(); c != -1; c = zis.read()) {
+                                        fout.write(c);
+                                    }
 
-                    } finally {
-                        IOUtils.closeQuietly(os);
-                        IOUtils.closeQuietly(zis);
-                    }
-                } else if ("message/rfc822".equalsIgnoreCase(entity.getMimeType())) {
-                    if (entity.getBody() instanceof org.apache.james.mime4j.message.MessageImpl) {
-                        result.addAll(handleMessage((org.apache.james.mime4j.message.MessageImpl) entity.getBody()));
+                                    tmp = new String(fout.toByteArray(), Charset.defaultCharset());
+
+                                    factura = FacturaUtil.read(tmp);
+                                    if (factura != null) {
+                                        result.add(new FacturaReader(factura, tmp, entity.getFilename()));
+                                    }
+                                    fout.close();
+                                }
+                                zis.closeEntry();
+                            }
+                            zis.close();
+
+                        } finally {
+                            IOUtils.closeQuietly(os);
+                            IOUtils.closeQuietly(zis);
+                        }
+                    } else if ("message/rfc822".equalsIgnoreCase(entity.getMimeType())) {
+                        if (entity.getBody() instanceof org.apache.james.mime4j.message.MessageImpl) {
+                            result.addAll(handleMessage((org.apache.james.mime4j.message.MessageImpl) entity.getBody()));
+                        }
                     }
                 }
             }
@@ -416,9 +429,9 @@ public class FacturaElectronicaMailReader {
                     result.add(FacturaElectronicaURLReader.getFacturaElectronica(url));
                 }
             }
-            //System.err.println("---------> " + emailHelper.getHtmlBody());
-            //System.err.println("---------> " + emailHelper.getTxtBody());
-            //System.err.println("---------> " + emailHelper.getAttachments());
+//            System.err.println("---------> " + emailHelper.getHtmlBody());
+//            System.err.println("---------> " + emailHelper.getTxtBody());
+//            System.err.println("---------> " + emailHelper.getAttachments());
         }
         return result;
     }
@@ -427,8 +440,8 @@ public class FacturaElectronicaMailReader {
 
         FacturaElectronicaMailReader famr = new FacturaElectronicaMailReader();
         String server = "jlgranda.com";
-        String username = "1103826960@jlgranda.com";
-        String password = "g9VhCF5lQGhobCRuuqkJww2tUlw2D+dZ";
+        String username = "1104499049@jlgranda.com";
+        String password = "FKR5oznrtVwnEirkrbl4rmeba0mFCmYh";
 
         String proto = "TLS";
         IMAPClient client = new IMAPClient(server, username, password);
@@ -463,7 +476,7 @@ public class FacturaElectronicaMailReader {
             from = fromAddress[0].toString();
             subject = message.getSubject();
             sentDate = message.getSentDate() != null ? message.getSentDate().toString() : "";
-            if (true /*subject.contains("SPAM Documento electrónico No: 001-067-000067064 Hotel Hilton Colon Quito")*/) {
+            if (subject.contains("Fwd: Ghost - Doc. Electrónico: 2201201601180145025300120010320000336391234567819")) {
                 System.out.println("--------------------------------------" + (index++) + "-----------------------------------------");
                 System.out.println("From: " + fromAddress);
                 System.out.println("Subject: " + subject);
