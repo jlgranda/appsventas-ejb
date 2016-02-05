@@ -23,6 +23,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -37,7 +39,13 @@ import org.jpapi.model.BussinesEntity;
 @Table(name = "BalancedScorecard")
 @DiscriminatorValue(value = "BSC")
 @PrimaryKeyJoinColumn(name = "id")
-public class BalancedScorecard extends BussinesEntity implements Serializable {
+@NamedQueries({
+    @NamedQuery(name = "BalancedScoreCard.findByOwner", query = "select b FROM BalancedScoreCard b WHERE b.owner=?1 ORDER BY b.name ASC"),
+    @NamedQuery(name = "BalancedScoreCard.findByOwnerAndOrganization", query = "select b FROM BalancedScoreCard b WHERE b.owner=?1 and b.organization = ?2 ORDER BY b.name ASC"),
+    @NamedQuery(name = "BalancedScoreCard.countByOwner", query = "select count(b) FROM BalancedScoreCard b WHERE b.owner = ?1"),
+    @NamedQuery(name = "BalancedScoreCard.countByOwnerAndOrganization", query = "select count(b) FROM BalancedScoreCard b WHERE b.owner = ?1 and b.organization = ?2")
+})
+public class BalancedScoreCard extends BussinesEntity implements Serializable {
     private static final long serialVersionUID = -8149661791009499829L;
     
     @ManyToOne
@@ -83,7 +91,7 @@ public class BalancedScorecard extends BussinesEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        BalancedScorecard other = (BalancedScorecard) obj;
+        BalancedScoreCard other = (BalancedScoreCard) obj;
         return new EqualsBuilder().
                 // if deriving: appendSuper(super.equals(obj)).
                 append(getName(), other.getName()).
@@ -100,7 +108,7 @@ public class BalancedScorecard extends BussinesEntity implements Serializable {
     
     @Override
     public String toString() {
-       /* return "org.eqaula.glue.model.management.BalancedScorecard[ "
+       /* return "org.eqaula.glue.model.management.BalancedScoreCard[ "
                 + "id=" + getId() + ","
                 + "name=" + getName() + ","
                 + "type=" + getType() + ","

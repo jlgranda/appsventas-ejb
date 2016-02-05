@@ -48,7 +48,7 @@ public class Perspective extends BussinesEntity implements Serializable {
     private  List<Theme> themes;
 
     @ManyToOne
-    private BalancedScorecard balancedScorecard;
+    private BalancedScoreCard balancedScorecard;
     
     public List<Theme> getThemes() {
         return themes;
@@ -66,11 +66,11 @@ public class Perspective extends BussinesEntity implements Serializable {
         this.sequence = sequence;
     }
 
-    public BalancedScorecard getBalancedScorecard() {
+    public BalancedScoreCard getBalancedScorecard() {
         return balancedScorecard;
     }
 
-    public void setBalancedScorecard(BalancedScorecard balancedScorecard) {
+    public void setBalancedScorecard(BalancedScoreCard balancedScorecard) {
         this.balancedScorecard = balancedScorecard;
     }
 

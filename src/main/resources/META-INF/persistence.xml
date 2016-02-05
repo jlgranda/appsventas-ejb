@@ -33,7 +33,6 @@
     <class>org.jpapi.model.Setting</class>
     <class>org.jpapi.model.Structure</class>
     <class>org.jpapi.model.profile.Subject</class>
-
     <!-- Security persistence model from picketlink sample simple -->
     <class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class>
     <class>org.picketlink.idm.jpa.model.sample.simple.AccountTypeEntity</class>
@@ -51,10 +50,7 @@
     <class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class>
     <class>org.picketlink.idm.jpa.model.sample.simple.DigestCredentialTypeEntity</class>
     <class>org.picketlink.idm.jpa.model.sample.simple.PermissionTypeEntity</class>
-    
     <class>org.jlgranda.fede.model.document.FacturaElectronica</class>
-    
-    <class>org.jlgranda.fede.model.management.BalancedScorecard</class>
     <class>org.jlgranda.fede.model.management.Diagnostic</class>
     <class>org.jlgranda.fede.model.management.Initiative</class>
     <class>org.jlgranda.fede.model.management.Linkage</class>
@@ -80,9 +76,8 @@
     <class>org.jlgranda.fede.model.management.Theme</class>
     <class>org.jlgranda.fede.model.management.Valuation</class>
     <class>org.jlgranda.fede.model.management.Vision</class>
-    
     <class>org.jlgranda.fede.model.config.Frequency</class>
-    
+    <class>org.jlgranda.fede.model.management.BalancedScoreCard</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

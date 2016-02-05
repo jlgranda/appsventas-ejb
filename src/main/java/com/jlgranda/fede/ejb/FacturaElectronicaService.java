@@ -137,9 +137,9 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         return super.count(FacturaElectronica.class); 
     }
     
-    public long count(String namedQuery, Object... params) {
-        return super.countByNamedQuery(namedQuery, params); 
-    }
+//    public long count(String namedQuery, Object... params) {
+//        return super.countByNamedQuery(namedQuery, params); 
+//    }
     
     public FacturaElectronica findByName(final String name) {
 

@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.jlgranda.fede.model.management.BalancedScoreCard;
 import org.jlgranda.fede.model.management.Organization;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
@@ -22,9 +23,9 @@ import org.slf4j.LoggerFactory;
  * @author jlgranda
  */
 @Stateless
-public class OrganizacionService extends BussinesEntityHome<Organization>{
+public class OrganizationService extends BussinesEntityHome<Organization>{
      
-    Logger  logger = LoggerFactory.getLogger(OrganizacionService.class);
+    Logger  logger = LoggerFactory.getLogger(OrganizationService.class);
     
     private static final long serialVersionUID = 6654364438741958096L;
     
@@ -54,5 +55,7 @@ public class OrganizacionService extends BussinesEntityHome<Organization>{
         return _instance;
     }
     
-    
+    public long count() {
+        return super.count(Organization.class); 
+    }
 }

@@ -28,6 +28,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -41,6 +43,10 @@ import org.jpapi.model.BussinesEntity;
 @Table(name = "Organization")
 @DiscriminatorValue(value = "ORG")
 @PrimaryKeyJoinColumn(name = "id")
+@NamedQueries({
+    @NamedQuery(name = "Organization.findByOwner", query = "select o FROM Organization o WHERE o.owner=?1 ORDER BY o.name ASC"),
+    @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1"),
+})
 public class Organization extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;
@@ -61,7 +67,8 @@ public class Organization extends BussinesEntity implements Serializable {
     public enum Type {
         GOVERMENT,
         PUBLIC,
-        PRIVATE;
+        PRIVATE,
+        NATURAL;
         private Type() {
         }
     }
@@ -76,9 +83,6 @@ public class Organization extends BussinesEntity implements Serializable {
     public void setOrganizationType(Type organizationType) {
         this.organizationType = organizationType;
     }
-
-    
-    
 
     public String getRuc() {
         return ruc;
