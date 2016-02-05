@@ -23,7 +23,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.management.BalancedScoreCard;
+import org.jlgranda.fede.model.management.BalancedScoreCard_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -69,6 +73,16 @@ public class BalancedScoreCardService  extends BussinesEntityHome<BalancedScoreC
 
     public long count() {
         return super.count(BalancedScoreCard.class); 
+    }
+    
+    public List<BalancedScoreCard> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<BalancedScoreCard> query = builder.createQuery(BalancedScoreCard.class);
+
+        Root<BalancedScoreCard> from = query.from(BalancedScoreCard.class);
+        query.select(from).orderBy(builder.desc(from.get(BalancedScoreCard_.name)));
+        return getResultList(query, maxresults, firstresult);
     }
 
 }
