@@ -78,6 +78,12 @@
     <class>org.jlgranda.fede.model.management.Vision</class>
     <class>org.jlgranda.fede.model.config.Frequency</class>
     <class>org.jlgranda.fede.model.management.BalancedScoreCard</class>
+    
+    <class>org.jlgranda.fede.model.sales.Invoice</class>
+    <class>org.jlgranda.fede.model.sales.Detail</class>
+    <class>org.jlgranda.fede.model.sales.Product</class>
+    <class>org.jlgranda.fede.model.sales.Establishment</class>
+    <class>org.jlgranda.fede.model.sales.EmissionPoint</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

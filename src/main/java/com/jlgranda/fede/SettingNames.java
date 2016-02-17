@@ -30,8 +30,10 @@ public class SettingNames {
     
     public static final String POPUP_DESCARGAR_FACTURA_ELECTRONICA = "descargar_factura_electronica";
     
-    public static String POPUP_NUEVA_ETIQUETA = "nueva_etiqueta";
+    public static String POPUP_NUEVA_ETIQUETA = "popup_etiqueta";
     public static String POPUP_FORMULARIO_ORGANIZATION = "popup_organizacion";
+    public static String POPUP_FORMULARIO_PRODUCTO = "popup_producto";
+    public static String POPUP_FORMULARIO_FACTURA = "popup_factura";
 
     //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";

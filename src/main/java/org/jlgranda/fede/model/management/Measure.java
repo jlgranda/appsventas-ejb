@@ -37,7 +37,7 @@ import org.jpapi.model.BussinesEntity;
 @Entity
 @Table(name = "Measure")
 @DiscriminatorValue(value = "MSR")
-@PrimaryKeyJoinColumn(name = "id")
+@PrimaryKeyJoinColumn(name = "measureId")
 public class Measure extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = -6935266135527132362L;

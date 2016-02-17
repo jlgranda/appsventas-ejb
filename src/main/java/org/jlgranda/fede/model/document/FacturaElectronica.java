@@ -83,6 +83,10 @@ public class FacturaElectronica extends BussinesEntity {
     @Column(nullable = true)
     protected SourceType sourceType;
     
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = true)
+    protected EmissionType emissionType;
+    
     /**
      * Nombre de archivo de donde se importó la factura
      */
@@ -159,6 +163,14 @@ public class FacturaElectronica extends BussinesEntity {
 
     public void setSourceType(SourceType sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public EmissionType getEmissionType() {
+        return emissionType;
+    }
+
+    public void setEmissionType(EmissionType emissionType) {
+        this.emissionType = emissionType;
     }
 
     public String getContenido() {

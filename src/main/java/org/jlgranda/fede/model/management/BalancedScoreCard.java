@@ -113,6 +113,6 @@ public class BalancedScoreCard extends BussinesEntity implements Serializable {
                 + "name=" + getName() + ","
                 + "type=" + getType() + ","
                 + " ]";*/
-        return getName();
+        return "" + getId();
     }
 }

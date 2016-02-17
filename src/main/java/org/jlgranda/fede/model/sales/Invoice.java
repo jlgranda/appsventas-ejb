@@ -15,17 +15,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jlgranda.fede.model.document;
+package org.jlgranda.fede.model.sales;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.jlgranda.fede.model.document.DocumentType;
+import org.jlgranda.fede.model.document.EmissionType;
+import org.jlgranda.fede.model.document.EnvironmentType;
+import org.jlgranda.fede.model.management.Organization;
 import org.jpapi.model.BussinesEntity;
-import org.jpapi.model.profile.Subject;
+import org.jpapi.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +50,11 @@ import org.slf4j.LoggerFactory;
 @Table(name = "INVOICE")
 @DiscriminatorValue(value = "INV")
 @PrimaryKeyJoinColumn(name = "invoiceId")
+@NamedQueries({
+    @NamedQuery(name = "Invoice.findLast", query = "select i FROM Invoice i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findLasts", query = "select i FROM Invoice i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.countByOwner", query = "select count(i) FROM Invoice i WHERE i.owner = ?1"),
+})
 public class Invoice extends BussinesEntity {
     
     private static Logger log = LoggerFactory.getLogger(Invoice.class);
@@ -46,21 +64,24 @@ public class Invoice extends BussinesEntity {
     private EmissionType emissionType;
     
     @ManyToOne(optional = true)
-    @JoinColumn(name = "emisor", nullable = false)
-    private Subject emisor;
-    
-    private String password;
+    @JoinColumn(name = "organization_id", insertable=false, updatable=false, nullable=true)
+    private Organization organization;
     
     private DocumentType documentType;
     
-    private String establishment;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "establishment_id", insertable=false, updatable=false, nullable=true)
+    private Establishment establishment;
     
-    private String emissionPoint;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "emissionpoint_id", insertable=false, updatable=false, nullable=true)
+    private EmissionPoint emissionPoint;
+    
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
+    private List<Detail> details = new ArrayList<Detail>();
     
     private String sequencial;
     
-    private String principalAddres;
-
     public static Logger getLog() {
         return log;
     }
@@ -85,20 +106,12 @@ public class Invoice extends BussinesEntity {
         this.emissionType = emissionType;
     }
 
-    public Subject getEmisor() {
-        return emisor;
+    public Organization getOrganization() {
+        return organization;
     }
 
-    public void setEmisor(Subject emisor) {
-        this.emisor = emisor;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public DocumentType getDocumentType() {
@@ -109,20 +122,33 @@ public class Invoice extends BussinesEntity {
         this.documentType = documentCode;
     }
 
-    public String getEstablishment() {
+    public Establishment getEstablishment() {
         return establishment;
     }
 
-    public void setEstablishment(String establishment) {
+    public void setEstablishment(Establishment establishment) {
         this.establishment = establishment;
     }
 
-    public String getEmissionPoint() {
+    public EmissionPoint getEmissionPoint() {
         return emissionPoint;
     }
 
-    public void setEmissionPoint(String emissionPoint) {
+    public void setEmissionPoint(EmissionPoint emissionPoint) {
         this.emissionPoint = emissionPoint;
+    }
+
+    public Detail addDetail(Detail detail){
+        detail.setInvoice(this);
+        this.details.add(detail);
+        return detail;
+    }
+    public List<Detail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<Detail> details) {
+        this.details = details;
     }
 
     public String getSequencial() {
@@ -132,15 +158,21 @@ public class Invoice extends BussinesEntity {
     public void setSequencial(String sequencial) {
         this.sequencial = sequencial;
     }
-
-    public String getPrincipalAddres() {
-        return principalAddres;
+    
+    @Transient
+    public String getSummary(){
+        return Lists.toString(getDetails());
     }
-
-    public void setPrincipalAddres(String principalAddres) {
-        this.principalAddres = principalAddres;
+    
+    @Transient
+    public BigDecimal getTotal(){
+        BigDecimal total = new BigDecimal(0);
+        for (Detail d : getDetails()){
+            total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())));
+        }
+        
+        return total;
     }
-
 
     @Override
     public int hashCode() {
@@ -171,4 +203,5 @@ public class Invoice extends BussinesEntity {
         }
         return true;
     }
+
 }

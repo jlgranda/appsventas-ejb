@@ -23,5 +23,7 @@ package org.jlgranda.fede.model.document;
  */
 public enum EmissionType {
     NORMAL,
-    SYSTEM_UNAVAILABLE
+    SYSTEM_UNAVAILABLE,
+    SALE,
+    PURCHASE
 }
