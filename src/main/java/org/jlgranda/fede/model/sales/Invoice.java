@@ -19,6 +19,8 @@ package org.jlgranda.fede.model.sales;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -53,7 +55,9 @@ import org.slf4j.LoggerFactory;
 @NamedQueries({
     @NamedQuery(name = "Invoice.findLast", query = "select i FROM Invoice i ORDER BY i.id DESC"),
     @NamedQuery(name = "Invoice.findLasts", query = "select i FROM Invoice i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findLastsByAuthor", query = "select i FROM Invoice i WHERE i.author = ?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Invoice.countByOwner", query = "select count(i) FROM Invoice i WHERE i.owner = ?1"),
+    @NamedQuery(name = "Invoice.countByAuthor", query = "select count(i) FROM Invoice i WHERE i.author = ?1"),
 })
 public class Invoice extends BussinesEntity {
     
@@ -161,7 +165,10 @@ public class Invoice extends BussinesEntity {
     
     @Transient
     public String getSummary(){
-        return Lists.toString(getDetails());
+        List<Detail> list = getDetails();
+        Collections.sort(list);
+        Collections.reverse(list);
+        return Lists.toString(list);
     }
     
     @Transient

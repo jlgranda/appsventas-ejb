@@ -33,7 +33,7 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "INVOICE_DETAIL")
-public class Detail extends PersistentObject {
+public class Detail extends PersistentObject implements Comparable<Detail> {
     
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
     @JoinColumn(name = "invoice_id", insertable=true, updatable=false, nullable=true)
@@ -121,5 +121,15 @@ public class Detail extends PersistentObject {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
- 
+
+    @Override
+    public String toString() {
+        return "(" + Math.round(getAmount()) + ") " + getProduct().getName();//To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int compareTo(Detail other) {
+        return this.product.getName().compareTo(other.product.getName());
+    }
+     
 }
