@@ -201,6 +201,9 @@ public class SetupService implements Serializable {
         
         props.put("fede.inbox.list.length", "50"); //364 días
         
+        props.put("app.fede.sales.dashboard.refreshtime", "20"); //20 segundos
+        props.put("app.fede.sales.dashboard.lasts.list.length", "10"); //10 segundos
+        
         
         String value = null;
         for (String key : props.keySet()){

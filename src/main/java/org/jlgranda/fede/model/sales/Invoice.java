@@ -19,7 +19,6 @@ package org.jlgranda.fede.model.sales;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -82,7 +81,7 @@ public class Invoice extends BussinesEntity {
     private EmissionPoint emissionPoint;
     
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
-    private List<Detail> details = new ArrayList<Detail>();
+    private List<Detail> details = new ArrayList<>();
     
     private String sequencial;
     
@@ -144,7 +143,11 @@ public class Invoice extends BussinesEntity {
 
     public Detail addDetail(Detail detail){
         detail.setInvoice(this);
-        this.details.add(detail);
+        if (this.details.contains(detail)){
+            replaceDetail(detail);
+        } else {
+            this.details.add(detail);
+        }
         return detail;
     }
     public List<Detail> getDetails() {
@@ -209,6 +212,11 @@ public class Invoice extends BussinesEntity {
             return false;
         }
         return true;
+    }
+
+    public Detail replaceDetail(Detail detail) {
+        getDetails().set(getDetails().indexOf(detail), detail);
+        return detail;
     }
 
 }

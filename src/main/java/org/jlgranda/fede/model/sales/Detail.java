@@ -25,6 +25,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -36,7 +37,7 @@ import org.jpapi.model.PersistentObject;
 public class Detail extends PersistentObject implements Comparable<Detail> {
     
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
-    @JoinColumn(name = "invoice_id", insertable=true, updatable=false, nullable=true)
+    @JoinColumn(name = "invoice_id", insertable=true, updatable=true, nullable=true)
     private Invoice invoice;
     
     @ManyToOne(optional = true, cascade = {CascadeType.ALL})
@@ -120,6 +121,34 @@ public class Detail extends PersistentObject implements Comparable<Detail> {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+    
+    @Override
+    public int hashCode() {
+        return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                append(getInvoice()).
+                append(getProductId()).
+                toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Detail other = (Detail) obj;
+        return new org.apache.commons.lang.builder.EqualsBuilder().
+                append(getProductId(), other.getProductId()).
+                append(getInvoice(), other.getInvoice()).
+                append(getAmount(), other.getAmount()).
+                isEquals();
     }
 
     @Override

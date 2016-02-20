@@ -17,14 +17,19 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
 import org.jlgranda.fede.model.sales.Invoice;
+import org.jlgranda.fede.model.sales.Invoice_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -74,6 +79,20 @@ public class InvoiceService extends BussinesEntityHome<Invoice> {
         _instance.setEmissionType(EmissionType.SALE);
         _instance.setDocumentType(documentType);
         return _instance;
+    }
+    
+    public long count() {
+        return super.count(Invoice.class); 
+    }
+    
+    public List<Invoice> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Invoice> query = builder.createQuery(Invoice.class);
+
+        Root<Invoice> from = query.from(Invoice.class);
+        query.select(from).orderBy(builder.desc(from.get(Invoice_.name)));
+        return getResultList(query, maxresults, firstresult);
     }
     
 }
