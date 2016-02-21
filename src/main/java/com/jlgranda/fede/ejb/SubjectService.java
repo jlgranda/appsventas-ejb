@@ -17,6 +17,8 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.HashMap;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -50,6 +52,21 @@ public class SubjectService extends BussinesEntityHome<Subject> {
     public boolean usersExist() {
         Query q = em.createQuery("SELECT U FROM AccountTypeEntity U");
         return !q.getResultList().isEmpty();
+    }
+
+    public List<Subject> all(Subject subjectLogin) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("SELECT s FROM Subjects s  WHERE 1=1 ");
+        if (subjectLogin != null) {
+            sql.append(" and s.id!=:id");
+            parametros.put("id", subjectLogin.getId());
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 
     @Override

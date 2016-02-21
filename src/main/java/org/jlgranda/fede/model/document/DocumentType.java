@@ -21,8 +21,7 @@ package org.jlgranda.fede.model.document;
  *
  * @author jlgranda
  */
-
-public enum DocumentType{
+public enum DocumentType {
 
     /**
      * Factura
@@ -32,6 +31,9 @@ public enum DocumentType{
     CREDIT_NOTE,
     DEBIT_NOTE,
     REMISSION_GUIDE,
-    RETENTION_SUPPORTING
+    RETENTION_SUPPORTING,
+    OFICIO,
+    FAX,
+    CATALOGO,
+    REVISTA
 }
-
