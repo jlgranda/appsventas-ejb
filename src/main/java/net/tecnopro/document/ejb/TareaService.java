@@ -17,7 +17,6 @@
  */
 package net.tecnopro.document.ejb;
 
-import com.jlgranda.fede.ejb.GroupService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +24,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import net.tecnopro.document.model.Tarea;
-import org.jlgranda.fede.model.document.FacturaElectronica;
+import net.tecnopro.document.model.Tarea_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Group;
 import org.jpapi.model.StatusType;
@@ -84,5 +86,14 @@ public class TareaService extends BussinesEntityHome<Tarea> {
 
     public long count() {
         return super.count(Tarea.class);
+    }
+     public List<Tarea> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Tarea> query = builder.createQuery(Tarea.class);
+
+        Root<Tarea> from = query.from(Tarea.class);
+        query.select(from).orderBy(builder.desc(from.get(Tarea_.name)));
+        return getResultList(query, maxresults, firstresult);
     }
 }

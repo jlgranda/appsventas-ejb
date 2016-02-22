@@ -34,11 +34,11 @@ import org.jpapi.model.BussinesEntity;
 @Entity
 @Table(name = "tarea")
 @NamedQueries({
-    @NamedQuery(name = "Tarea.findLast", query = "select i FROM Tarea i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Tarea.findLast", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.findLasts", query = "select i FROM Tarea i ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.countByOwner", query = "select count(i) FROM Tarea i WHERE i.owner = ?1"),
     @NamedQuery(name = "Tarea.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
-    @NamedQuery(name = "Tarea.countBussinesEntityByOwner", query = "select count(f) FROM Tarea f WHERE f.owner = ?1")})
+    @NamedQuery(name = "Tarea.countBussinesEntityByOwner", query = "select count(t) FROM Tarea t WHERE t.owner = ?1")})
 @XmlRootElement
 public class Tarea extends BussinesEntity implements Serializable {
 

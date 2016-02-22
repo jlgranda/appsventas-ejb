@@ -29,8 +29,8 @@ import org.jlgranda.fede.model.document.DocumentType;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
 import org.jlgranda.fede.model.sales.Invoice;
-import org.jlgranda.fede.model.sales.Invoice_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jlgranda.fede.model.sales.Invoice_;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 
