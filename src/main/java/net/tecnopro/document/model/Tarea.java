@@ -35,7 +35,9 @@ import org.jpapi.model.BussinesEntity;
 @Table(name = "tarea")
 @NamedQueries({
     @NamedQuery(name = "Tarea.findLast", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
-    @NamedQuery(name = "Tarea.findLasts", query = "select i FROM Tarea i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Tarea.findLasts", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Tarea.findLastsByAuthor", query = "select i FROM Tarea i where i.author=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Tarea.findLastsByOwner", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.countByOwner", query = "select count(i) FROM Tarea i WHERE i.owner = ?1"),
     @NamedQuery(name = "Tarea.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "Tarea.countBussinesEntityByOwner", query = "select count(t) FROM Tarea t WHERE t.owner = ?1")})
@@ -46,7 +48,6 @@ public class Tarea extends BussinesEntity implements Serializable {
     private Date fechaEnvio;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 250)
     private String Departamento;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)

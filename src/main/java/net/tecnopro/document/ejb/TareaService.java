@@ -81,6 +81,7 @@ public class TareaService extends BussinesEntityHome<Tarea> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setFechaEnvio(Dates.now());
         return _instance;
     }
 
