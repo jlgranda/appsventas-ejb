@@ -23,9 +23,9 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.profile.Subject;
 
 /**
  *
@@ -41,7 +41,6 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "Tarea.countByOwner", query = "select count(i) FROM Tarea i WHERE i.owner = ?1"),
     @NamedQuery(name = "Tarea.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "Tarea.countBussinesEntityByOwner", query = "select count(t) FROM Tarea t WHERE t.owner = ?1")})
-@XmlRootElement
 public class Tarea extends BussinesEntity implements Serializable {
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -57,6 +56,10 @@ public class Tarea extends BussinesEntity implements Serializable {
     private EstadoTipo estadoTipo;
     @OneToMany(mappedBy = "tarea")
     private List<Documento> documentos;
+    
+    @JoinColumn(name = "proceso_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Proceso proceso;
 
     public Tarea() {
         this.documentos = new ArrayList<>();
@@ -109,6 +112,14 @@ public class Tarea extends BussinesEntity implements Serializable {
 
     public void setDocumentos(List<Documento> documentos) {
         this.documentos = documentos;
+    }
+
+    public Proceso getProceso() {
+        return proceso;
+    }
+
+    public void setProceso(Proceso proceso) {
+        this.proceso = proceso;
     }
 
 }
