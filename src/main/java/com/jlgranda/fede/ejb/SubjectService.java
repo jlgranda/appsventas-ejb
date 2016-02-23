@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -54,13 +55,28 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         return !q.getResultList().isEmpty();
     }
 
-    public List<Subject> all(Subject subjectLogin) {
+    public List<Subject> buscarPorCriterio(Subject subjectLogin) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
-        sql.append("SELECT s FROM Subjects s  WHERE 1=1 ");
-        if (subjectLogin != null) {
-            sql.append(" and s.id!=:id");
-            parametros.put("id", subjectLogin.getId());
+        boolean existeFiltro = false;
+        sql.append("SELECT s FROM Subject s  WHERE 1=1 ");
+        if (subjectLogin.getUsername() != null) {
+            sql.append(" and s.username=:username");
+            parametros.put("username", subjectLogin.getUsername());
+            existeFiltro = true;
+        }
+        if (subjectLogin.getFirstname() != null) {
+            sql.append(" and s.firstname=:firstname");
+            parametros.put("firstname", subjectLogin.getFirstname());
+            existeFiltro = true;
+        }
+        if (subjectLogin.getSurname() != null) {
+            sql.append(" and s.surname=:surname");
+            parametros.put("surname", subjectLogin.getSurname());
+            existeFiltro = true;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

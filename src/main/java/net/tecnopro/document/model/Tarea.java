@@ -23,9 +23,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.jpapi.model.BussinesEntity;
-import org.jpapi.model.profile.Subject;
 
 /**
  *
