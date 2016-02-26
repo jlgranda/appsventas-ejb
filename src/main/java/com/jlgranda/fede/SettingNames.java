@@ -27,7 +27,7 @@ public class SettingNames {
     
     //Popups
     public static final String POPUP_SUBIR_FACTURA_ELECTRONICA = "subir_factura_electronica";
-    
+     public static final String POPUP_SUBIR_DOCUMENTO= "subir_documento";
     public static final String POPUP_DESCARGAR_FACTURA_ELECTRONICA = "descargar_factura_electronica";
     
     public static String POPUP_NUEVA_ETIQUETA = "popup_etiqueta";

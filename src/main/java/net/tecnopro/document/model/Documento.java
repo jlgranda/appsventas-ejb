@@ -24,7 +24,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,6 +40,16 @@ import org.jpapi.model.BussinesEntity;
  */
 @Entity
 @Table(name = "documento")
+@NamedQueries({
+    @NamedQuery(name = "Documento.findLast", query = "select i FROM Documento i where i.owner=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Documento.findLasts", query = "select i FROM Documento i where i.owner=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Documento.findLastsByAuthor", query = "select i FROM Documento i where i.author=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Documento.findLastsByOwner", query = "select i FROM Documento i where i.owner=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Documento.countByOwner", query = "select count(i) FROM Documento i WHERE i.owner = ?1"),
+    @NamedQuery(name = "Documento.findByTarea", query = "select i FROM Documento i WHERE i.tarea = ?1"),
+    @NamedQuery(name = "Documento.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
+    @NamedQuery(name = "Documento.countBussinesEntityByOwner", query = "select count(t) FROM Documento t WHERE t.owner = ?1")})
+
 @XmlRootElement
 public class Documento extends BussinesEntity {
 
@@ -54,7 +67,8 @@ public class Documento extends BussinesEntity {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tarea tarea;
-
+@Transient
+    private byte[] contents;
     public Documento() {
     }
 
@@ -95,6 +109,14 @@ public class Documento extends BussinesEntity {
 
     public void setTarea(Tarea tarea) {
         this.tarea = tarea;
+    }
+
+    public byte[] getContents() {
+        return contents;
+    }
+
+    public void setContents(byte[] contents) {
+        this.contents = contents;
     }
 
 }
