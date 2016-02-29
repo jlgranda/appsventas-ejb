@@ -22,14 +22,14 @@ package com.jlgranda.fede;
  * @author jlgranda
  */
 public class SettingNames {
-    
+
     public static String DEFAULT_INVOICES_GROUP_NAME = "fede.group.default";
-    
+
     //Popups
     public static final String POPUP_SUBIR_FACTURA_ELECTRONICA = "subir_factura_electronica";
-     public static final String POPUP_SUBIR_DOCUMENTO= "subir_documento";
+    public static final String POPUP_EDITAR_DOCUMENTO = "editar_documento";
     public static final String POPUP_DESCARGAR_FACTURA_ELECTRONICA = "descargar_factura_electronica";
-    
+
     public static String POPUP_NUEVA_ETIQUETA = "popup_etiqueta";
     public static String POPUP_FORMULARIO_ORGANIZATION = "popup_organizacion";
     public static String POPUP_FORMULARIO_PRODUCTO = "popup_producto";
@@ -37,14 +37,14 @@ public class SettingNames {
 
     //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";
-    
+
     public static final String TAG_NUMERO_AUTORIZACION = "fede.xml.tag.fechaAutorizacion";
-    
+
     //Properties
     public static String DASHBOARD_RANGE = "fede.dashboard.range";
     public static String POPUP_WIDTH = "fede.popup.width";
     public static String POPUP_HEIGHT = "fede.popup.height";
     public static String POPUP_SMALL_WIDTH = "fede.popup.small.width";
     public static String POPUP_SMALL_HEIGHT = "fede.popup.small.height";
-    
+
 }
