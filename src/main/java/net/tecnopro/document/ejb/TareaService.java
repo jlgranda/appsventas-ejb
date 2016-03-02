@@ -88,7 +88,8 @@ public class TareaService extends BussinesEntityHome<Tarea> {
     public long count() {
         return super.count(Tarea.class);
     }
-     public List<Tarea> find(int maxresults, int firstresult) {
+
+    public List<Tarea> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Tarea> query = builder.createQuery(Tarea.class);
