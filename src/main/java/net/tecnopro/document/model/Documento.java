@@ -67,8 +67,11 @@ public class Documento extends BussinesEntity {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tarea tarea;
-@Transient
+    @Transient
     private byte[] contents;
+    @Transient
+    private Boolean esActivo;
+
     public Documento() {
     }
 
@@ -117,6 +120,14 @@ public class Documento extends BussinesEntity {
 
     public void setContents(byte[] contents) {
         this.contents = contents;
+    }
+
+    public Boolean isEsActivo() {
+        return esActivo;
+    }
+
+    public void setEsActivo(Boolean esActivo) {
+        this.esActivo = esActivo;
     }
 
 }
