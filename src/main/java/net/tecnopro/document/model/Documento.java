@@ -55,20 +55,22 @@ public class Documento extends BussinesEntity {
 
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 250)
     private String numeroRegistro;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private DocumentType documentType;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 500)
     private String ruta;
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tarea tarea;
-@Transient
+    @Transient
     private byte[] contents;
+    
+    @Column
+    private String fileName;
+
     public Documento() {
     }
 
@@ -117,6 +119,14 @@ public class Documento extends BussinesEntity {
 
     public void setContents(byte[] contents) {
         this.contents = contents;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
 }

@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import net.tecnopro.document.model.Documento;
 import net.tecnopro.document.model.Documento;
+import org.jlgranda.fede.model.document.DocumentType;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Group;
 import org.jpapi.model.StatusType;
@@ -72,6 +73,7 @@ public class DocumentoService extends BussinesEntityHome<Documento> {
     public Documento createInstance() {
 
         Documento _instance = new Documento();
+        _instance.setDocumentType(DocumentType.OFICIO);
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());

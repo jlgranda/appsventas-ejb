@@ -204,6 +204,14 @@ public class SetupService implements Serializable {
         props.put("app.fede.sales.dashboard.refreshtime", "20"); //20 segundos
         props.put("app.fede.sales.dashboard.lasts.list.length", "10"); //10 segundos
         
+        props.put("app.fede.sizeLimit", "1048576"); //maximo tamaño de archivo a subir
+        props.put("app.fede.fileLimit", "34"); //Maximo de archivos a subir
+        props.put("app.fede.allowTypes", "/(\\.|\\/)(xml|zip)$/"); //Tipo de archivo permitidos
+        
+        props.put("app.management.tarea.documentos.sizeLimit", "1048576"); //maximo tamaño de archivo a subir
+        props.put("app.management.tarea.documentos.fileLimit", "34"); //Maximo de archivos a subir
+        props.put("app.management.tarea.documentos.allowTypes", "/(\\.|\\/)(xml|zip|pdf)$/"); //Tipo de archivo permitidos
+      
         
         String value = null;
         for (String key : props.keySet()){
