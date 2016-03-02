@@ -10,8 +10,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.jlgranda.fede.model.management.BalancedScoreCard;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.management.Organization;
+import org.jlgranda.fede.model.management.Organization_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -34,6 +37,7 @@ public class OrganizationService extends BussinesEntityHome<Organization>{
 
     @PostConstruct
     private void init(){
+        setEntityClass(Organization.class);
         setEntityManager(em);
     }
     
@@ -57,5 +61,15 @@ public class OrganizationService extends BussinesEntityHome<Organization>{
     
     public long count() {
         return super.count(Organization.class); 
+    }
+    
+    public List<Organization> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Organization> query = builder.createQuery(Organization.class);
+
+        Root<Organization> from = query.from(Organization.class);
+        query.select(from).orderBy(builder.desc(from.get(Organization_.name)));
+        return getResultList(query, maxresults, firstresult);
     }
 }
