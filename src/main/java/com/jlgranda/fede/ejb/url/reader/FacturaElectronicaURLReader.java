@@ -17,7 +17,6 @@
  */
 package com.jlgranda.fede.ejb.url.reader;
 
-import com.jlgranda.fede.ejb.SettingService;
 import com.jlgranda.fede.ejb.mail.reader.FacturaReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,11 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.ejb.EJB;
-import javax.mail.MessagingException;
 import org.apache.commons.io.IOUtils;
 import org.jlgranda.fede.util.FacturaUtil;
-import org.jpapi.model.profile.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

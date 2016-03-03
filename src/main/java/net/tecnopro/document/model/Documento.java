@@ -29,7 +29,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jpapi.model.BussinesEntity;
@@ -66,12 +65,9 @@ public class Documento extends BussinesEntity {
     @ManyToOne(optional = false)
     private Tarea tarea;
     @Transient
-    private byte[] contents;
-    
+    private byte[] contents;  
     @Column
     private String fileName;
-    @Transient
-    private Boolean esActivo;
 
     public Documento() {
     }
@@ -130,5 +126,6 @@ public class Documento extends BussinesEntity {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
 
 }
