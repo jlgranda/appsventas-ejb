@@ -22,14 +22,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.jpapi.model.BussinesEntity;
 
 /*
@@ -53,7 +51,7 @@ public class Period extends BussinesEntity implements Serializable{
     @Column(name = "periodTo", nullable = false)
     private Date periodTo;
     
-    @NotEmpty
+    //@NotEmpty
     @Column(nullable = false)
     private String duration;
     
