@@ -102,7 +102,8 @@
             <property name="eclipselink.logging.level" value="FINE" />
             -->
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true"/>
-            <property name="hibernate.transaction.flush_before_completion" value="true"/>
+            <property name="hibernate.archive.scanner" value="true"/>
+<!--            <property name="hibernate.transaction.flush_before_completion" value="true"/>-->
             <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
             <!--http://stackoverflow.com/questions/26591521/java-lang-illegalstateexception-multiple-representations-of-the-same-entity-wit-->
             <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
