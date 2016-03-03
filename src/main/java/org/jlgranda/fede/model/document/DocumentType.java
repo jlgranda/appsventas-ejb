@@ -32,8 +32,10 @@ public enum DocumentType {
     DEBIT_NOTE,
     REMISSION_GUIDE,
     RETENTION_SUPPORTING,
-    OFICIO,
     FAX,
     CATALOGO,
-    REVISTA
+    REVISTA,
+    OFICIO,
+    SOLICITUD,
+    DIGITALIZADO
 }

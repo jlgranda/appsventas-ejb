@@ -55,20 +55,21 @@ public class Documento extends BussinesEntity {
 
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 250)
     private String numeroRegistro;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private DocumentType documentType;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 500)
     private String ruta;
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tarea tarea;
     @Transient
     private byte[] contents;
+    
+    @Column
+    private String fileName;
     @Transient
     private Boolean esActivo;
 
@@ -122,12 +123,12 @@ public class Documento extends BussinesEntity {
         this.contents = contents;
     }
 
-    public Boolean isEsActivo() {
-        return esActivo;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setEsActivo(Boolean esActivo) {
-        this.esActivo = esActivo;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
 }
