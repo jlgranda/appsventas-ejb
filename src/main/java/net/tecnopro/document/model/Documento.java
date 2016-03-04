@@ -29,7 +29,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jpapi.model.BussinesEntity;
 
