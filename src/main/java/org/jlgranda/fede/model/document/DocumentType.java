@@ -26,6 +26,7 @@ public enum DocumentType {
     /**
      * Factura
      */
+    UNDEFINED,
     PRE_INVOICE,
     INVOICE,
     CREDIT_NOTE,

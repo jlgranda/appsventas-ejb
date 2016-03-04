@@ -66,6 +66,9 @@ public class Documento extends BussinesEntity {
     private byte[] contents;  
     @Column
     private String fileName;
+    
+    @Column
+    private String mimeType;
 
     public Documento() {
     }
@@ -128,5 +131,13 @@ public class Documento extends BussinesEntity {
     @Transient
     public boolean isMimeType(String mimeType){
         return getFileName() == null ? false : getFileName().endsWith(mimeType);//TODO analisar una mejor forma, talvez se requiera guardar el mimeType al adjuntar
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 }
