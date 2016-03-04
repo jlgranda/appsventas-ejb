@@ -49,7 +49,6 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "Documento.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "Documento.countBussinesEntityByOwner", query = "select count(t) FROM Documento t WHERE t.owner = ?1")})
 
-@XmlRootElement
 public class Documento extends BussinesEntity {
 
     @Basic(optional = false)
@@ -127,5 +126,8 @@ public class Documento extends BussinesEntity {
         this.fileName = fileName;
     }
 
-
+    @Transient
+    public boolean isMimeType(String mimeType){
+        return getFileName() == null ? false : getFileName().endsWith(mimeType);//TODO analisar una mejor forma, talvez se requiera guardar el mimeType al adjuntar
+    }
 }
