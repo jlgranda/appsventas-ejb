@@ -46,5 +46,8 @@ public class SettingNames {
     public static String POPUP_HEIGHT = "fede.popup.height";
     public static String POPUP_SMALL_WIDTH = "fede.popup.small.width";
     public static String POPUP_SMALL_HEIGHT = "fede.popup.small.height";
+    //MYMETYPE
+    public static String MYMETYPE_PDF = "application/pdf";
+    public static String MYMETYPE_ZIP = "application/octet-stream";
 
 }
