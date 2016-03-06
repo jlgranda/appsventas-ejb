@@ -61,18 +61,23 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         boolean existeFiltro = false;
         sql.append("SELECT s FROM Subject s  WHERE 1=1 ");
         if (subjectLogin.getUsername() != null) {
-            sql.append(" and LOWER(s.username) like concat('%',LOWER(:username),'%')");
+            sql.append(" and (LOWER(s.username) like concat('%',LOWER(:username),'%')");
             parametros.put("username", subjectLogin.getUsername());
             existeFiltro = true;
         }
         if (subjectLogin.getFirstname() != null) {
-            sql.append(" and LOWER(s.firstname) like concat('%',LOWER(:firstname),'%')");
+            sql.append(" or LOWER(s.firstname) like concat('%',LOWER(:firstname),'%')");
             parametros.put("firstname", subjectLogin.getFirstname());
             existeFiltro = true;
         }
         if (subjectLogin.getSurname() != null) {
-            sql.append(" and LOWER(s.surname) like concat('%',LOWER(:surname),'%')");
+            sql.append(" or LOWER(s.surname) like concat('%',LOWER(:surname),'%') )");
             parametros.put("surname", subjectLogin.getSurname());
+            existeFiltro = true;
+        }
+        if (subjectLogin.getId() != null) {
+            sql.append(" and id != :subjectId");
+            parametros.put("subjectId", subjectLogin.getId());
             existeFiltro = true;
         }
         if (!existeFiltro) {
