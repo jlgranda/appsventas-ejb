@@ -52,11 +52,12 @@ import org.slf4j.LoggerFactory;
 @DiscriminatorValue(value = "INV")
 @PrimaryKeyJoinColumn(name = "invoiceId")
 @NamedQueries({
-    @NamedQuery(name = "Invoice.findLast", query = "select i FROM Invoice i ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.findLasts", query = "select i FROM Invoice i ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.findLastsByAuthor", query = "select i FROM Invoice i WHERE i.author = ?1 ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.countByOwner", query = "select count(i) FROM Invoice i WHERE i.owner = ?1"),
-    @NamedQuery(name = "Invoice.countByAuthor", query = "select count(i) FROM Invoice i WHERE i.author = ?1"),
+    @NamedQuery(name = "Invoice.findAll", query = "select i FROM Invoice i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentType", query = "select i FROM Invoice i WHERE i.documentType = ?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthor", query = "select i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentTypeAndOwner", query = "select i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "select count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2"),
+    @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "select count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2"),
 })
 public class Invoice extends BussinesEntity {
     
