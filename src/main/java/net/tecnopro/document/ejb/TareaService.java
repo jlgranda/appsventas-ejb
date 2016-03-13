@@ -66,7 +66,7 @@ public class TareaService extends BussinesEntityHome<Tarea> {
     }
 
     public List<Tarea> findAllByOwner(Subject owner) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("owner", owner);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
