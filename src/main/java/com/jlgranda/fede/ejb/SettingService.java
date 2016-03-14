@@ -32,6 +32,7 @@ public class SettingService extends BussinesEntityHome<Setting> {
 
     @PostConstruct
     private void init() {
+        setEntityClass(Setting.class);
         setEntityManager(em);
     }
 
