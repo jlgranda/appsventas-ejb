@@ -73,201 +73,6 @@ public class FacturaElectronicaMailReader {
     SettingService settingService;
 
     /**
-     * Obtiene la lista de objetos factura para el sujeto en fede
-     *
-     * @param _subject la instancia <tt>Subject</tt> para la cual ingresar al
-     * inbox y cargar las facturas
-     * @return
-     */
-    @Deprecated
-    public List<FacturaReader> getFacturasElectronicas(Subject _subject) throws MessagingException, IOException {
-
-        List<FacturaReader> result = new ArrayList<>();
-        String server = settingService.findByName("mail.imap.host").getValue();
-        //Todo definir una mejor forma de manejar la cuenta de correo
-        String username = _subject.getFedeEmail();
-        String password = _subject.getFedeEmailPassword();
-        String port = settingService.findByName("mail.imap.port").getValue();
-
-        String proto = "true".equalsIgnoreCase(settingService.findByName("mail.smtp.starttls.enable").getValue()) ? "TLS" : null;
-
-        ///logger.info("Conectanto a servidor de correo # {}:\n\t Username: {}\n\t Password: {}\n\t ", server, username, password);
-        IMAPClient client = new IMAPClient(server, username, password);
-
-        String contentType = null;
-        StringReader reader = null;
-        Address[] fromAddress = null;
-        String messageContent = "";
-        Multipart multiPart = null;
-        MimeBodyPart part = null;
-        String partContentType = null;
-        String partName = null;
-        String from = "";
-        String subject = "";
-        String sentDate = "";
-        FacturaReader facturaReader = null;
-        String[] token = null;
-
-        List<String> urls = new ArrayList<>(); //Guardar enlaces a factura si es el caso
-
-        boolean facturaEncontrada = false;
-        int numberOfParts = 0;
-        Factura factura = null;
-
-        for (Message message : client.getMessages("inbox", false)) {
-            //attachFiles = "";
-            fromAddress = message.getFrom();
-            from = fromAddress[0].toString();
-            subject = message.getSubject();
-            sentDate = message.getSentDate() != null ? message.getSentDate().toString() : "";
-
-            contentType = message.getContentType();
-            facturaEncontrada = false;
-
-            if (contentType.contains("multipart")) {
-                // content may contain attachments
-                multiPart = (Multipart) message.getContent();
-                numberOfParts = multiPart.getCount();
-                for (int partCount = 0; partCount < numberOfParts; partCount++) {
-
-                    part = (MimeBodyPart) multiPart.getBodyPart(partCount);
-
-                    token = part.getContentType().split(";");
-
-                    partContentType = token[0];
-
-                    if (token.length == 3) {
-                        partName = token[2];
-                    } else {
-                        partName = token[1];
-                    }
-
-                    if (facturaEncontrada) {
-                        break; //No buscar en otras partes del mensaje
-                    }
-
-                    token = part.getContentType().split(";");
-
-                    partContentType = token[0];
-
-                    if (token.length == 3) {
-                        partName = token[2];
-                    } else {
-                        partName = token[1];
-                    }
-
-                    if (facturaEncontrada) {
-                        break; //No buscar en otras partes del mensaje
-                    }
-                    System.out.println("---------------------------------------------------");
-                    System.out.println(">>>> subject: " + subject);
-                    System.out.println(">>>> partContentType: " + partContentType);
-                    System.out.println(">>>> partName: " + partName);
-                    System.out.println("---------------------------------------------------");
-
-                    if (MimeBodyPart.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
-
-                        if (("application/octet-stream".equalsIgnoreCase(partContentType)
-                                || "aplication/xml".equalsIgnoreCase(partContentType)
-                                || "text/xml".equalsIgnoreCase(partContentType))
-                                && partName.endsWith(".xml")) {
-                            //attachFiles += part.getFileName() + ", ";
-                            StringWriter writer = new StringWriter();
-                            IOUtils.copy(part.getInputStream(), writer, "UTF-8");
-                            factura = FacturaUtil.read(writer.toString());
-                            if (factura != null) {
-                                facturaReader = new FacturaReader(factura, writer.toString(), part.getFileName());
-                                result.add(facturaReader);
-
-                                facturaEncontrada = true;
-                            }
-                            IOUtils.closeQuietly(part.getInputStream());
-
-                        } else if (("application/octet-stream".equalsIgnoreCase(partContentType)
-                                || "aplication/xml".equalsIgnoreCase(partContentType)
-                                || "text/xml".equalsIgnoreCase(partContentType))
-                                && partName.endsWith(".zip")) {
-                            //http://www.java2s.com/Tutorial/Java/0180__File/UnzipusingtheZipInputStream.htm    
-                            ZipInputStream zis = new ZipInputStream(part.getInputStream());
-                            try {
-                                ZipEntry entry = null;
-                                String tmp = null;
-                                ByteArrayOutputStream fout = null;
-                                while ((entry = zis.getNextEntry()) != null) {
-                                    if (entry.getName().endsWith(".xml")) {
-                                        logger.debug("Unzipping {}", entry.getName());
-                                        fout = new ByteArrayOutputStream();
-                                        for (int c = zis.read(); c != -1; c = zis.read()) {
-                                            fout.write(c);
-                                        }
-
-                                        tmp = new String(fout.toByteArray(), Charset.defaultCharset());
-
-                                        factura = FacturaUtil.read(tmp);
-                                        if (factura != null) {
-                                            facturaReader = new FacturaReader(factura, tmp, part.getFileName());
-                                            result.add(facturaReader);
-
-                                            facturaEncontrada = true;
-                                        }
-                                        fout.close();
-                                    }
-                                    zis.closeEntry();
-                                }
-                                zis.close();
-
-                                facturaEncontrada = true;
-
-                            } finally {
-                                IOUtils.closeQuietly(part.getInputStream());
-                                IOUtils.closeQuietly(zis);
-                            }
-                        } else {
-                            //TODO procesar otros tipos de archivos
-                        }
-
-                    } else//Contenido HTML/TXT, sin adjuntos
-                     if (("text/plain".equalsIgnoreCase(partContentType)
-                                || "text/html".equalsIgnoreCase(partContentType)
-                                || "text/xml".equalsIgnoreCase(partContentType))) {
-                            //Procesar Ghost
-                            messageContent = part.getContent().toString();
-                            if (subject.contains("Ghost")) {
-
-                                String url = FacturaUtil.extraerURL(messageContent, "<a href=\"", "\" target=\"_blank\">Descarga formato XML</a>");
-                                if (url != null) {
-                                    urls.add(url);
-                                    facturaEncontrada = true;
-                                }
-                            }
-
-                        }
-                }
-            } else if (contentType.contains("text/plain")
-                    || contentType.contains("text/html")) {
-                Object content = message.getContent();
-                if (content != null) {
-                    messageContent = content.toString();
-                }
-            }
-        }
-
-        client.close();
-
-        if (!urls.isEmpty()) {
-            try {
-                result.addAll(FacturaElectronicaURLReader.getFacturasElectronicas(urls));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        logger.info("Read {} email messages!", result.size());
-
-        return result;
-    }
-
-    /**
      * Leer el inbox de <tt>Subject</tt>
      *
      * @param _subject la instancia <tt>Subject</tt> para la cual ingresar al
@@ -345,8 +150,6 @@ public class FacturaElectronicaMailReader {
         if (mime4jMessage.isMultipart()) {
             org.apache.james.mime4j.dom.Multipart mime4jMultipart = (org.apache.james.mime4j.dom.Multipart) mime4jMessage.getBody();
             emailHelper.parseBodyParts(mime4jMultipart);
-            //System.err.println("---------> " + emailHelper.getHtmlBody());
-            //System.err.println("---------> " + emailHelper.getAttachments());
             //Obtener la factura en los adjuntos
             if (emailHelper.getAttachments().isEmpty()) {
                 //If it's single part message, just get text body  
@@ -374,7 +177,6 @@ public class FacturaElectronicaMailReader {
                         factura = FacturaUtil.read(os.toString());
                         if (factura != null) {
                             result.add(new FacturaReader(factura, os.toString(), entity.getFilename(), mime4jMessage.getFrom().get(0).getAddress()));
-                            //System.err.println("---------> " + factura.getInfoTributaria().getSecuencial());
                         }
                     } else if (("application/octet-stream".equalsIgnoreCase(entity.getMimeType())
                             || "aplication/xml".equalsIgnoreCase(entity.getMimeType())
@@ -429,9 +231,6 @@ public class FacturaElectronicaMailReader {
                     result.add(FacturaElectronicaURLReader.getFacturaElectronica(url));
                 }
             }
-//            System.err.println("---------> " + emailHelper.getHtmlBody());
-//            System.err.println("---------> " + emailHelper.getTxtBody());
-//            System.err.println("---------> " + emailHelper.getAttachments());
         }
         return result;
     }

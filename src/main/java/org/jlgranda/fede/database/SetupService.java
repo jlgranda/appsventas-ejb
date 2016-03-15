@@ -158,71 +158,69 @@ public class SetupService implements Serializable {
         Map<String, String> props = new HashMap<String, String>();
         
         //email settings
-        props.put("mail.from", "fede@jlgranda.com");
-        props.put("mail.host", "jlgranda.com");
-        props.put("mail.user", "fede");
-        props.put("mail.password", "LieferQuireMidstUpends95");
-        props.put("mail.inbox", "INBOX");
-        props.put("mail.port", "25");
-        props.put("mail.verbose", "true");
-        props.put("mail.debug", "true");
+//        props.put("mail.from", "fede@jlgranda.com:Remitente de correo electrónico");
+//        props.put("mail.host", "jlgranda.com:Servidor de correo electrónico");
+//        props.put("mail.user", "fede:Usuario de correo electrónico");
+//        props.put("mail.password", "LieferQuireMidstUpends95: Contraseña de correo electrónico");
+//        props.put("mail.inbox", "INBOX:Carpeta de correo electrónico");
+//        props.put("mail.port", "25:Puerto de correo");
+//        props.put("mail.verbose", "false:Mostrar detalles de conversación de sessión de correo");
+//        props.put("mail.debug", "false:Mostrar información de depuración de sessión de correo");
+//        
+//        props.put("mail.store.protocol", "imap:Protocolo de sessión de correo");
+//        props.put("mail.transport.protocol", "smtps:Protocolo seguro de sessión de correo");
         
-        props.put("mail.store.protocol", "imap");
-        props.put("mail.transport.protocol", "smtps");
+        props.put("mail.imap.host", "jlgranda.com:Servidor IMAP:IMAP");
+        props.put("mail.imap.port", "25:Puerto IMAP:IMAP");
         
-        props.put("mail.imap.host", "jlgranda.com");
-        props.put("mail.imap.port", "25");
+//        props.put("mail.smtp.host", "jlgranda.com:Servidor SMTP");
+//        props.put("mail.smtp.user", "fede:Usuario correo electrónico");
+//        props.put("mail.smtp.password", "LieferQuireMidstUpends95:Contraseña de correo electrónico");
+//        props.put("mail.smtp.starttls.enable", "true:Usar TTLS");
         
-        props.put("mail.smtp.host", "jlgranda.com");
-        props.put("mail.smtp.user", "fede");
-        props.put("mail.smtp.password", "LieferQuireMidstUpends95");
-        
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtps.port", "465");
-        props.put("mail.smtps.host", "smtp.gmail.com");
-        props.put("mail.smtps.auth", "true");
-        props.put("mail.imaps.ssl.trust", "*");
-        
-        //dashboard settings
-        props.put("fede.dashboard.timeline.length", "10");
+        props.put("mail.smtps.port", "465:Puesto SMTP:SMTPS");
+        props.put("mail.smtps.host", "smtp.gmail.com:Servidor de envios SMTPS:SMTPS");
+        props.put("mail.smtps.auth", "true:Usar autenticación:SMTPS");
+        props.put("mail.imaps.ssl.trust", "*:SSL TRUST:SMTPS");
         
         //XML utils settings
-        props.put("fede.xml.tag.numeroAutorizacion", "<numeroAutorizacion></numeroAutorizacion>");
-        props.put("fede.xml.tag.fechaAutorizacion", "<fechaAutorizacion></fechaAutorizacion>");
-        
-        //Groups
-        props.put("fede.group.default", "fede");
+        props.put("fede.xml.tag.numeroAutorizacion", "<numeroAutorizacion></numeroAutorizacion>:Etiqueta de número de autorización en XML:XML");
+        props.put("fede.xml.tag.fechaAutorizacion", "<fechaAutorizacion></fechaAutorizacion>:Etiqueta de fecha de autorización en XML:XML");
         
         //dates patterns
-        props.put("fede.date.pattern", "dd/MM/yyyy");
-        
-        props.put("fede.dashboard.range", "364"); //364 días
+        props.put("fede.date.pattern", "dd/MM/yyyy:Formato de fecha:SYSTEM");
         
         
-        props.put("fede.inbox.list.length", "50"); //364 días
-        
-        props.put("app.fede.sales.dashboard.refreshtime", "20"); //20 segundos
-        props.put("app.fede.sales.dashboard.lasts.list.length", "10"); //10 segundos
-        
-        props.put("app.fede.sizeLimit", "1048576"); //maximo tamaño de archivo a subir
-        props.put("app.fede.fileLimit", "34"); //Maximo de archivos a subir
-        props.put("app.fede.allowTypes", "/(\\.|\\/)(xml|zip)$/"); //Tipo de archivo permitidos
-        
-        props.put("app.management.tarea.documentos.sizeLimit", "1048576"); //maximo tamaño de archivo a subir
-        props.put("app.management.tarea.documentos.fileLimit", "34"); //Maximo de archivos a subir
-        props.put("app.management.tarea.documentos.allowTypes", "/(\\.|\\/)(xml|zip|pdf)$/"); //Tipo de archivo permitidos
+        //UI settings
+        props.put("fede.group.default", "fede:Grupo por defecto:UI");
+        props.put("fede.dashboard.timeline.length", "10:Longitud de lista en dashboard::UI");
+        props.put("fede.dashboard.range", "364:Rango de tiempo para mostrar tablas:UI"); //364 días
+        props.put("fede.inbox.list.length", "50:Número de filas en detalles tipo tabla:UI"); //50 días
+        props.put("app.fede.sales.dashboard.refreshtime", "20:Tiempo de refresco en pantallas de monitoreo:UI"); //20 segundos
+        props.put("app.fede.sales.dashboard.lasts.list.length", "10:Longitud de listas rápidas:UI"); //10 segundos
+        props.put("app.fede.sizeLimit", "1048576:Tamaño máximo de carga de archivo:UI"); //maximo tamaño de archivo a subir
+        props.put("app.fede.fileLimit", "34:Número máximo de archivos a cargar:UI"); //Maximo de archivos a subir
+        props.put("app.fede.allowTypes", "/(\\.|\\/)(xml|zip|pdf|txt)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
+        props.put("app.management.tarea.documentos.sizeLimit", "1048576:Tamaño máximo de carga de archivo:UI"); //maximo tamaño de archivo a subir
+        props.put("app.management.tarea.documentos.fileLimit", "34:Número máximo de archivos a cargar:UI"); //Maximo de archivos a subir
+        props.put("app.management.tarea.documentos.allowTypes", "/(\\.|\\/)(xml|zip|pdf|txt)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
       
         
+        String label = null;
         String value = null;
+        String category = null;
         for (String key : props.keySet()){
-            value = props.get(key);
+            value = props.get(key).split(":")[0];
+            label = props.get(key).split(":")[1];
+            category = props.get(key).split(":")[2];
             try {
                 TypedQuery<Setting> query = getEntityManager().createQuery("from Setting s where s.name='" + key + "'",
                         Setting.class);
                 singleResult = query.getSingleResult();
             } catch (NoResultException e) {
                 java.util.Date now = Dates.now();
-                singleResult = new Setting(key, value);
+                singleResult = new Setting(label, key, value);
+                singleResult.setCategory(category);
                 singleResult.setCreatedOn(now);
                 singleResult.setLastUpdate(now);
                 singleResult.setCodeType(CodeType.SYSTEM);
