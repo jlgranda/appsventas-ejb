@@ -34,6 +34,8 @@ import org.jpapi.model.BussinesEntity;
 @NamedQueries({
     @NamedQuery(name = "Tarea.findLast", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.findLasts", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Tarea.findLastByInstanciaProceso", query = "select i FROM Tarea i where i.instanciaProceso=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Tarea.findLastsByInstanciaProceso", query = "select i FROM Tarea i where i.instanciaProceso=?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.findLastsByAuthor", query = "select i FROM Tarea i where i.author=?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.findLastsByOwner", query = "select i FROM Tarea i where i.owner=?1 and i.estadoTipo=?2 ORDER BY i.id DESC "),
     @NamedQuery(name = "Tarea.countByOwner", query = "select count(i) FROM Tarea i WHERE i.owner = ?1"),
@@ -54,10 +56,10 @@ public class Tarea extends BussinesEntity implements Serializable {
     private EstadoTipo estadoTipo;
     @OneToMany(mappedBy = "tarea")
     private List<Documento> documentos;
-    
+
     @JoinColumn(name = "proceso_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Proceso proceso;
+    private InstanciaProceso instanciaProceso;
 
     public Tarea() {
         this.documentos = new ArrayList<>();
@@ -112,12 +114,12 @@ public class Tarea extends BussinesEntity implements Serializable {
         this.documentos = documentos;
     }
 
-    public Proceso getProceso() {
-        return proceso;
+    public InstanciaProceso getInstanciaProceso() {
+        return instanciaProceso;
     }
 
-    public void setProceso(Proceso proceso) {
-        this.proceso = proceso;
+    public void setInstanciaProceso(InstanciaProceso instanciaProceso) {
+        this.instanciaProceso = instanciaProceso;
     }
 
 }

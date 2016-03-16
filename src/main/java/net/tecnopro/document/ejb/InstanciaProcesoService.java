@@ -27,8 +27,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import net.tecnopro.document.model.Proceso;
-import net.tecnopro.document.model.Proceso_;
+import net.tecnopro.document.model.InstanciaProceso;
+import net.tecnopro.document.model.InstanciaProceso_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Group;
 import org.jpapi.model.StatusType;
@@ -43,16 +43,16 @@ import org.slf4j.LoggerFactory;
  * @author jlgranda
  */
 @Stateless
-public class ProcesoService extends BussinesEntityHome<Proceso> {
+public class InstanciaProcesoService extends BussinesEntityHome<InstanciaProceso> {
     
-    Logger logger = LoggerFactory.getLogger(ProcesoService.class);
+    Logger logger = LoggerFactory.getLogger(InstanciaProcesoService.class);
 
     @PersistenceContext
     EntityManager em;
 
     @PostConstruct
     private void init() {
-        setEntityClass(Proceso.class);
+        setEntityClass(InstanciaProceso.class);
         setEntityManager(em);
     }
 
@@ -61,20 +61,20 @@ public class ProcesoService extends BussinesEntityHome<Proceso> {
         return groups.isEmpty() ? new Group(code, code) : groups.get(0);
     }
 
-    public List<Proceso> findAll() {
+    public List<InstanciaProceso> findAll() {
         return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
     }
 
-    public List<Proceso> findAllByOwner(Subject owner) {
+    public List<InstanciaProceso> findAllByOwner(Subject owner) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("owner", owner);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
 
     @Override
-    public Proceso createInstance() {
+    public InstanciaProceso createInstance() {
 
-        Proceso _instance = new Proceso();
+        InstanciaProceso _instance = new InstanciaProceso();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
@@ -85,15 +85,15 @@ public class ProcesoService extends BussinesEntityHome<Proceso> {
     }
 
     public long count() {
-        return super.count(Proceso.class);
+        return super.count(InstanciaProceso.class);
     }
-     public List<Proceso> find(int maxresults, int firstresult) {
+     public List<InstanciaProceso> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<Proceso> query = builder.createQuery(Proceso.class);
+        CriteriaQuery<InstanciaProceso> query = builder.createQuery(InstanciaProceso.class);
 
-        Root<Proceso> from = query.from(Proceso.class);
-        query.select(from).orderBy(builder.desc(from.get(Proceso_.name)));
+        Root<InstanciaProceso> from = query.from(InstanciaProceso.class);
+        query.select(from).orderBy(builder.desc(from.get(InstanciaProceso_.name)));
         return getResultList(query, maxresults, firstresult);
     }
 }

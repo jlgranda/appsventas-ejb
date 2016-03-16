@@ -85,7 +85,7 @@
     <class>org.jlgranda.fede.model.sales.EmissionPoint</class>
     <class>net.tecnopro.document.model.Documento</class>
     <class>net.tecnopro.document.model.Tarea</class>
-    <class>net.tecnopro.document.model.Proceso</class>
+    <class>net.tecnopro.document.model.InstanciaProceso</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

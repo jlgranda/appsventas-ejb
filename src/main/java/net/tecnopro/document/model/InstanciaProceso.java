@@ -31,15 +31,14 @@ import org.jpapi.model.BussinesEntity;
  * @author jlgranda
  */
 @Entity
-@Table(name = "proceso")
+@Table(name = "instancia_proceso")
 @NamedQueries({
-    @NamedQuery(name = "Proceso.findLast", query = "select p FROM Proceso p where p.owner=?1 ORDER BY p.id DESC"),
-    })
-public class Proceso extends BussinesEntity implements Serializable {
-    
-    @OneToMany(mappedBy = "proceso")
+    @NamedQuery(name = "instanciaProceso.findLast", query = "select p FROM InstanciaProceso p where p.owner=?1 ORDER BY p.id DESC"),})
+public class InstanciaProceso extends BussinesEntity implements Serializable {
+
+    @OneToMany(mappedBy = "instanciaProceso")
     private List<Tarea> tareas;
-    
+
     private ProcesoTipo procesoTipo;
 
     public ProcesoTipo getProcesoTipo() {
