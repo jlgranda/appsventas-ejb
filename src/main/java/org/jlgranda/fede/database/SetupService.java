@@ -214,7 +214,7 @@ public class SetupService implements Serializable {
             label = props.get(key).split(":")[1];
             category = props.get(key).split(":")[2];
             try {
-                TypedQuery<Setting> query = getEntityManager().createQuery("from Setting s where s.name='" + key + "'",
+                TypedQuery<Setting> query = getEntityManager().createQuery("from Setting s where s.name='" + key + "' and owner is null",
                         Setting.class);
                 singleResult = query.getSingleResult();
             } catch (NoResultException e) {
