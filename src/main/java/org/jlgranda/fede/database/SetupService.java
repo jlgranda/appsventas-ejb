@@ -25,7 +25,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.jpapi.model.Setting;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.CodeType;
