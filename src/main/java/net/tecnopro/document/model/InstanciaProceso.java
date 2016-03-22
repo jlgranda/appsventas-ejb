@@ -19,10 +19,13 @@ package net.tecnopro.document.model;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.jpapi.model.BussinesEntity;
 
@@ -36,7 +39,8 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "instanciaProceso.findLast", query = "select p FROM InstanciaProceso p where p.owner=?1 ORDER BY p.id DESC"),})
 public class InstanciaProceso extends BussinesEntity implements Serializable {
 
-    @OneToMany(mappedBy = "instanciaProceso")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "instanciaProceso", fetch = FetchType.LAZY)
+    @OrderBy("id ASC")
     private List<Tarea> tareas;
 
     private ProcesoTipo procesoTipo;
@@ -55,5 +59,10 @@ public class InstanciaProceso extends BussinesEntity implements Serializable {
 
     public void setTareas(List<Tarea> tareas) {
         this.tareas = tareas;
+    }
+    
+    public void addTarea(Tarea t){
+        t.setInstanciaProceso(this);
+        this.tareas.add(t);
     }
 }
