@@ -54,7 +54,7 @@ public class Tarea extends BussinesEntity implements Serializable {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private EstadoTipo estadoTipo;
-    @OneToMany(mappedBy = "tarea")
+    @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Documento> documentos;
 
     @JoinColumn(name = "proceso_id", referencedColumnName = "id")
