@@ -87,9 +87,9 @@ public class FacturaElectronicaMailReader {
         //Todo definir una mejor forma de manejar la cuenta de correo
         String username = _subject.getFedeEmail();
         String password = _subject.getFedeEmailPassword();
-        String port = settingService.findByName("mail.imap.port").getValue();
+        //String port = settingService.findByName("mail.imap.port").getValue();
 
-        String proto = "true".equalsIgnoreCase(settingService.findByName("mail.smtp.starttls.enable").getValue()) ? "TLS" : null;
+        //String proto = "true".equalsIgnoreCase(settingService.findByName("mail.smtp.starttls.enable").getValue()) ? "TLS" : null;
 
         ///logger.info("Conectanto a servidor de correo # {}:\n\t Username: {}\n\t Password: {}\n\t ", server, username, password);
         IMAPClient client = new IMAPClient(server, username, password);
