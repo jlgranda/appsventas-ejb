@@ -45,6 +45,7 @@ public class SettingService extends BussinesEntityHome<Setting> {
         return settings.isEmpty() ? null : settings.get(0);
     }
 
+    @Deprecated
     public List<Setting> findByCriteria(Setting setting) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
@@ -65,6 +66,7 @@ public class SettingService extends BussinesEntityHome<Setting> {
         return q.getResultList();
     }
 
+    @Deprecated
     public List<Setting> findByCriteriaOwnerNone(Setting setting) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();

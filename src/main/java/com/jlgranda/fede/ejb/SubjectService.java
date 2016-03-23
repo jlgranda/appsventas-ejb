@@ -55,6 +55,7 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         return !q.getResultList().isEmpty();
     }
 
+    @Deprecated
     public List<Subject> buscarPorCriterio(Subject subjectLogin) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
