@@ -67,7 +67,7 @@ public class GroupService extends BussinesEntityHome<Group>{
     public List<Group> findAllByOwner(Subject owner){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("owner", owner);
-        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+        return this.find(-1, -1, "orden, name", QuerySortOrder.ASC, params).getResult();
     }
     
     @Override

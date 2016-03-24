@@ -67,7 +67,6 @@ public class SetupService implements Serializable {
     public void validate() {
         //bussinesEntityHome.setEntityManager(bussinesEntityRepository);
         validateDB();
-        //validateGroups(); Los grupos se crean por Subject
         //validateIdentityObjectTypes();
         validateSecurity();
         validateSetting();
@@ -117,19 +116,22 @@ public class SetupService implements Serializable {
     private void validateGroups() {
         
         Group singleResult = null;
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         
-        //email settings
-        props.put("fede", "fede");
-        props.put("salud", "Salud");
-        props.put("alimentos", "Alimentos");
-        props.put("ropa", "Ropa");
-        props.put("educacion", "Educación");
-        props.put("vivienda", "Vivienda");
+        //Grupos de arranque del sistema
         
+        props.put("fede", "fede:1");
+        props.put("salud", "Salud:2");
+        props.put("alimentos", "Alimentos:3");
+        props.put("ropa", "Ropa:4");
+        props.put("educacion", "Educación:5");
+        props.put("vivienda", "Vivienda:6");
         
-        
+        props.put("favorito", "Favoritos:7");
+
         String value = null;
+        String name = null;
+        Short orden = null;
         for (String key : props.keySet()){
             value = props.get(key);
             try {
@@ -137,8 +139,12 @@ public class SetupService implements Serializable {
                         Group.class);
                 singleResult = query.getSingleResult();
             } catch (NoResultException e) {
+                
                 java.util.Date now = Dates.now();
-                singleResult = new Group(key, value);
+                name = value.split(":")[0];
+                orden = Short.valueOf(value.split(":")[1]);
+                singleResult = new Group(key, name);
+                singleResult.setOrden(orden);
                 singleResult.setCreatedOn(now);
                 singleResult.setLastUpdate(now);
                 singleResult.setCodeType(CodeType.TAG);
