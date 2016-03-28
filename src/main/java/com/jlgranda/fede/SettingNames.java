@@ -23,6 +23,7 @@ package com.jlgranda.fede;
  */
 public class SettingNames {
 
+    public static String GENERAL_MODULE = "aaa-general"; //asegura siempre estar en el top de la lista
     public static String DEFAULT_INVOICES_GROUP_NAME = "fede.group.default";
 
     //Popups

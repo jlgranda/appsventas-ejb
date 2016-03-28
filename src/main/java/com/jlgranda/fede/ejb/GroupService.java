@@ -17,6 +17,8 @@
  */
 package com.jlgranda.fede.ejb;
 
+import com.jlgranda.fede.SettingNames;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +66,15 @@ public class GroupService extends BussinesEntityHome<Group>{
         return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
     }
     
-    public List<Group> findAllByOwner(Subject owner){
-        Map<String, Object> params = new HashMap<String, Object>();
+    public List<Group> findByOwnerAndModuleAndType(Subject owner, String module, Group.Type groupType){
+        List<String> modules = new ArrayList<>();
+        modules.add(SettingNames.GENERAL_MODULE);
+        modules.add(module);
+        Map<String, Object> params = new HashMap<>();
         params.put("owner", owner);
-        return this.find(-1, -1, "orden, name", QuerySortOrder.ASC, params).getResult();
+        params.put("module", modules);
+        params.put("groupType", groupType);
+        return this.find(-1, -1, "module, orden, name", QuerySortOrder.ASC, params).getResult();
     }
     
     @Override
