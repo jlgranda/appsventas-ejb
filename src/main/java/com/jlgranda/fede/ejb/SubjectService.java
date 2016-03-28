@@ -26,9 +26,14 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import net.tecnopro.document.model.Tarea;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
+import org.jpapi.model.profile.Subject_;
 import org.jpapi.util.Dates;
 
 /**
@@ -89,6 +94,20 @@ public class SubjectService extends BussinesEntityHome<Subject> {
             q.setParameter(key, parametros.get(key));
         }
         return q.getResultList();
+    }
+
+    public long count() {
+        return super.count(Subject.class);
+    }
+
+    public List<Subject> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Subject> query = builder.createQuery(Subject.class);
+
+        Root<Subject> from = query.from(Subject.class);
+        query.select(from).orderBy(builder.desc(from.get(Subject_.name)));
+        return getResultList(query, maxresults, firstresult);
     }
 
     @Override
