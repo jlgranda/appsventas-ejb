@@ -22,13 +22,17 @@ import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.jlgranda.fede.model.management.Organization;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
+import org.jpapi.model.profile.Subject_;
 import org.jpapi.util.Dates;
 
 /**
@@ -55,42 +59,6 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         return !q.getResultList().isEmpty();
     }
 
-    @Deprecated
-    public List<Subject> buscarPorCriterio(Subject subjectLogin) {
-        StringBuilder sql = new StringBuilder();
-        HashMap<String, Object> parametros = new HashMap<>();
-        boolean existeFiltro = false;
-        sql.append("SELECT s FROM Subject s  WHERE 1=1 ");
-        if (subjectLogin.getUsername() != null) {
-            sql.append(" and (LOWER(s.username) like concat('%',LOWER(:username),'%')");
-            parametros.put("username", subjectLogin.getUsername());
-            existeFiltro = true;
-        }
-        if (subjectLogin.getFirstname() != null) {
-            sql.append(" or LOWER(s.firstname) like concat('%',LOWER(:firstname),'%')");
-            parametros.put("firstname", subjectLogin.getFirstname());
-            existeFiltro = true;
-        }
-        if (subjectLogin.getSurname() != null) {
-            sql.append(" or LOWER(s.surname) like concat('%',LOWER(:surname),'%') )");
-            parametros.put("surname", subjectLogin.getSurname());
-            existeFiltro = true;
-        }
-        if (subjectLogin.getId() != null) {
-            sql.append(" and id != :subjectId");
-            parametros.put("subjectId", subjectLogin.getId());
-            existeFiltro = true;
-        }
-        if (!existeFiltro) {
-            return new ArrayList<>();
-        }
-        final Query q = em.createQuery(sql.toString());
-        for (String key : parametros.keySet()) {
-            q.setParameter(key, parametros.get(key));
-        }
-        return q.getResultList();
-    }
-
     @Override
     public Subject createInstance() {
 
@@ -102,5 +70,19 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
+    }
+    
+    public List<Subject> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Subject> query = builder.createQuery(Subject.class);
+
+        Root<Subject> from = query.from(Subject.class);
+        query.select(from).orderBy(builder.desc(from.get(Subject_.name)));
+        return getResultList(query, maxresults, firstresult);
+    }
+    
+    public long count() {
+        return super.count(Subject.class); 
     }
 }
