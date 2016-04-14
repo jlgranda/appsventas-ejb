@@ -28,7 +28,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.management.Organization;
+import net.tecnopro.document.model.Tarea;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
@@ -58,6 +58,7 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         Query q = em.createQuery("SELECT U FROM AccountTypeEntity U");
         return !q.getResultList().isEmpty();
     }
+
 
     @Override
     public Subject createInstance() {
