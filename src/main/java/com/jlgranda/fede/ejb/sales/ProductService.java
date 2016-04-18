@@ -17,11 +17,16 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.sales.Product;
+import org.jlgranda.fede.model.sales.Product_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -53,5 +58,20 @@ public class ProductService extends BussinesEntityHome<Product> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
+    }
+    
+    //soporte para lazy data model
+    public long count() {
+        return super.count(Product.class); 
+    }
+    
+    public List<Product> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+
+        Root<Product> from = query.from(Product.class);
+        query.select(from).orderBy(builder.desc(from.get(Product_.name)));
+        return getResultList(query, maxresults, firstresult);
     }
 }

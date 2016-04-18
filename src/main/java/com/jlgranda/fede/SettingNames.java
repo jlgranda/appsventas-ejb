@@ -50,5 +50,8 @@ public class SettingNames {
     //MYMETYPE
     public static String MYMETYPE_PDF = "application/pdf";
     public static String MYMETYPE_ZIP = "application/octet-stream";
+    
+    //Modulos
+    public static String MODULE = "module-";
 
 }
