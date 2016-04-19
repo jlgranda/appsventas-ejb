@@ -121,5 +121,10 @@ public class Tarea extends BussinesEntity implements Serializable {
     public void setInstanciaProceso(InstanciaProceso instanciaProceso) {
         this.instanciaProceso = instanciaProceso;
     }
+    
+    public boolean checkStatus(EstadoTipo estadoTipo){
+        if (estadoTipo == null) return false;
+        return estadoTipo.equals(this.getEstadoTipo());
+    }
 
 }
