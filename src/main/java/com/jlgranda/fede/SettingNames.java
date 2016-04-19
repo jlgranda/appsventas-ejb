@@ -53,5 +53,6 @@ public class SettingNames {
     
     //Raíz de modulos
     public static String MODULE = "module-";
+    public static String POPUP_FORMULARIO_CAMBIAR_CLAVE = "popup_cambiar_clave";
 
 }
