@@ -35,6 +35,7 @@ public class SettingNames {
     public static String POPUP_FORMULARIO_ORGANIZATION = "popup_organizacion";
     public static String POPUP_FORMULARIO_PRODUCTO = "popup_producto";
     public static String POPUP_FORMULARIO_FACTURA = "popup_factura";
+    public static String POPUP_FORMULARIO_CAMBIAR_CLAVE = "cambiar_clave";
 
     //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";
