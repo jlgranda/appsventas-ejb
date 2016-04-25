@@ -126,5 +126,14 @@ public class Tarea extends BussinesEntity implements Serializable {
         if (estadoTipo == null) return false;
         return estadoTipo.equals(this.getEstadoTipo());
     }
+    
+    /**
+     * Agregar la relación uno muchos para tarea->documento
+     * @param documento 
+     */
+    public void addDocumento(Documento documento){
+        documento.setTarea(this);
+        this.documentos.add(documento);
+    }
 
 }
