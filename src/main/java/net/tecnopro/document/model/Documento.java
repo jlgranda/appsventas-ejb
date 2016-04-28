@@ -17,6 +17,7 @@
  */
 package net.tecnopro.document.model;
 
+import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,7 +49,9 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "Documento.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "Documento.countBussinesEntityByOwner", query = "select count(t) FROM Documento t WHERE t.owner = ?1")})
 
-public class Documento extends BussinesEntity {
+public class Documento extends BussinesEntity implements Serializable {
+
+    private static final long serialVersionUID = -5602792285963020179L;
 
     @Basic(optional = false)
     @NotNull

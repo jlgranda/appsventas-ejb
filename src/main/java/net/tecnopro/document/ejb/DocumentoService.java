@@ -25,7 +25,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import net.tecnopro.document.model.Documento;
-import net.tecnopro.document.model.Documento;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Group;
@@ -42,6 +41,8 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class DocumentoService extends BussinesEntityHome<Documento> {
+
+    private static final long serialVersionUID = -2523566526039937702L;
 
     Logger logger = LoggerFactory.getLogger(DocumentoService.class);
 

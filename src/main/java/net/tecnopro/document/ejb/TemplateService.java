@@ -15,36 +15,65 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.jlgranda.fede.ejb.sales;
+package net.tecnopro.document.ejb;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.jlgranda.fede.model.sales.Detail;
+import net.tecnopro.document.model.Template;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Group;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
+import org.jpapi.util.QuerySortOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author jlgranda
  */
 @Stateless
-public class DetailService extends BussinesEntityHome<Detail> {
+public class TemplateService extends BussinesEntityHome<Template> implements Serializable {
+
+    private static final long serialVersionUID = 50292869154561898L;
+
+    Logger logger = LoggerFactory.getLogger(TemplateService.class);
+
     @PersistenceContext
     EntityManager em;
 
     @PostConstruct
     private void init() {
+        setEntityClass(Template.class);
         setEntityManager(em);
-        setEntityClass(Detail.class);
+    }
+
+    public Template findByCode(String code) {
+        List<Template> templates = this.findByNamedQuery("Template.findByCode", code);
+        return templates.isEmpty() ? null : templates.get(0);
+    }
+
+    public List<Template> findAll() {
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
+    }
+
+    public List<Template> findAllByOwner(Subject owner) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("owner", owner);
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
 
     @Override
-    public Detail createInstance() {
+    public Template createInstance() {
 
-        Detail _instance = new Detail();
+        Template _instance = new Template();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
@@ -52,5 +81,4 @@ public class DetailService extends BussinesEntityHome<Detail> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         return _instance;
     }
-    
 }

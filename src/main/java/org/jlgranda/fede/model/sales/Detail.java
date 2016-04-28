@@ -17,6 +17,7 @@
  */
 package org.jlgranda.fede.model.sales;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,7 +35,9 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "INVOICE_DETAIL")
-public class Detail extends PersistentObject implements Comparable<Detail> {
+public class Detail extends PersistentObject implements Comparable<Detail>, Serializable {
+
+    private static final long serialVersionUID = 2616187458131227603L;
     
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
     @JoinColumn(name = "invoice_id", insertable=true, updatable=true, nullable=true)
