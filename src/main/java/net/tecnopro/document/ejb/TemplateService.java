@@ -25,11 +25,16 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import net.tecnopro.document.model.Template;
+import net.tecnopro.document.model.Template_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Group;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
+import org.jpapi.model.profile.Subject_;
 import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 import org.slf4j.Logger;
@@ -80,5 +85,19 @@ public class TemplateService extends BussinesEntityHome<Template> implements Ser
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         return _instance;
+    }
+    
+    public List<Template> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Template> query = builder.createQuery(Template.class);
+
+        Root<Template> from = query.from(Template.class);
+        query.select(from).orderBy(builder.desc(from.get(Template_.name)));
+        return getResultList(query, maxresults, firstresult);
+    }
+    
+    public long count() {
+        return super.count(Template.class); 
     }
 }

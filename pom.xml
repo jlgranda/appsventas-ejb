@@ -18,7 +18,7 @@
 
         <!-- PicketLink dependency versions -->
         <version.picketlink.javaee.bom>2.7.0.Final</version.picketlink.javaee.bom>
-        <deltaspike.version>1.5.0</deltaspike.version>
+        <deltaspike.version>1.6.0</deltaspike.version>
     </properties>
 
     <repositories>

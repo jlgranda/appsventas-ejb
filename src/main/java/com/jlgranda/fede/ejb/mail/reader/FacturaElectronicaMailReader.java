@@ -104,10 +104,8 @@ public class FacturaElectronicaMailReader {
             try {
                 org.apache.james.mime4j.dom.Message mime4jMessage = builder.parseMessage(new ByteArrayInputStream(emailHelper.fullMail(message).getBytes()));
                 result.addAll(handleMessage(mime4jMessage));
-            } catch (org.apache.james.mime4j.MimeIOException mioe) {
+            } catch (org.apache.james.mime4j.MimeIOException | org.apache.james.mime4j.MimeException mioe) {
                 mioe.printStackTrace();
-            } catch (org.apache.james.mime4j.MimeException me) {
-                me.printStackTrace();
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(FacturaElectronicaMailReader.class.getName()).log(Level.SEVERE, null, ex);
             }

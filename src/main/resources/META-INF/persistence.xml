@@ -86,6 +86,7 @@
     <class>net.tecnopro.document.model.Documento</class>
     <class>net.tecnopro.document.model.Tarea</class>
     <class>net.tecnopro.document.model.InstanciaProceso</class>
+    <class>net.tecnopro.document.model.Template</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

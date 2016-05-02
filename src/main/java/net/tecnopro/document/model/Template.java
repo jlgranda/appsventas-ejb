@@ -22,7 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import org.jpapi.model.PersistentObject;
+import org.jpapi.model.BussinesEntity;
 
 /**
  *
@@ -31,9 +31,9 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "template")
 @NamedQueries({
-    @NamedQuery(name = "Template.findByCode", query = "select t FROM Template t where t.code=?1 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Template.findByCode", query = "select t FROM Template t where t.code=?1 ORDER BY t.id DESC"),
     })
-public class Template extends PersistentObject<Template> implements Comparable<Template>, Serializable {
+public class Template extends BussinesEntity implements Comparable<Template>, Serializable {
     
     private static final long serialVersionUID = 6206887274643020128L;
     

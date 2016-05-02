@@ -39,6 +39,8 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "instanciaProceso.findLast", query = "select p FROM InstanciaProceso p where p.owner=?1 ORDER BY p.id DESC"),})
 public class InstanciaProceso extends BussinesEntity implements Serializable {
 
+    private static final long serialVersionUID = 931470573990535517L;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "instanciaProceso", fetch = FetchType.LAZY)
     @OrderBy("id ASC")
     private List<Tarea> tareas;

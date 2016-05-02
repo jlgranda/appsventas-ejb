@@ -118,7 +118,7 @@ public class EmailHelper {
         Enumeration<javax.mail.Header> headers = message.getAllHeaders();
         while (headers.hasMoreElements()) {
             javax.mail.Header header = headers.nextElement();
-            sBuf.append(header.getName() + ": " + header.getValue() + "\n");
+            sBuf.append(header.getName()).append(": ").append(header.getValue()).append("\n");
         }
         sBuf.append(fromInputStream(message.getInputStream()));
         return sBuf.toString();
@@ -157,6 +157,7 @@ public class EmailHelper {
         /**
          * authenticate for sending / receiving e-mail
          * 
+      * @return 
          * @throws MessagingException
          */
         public Transport authenticate() throws MessagingException {
@@ -197,7 +198,6 @@ public class EmailHelper {
     /**
      * write the given body to the given fileoutput stream
      * 
-     * @param fos
      * @param body
      * @return 
      * @throws IOException

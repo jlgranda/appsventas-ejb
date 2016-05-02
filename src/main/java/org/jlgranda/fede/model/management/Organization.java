@@ -53,9 +53,9 @@ public class Organization extends BussinesEntity implements Serializable {
     private String ruc;
     private String initials;
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Proprietor> proprietors = new ArrayList<Proprietor>();
+    private List<Proprietor> proprietors = new ArrayList<>();
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Theme> themes = new ArrayList<Theme>();
+    private List<Theme> themes = new ArrayList<>();
     //Philosophical definition
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mission> missions = new org.apache.commons.collections.list.TreeList();
