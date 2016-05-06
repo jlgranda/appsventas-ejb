@@ -19,12 +19,13 @@
         <!-- PicketLink dependency versions -->
         <version.picketlink.javaee.bom>2.7.0.Final</version.picketlink.javaee.bom>
         <deltaspike.version>1.6.0</deltaspike.version>
+        <james.version>0.7.2</james.version>
     </properties>
 
     <repositories>
         <repository>
             <id>org.apache.james</id>
-            <url>http://repo1.maven.org/maven2/</url>
+            <url>http://repo1.maven.org/maven2/org/apache/james/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -168,17 +169,17 @@
         <dependency>
             <groupId>org.apache.james</groupId>
             <artifactId>apache-mime4j-core</artifactId>
-            <version>0.7.2</version>
+            <version>${james.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.james</groupId>
             <artifactId>apache-mime4j-dom</artifactId>
-            <version>0.7.2</version>
+            <version>${james.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.james</groupId>
             <artifactId>apache-mime4j-storage</artifactId>
-            <version>0.7.2</version>
+            <version>${james.version}</version>
         </dependency>
 
         <!--XML bind dependencies-->

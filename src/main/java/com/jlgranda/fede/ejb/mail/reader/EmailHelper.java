@@ -52,7 +52,7 @@ import org.apache.james.mime4j.message.MessageImpl;
  */
 public class EmailHelper {
  public static boolean debug = true;
-    public static Logger LOGGER = Logger
+    public static final Logger LOGGER = Logger
             .getLogger("com.jlgranda.fede.ejb.mail.reader.EMailHelper");
     private StringBuffer txtBody = new StringBuffer();
     private StringBuffer htmlBody = new StringBuffer();
@@ -99,7 +99,6 @@ public class EmailHelper {
      */
     public String fromInputStream(InputStream inputStream) throws IOException {
         String result = IOUtils.toString(inputStream);
-        // System.out.println(result);
         return result;
     }
 

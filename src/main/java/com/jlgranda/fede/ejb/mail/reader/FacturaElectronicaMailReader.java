@@ -65,6 +65,8 @@ public class FacturaElectronicaMailReader {
      * inbox y cargar las facturas
      * @param folder
      * @return Lista de objetos <tt>FacturaReader</tt>
+     * @throws javax.mail.MessagingException
+     * @throws java.io.IOException
      */
     public List<FacturaReader> read(Subject _subject, String folder) throws MessagingException, IOException {
 
@@ -104,16 +106,16 @@ public class FacturaElectronicaMailReader {
             try {
                 org.apache.james.mime4j.dom.Message mime4jMessage = builder.parseMessage(new ByteArrayInputStream(emailHelper.fullMail(message).getBytes()));
                 result.addAll(handleMessage(mime4jMessage));
-            } catch (org.apache.james.mime4j.MimeIOException | org.apache.james.mime4j.MimeException mioe) {
-                mioe.printStackTrace();
+            } catch (org.apache.james.mime4j.MimeIOException | org.apache.james.mime4j.MimeException ex) {
+                logger.error("Fail to read message: " + subject, ex);
             } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(FacturaElectronicaMailReader.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Fail to read message with General Exception: " + subject, ex);
             }
         }
 
         client.close();
 
-        logger.info("Read {} email messages!", result.size());
+        logger.info("Readed {} email messages!", result.size());
 
         return result;
     }
