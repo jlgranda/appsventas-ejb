@@ -18,6 +18,7 @@
 package net.tecnopro.document.model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,10 +38,13 @@ public class Template extends BussinesEntity implements Comparable<Template>, Se
     
     private static final long serialVersionUID = 6206887274643020128L;
     
+    @Column(nullable = true, length = 1024)
     private String title;
     
+    @Column(nullable = true, length = 4096)
     private String body;
     
+    @Column(nullable = true, length = 2048)
     private String signature;
 
     public String getTitle() {
