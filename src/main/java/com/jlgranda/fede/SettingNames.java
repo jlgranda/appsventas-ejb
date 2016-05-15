@@ -50,9 +50,10 @@ public class SettingNames {
     //MYMETYPE
     public static String MYMETYPE_PDF = "application/pdf";
     public static String MYMETYPE_ZIP = "application/octet-stream";
-    
+
     //Raíz de modulos
     public static String MODULE = "module-";
     public static String POPUP_FORMULARIO_CAMBIAR_CLAVE = "popup_cambiar_clave";
+    public static String POPUP_SELECCIONAR_GRUPOS_USUARIO = "seleccionar_grupos_usuario";
 
 }
