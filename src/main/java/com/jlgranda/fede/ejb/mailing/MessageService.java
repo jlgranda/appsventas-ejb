@@ -15,15 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.jlgranda.fede.ejb.sales;
+package com.jlgranda.fede.ejb.mailing;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.jlgranda.fede.model.sales.Detail;
+import net.tecnopro.mailing.Message;
 import org.jpapi.controller.BussinesEntityHome;
-import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 
 /**
@@ -31,28 +30,28 @@ import org.jpapi.util.Dates;
  * @author jlgranda
  */
 @Stateless
-public class DetailService extends BussinesEntityHome<Detail> {
-
-    private static final long serialVersionUID = 4837861037443488043L;
+public class MessageService extends BussinesEntityHome<Message> {
+    
+    private static final long serialVersionUID = 7871335162868093551L;
+    
     @PersistenceContext
     EntityManager em;
 
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(Detail.class);
+        setEntityClass(Message.class);
     }
 
     @Override
-    public Detail createInstance() {
+    public Message createInstance() {
 
-        Detail _instance = new Detail();
+        Message _instance = new Message();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
-        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setStatus(null);
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         return _instance;
     }
-    
 }

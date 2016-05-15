@@ -87,6 +87,8 @@
     <class>net.tecnopro.document.model.Tarea</class>
     <class>net.tecnopro.document.model.InstanciaProceso</class>
     <class>net.tecnopro.document.model.Template</class>
+    <class>net.tecnopro.mailing.Message</class>
+    <class>net.tecnopro.mailing.Notification</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
