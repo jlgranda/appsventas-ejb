@@ -245,18 +245,24 @@ public class SetupService implements Serializable {
                     Subject.class);
             singleResult = query.getSingleResult();
         } catch (NoResultException e) {
-            singleResult = new Subject();
-            singleResult.setEmail("admin@fede.com");
-            singleResult.setUsername("admin");
-            singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("fede")));
-            singleResult.setUsernameConfirmed(true);
-            singleResult.setCreatedOn(Dates.now());
-            singleResult.setLastUpdate(Dates.now());
-            singleResult.setCodeType(CodeType.NONE);
-            singleResult.setSubjectType(Subject.Type.SYSTEM);
-            
+            singleResult = createAdministrator();
             getEntityManager().persist(singleResult);
         }
+    }
+    
+    private Subject createAdministrator() {
+        Subject singleResult = new Subject();
+        singleResult.setEmail("admin@fede.com");
+        singleResult.setUsername("admin");
+        singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("fede")));
+        singleResult.setUsernameConfirmed(true);
+        singleResult.setCreatedOn(Dates.now());
+        singleResult.setLastUpdate(Dates.now());
+        singleResult.setCodeType(CodeType.NONE);
+        singleResult.setSubjectType(Subject.Type.SYSTEM);
+
+        getEntityManager().persist(singleResult);
+        return singleResult;
     }
 
     private EntityManager getEntityManager() {

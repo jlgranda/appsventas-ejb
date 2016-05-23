@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class InstanciaProcesoService extends BussinesEntityHome<InstanciaProceso> {
+
+    private static final long serialVersionUID = 96744505650450257L;
     
     Logger logger = LoggerFactory.getLogger(InstanciaProcesoService.class);
 
@@ -66,7 +68,7 @@ public class InstanciaProcesoService extends BussinesEntityHome<InstanciaProceso
     }
 
     public List<InstanciaProceso> findAllByOwner(Subject owner) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("owner", owner);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
