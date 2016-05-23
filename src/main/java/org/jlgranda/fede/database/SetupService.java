@@ -160,7 +160,7 @@ public class SetupService implements Serializable {
     private void validateSetting() {
         
         Setting singleResult = null;
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         
         //email settings
 //        props.put("mail.from", "fede@jlgranda.com:Remitente de correo electrónico");
