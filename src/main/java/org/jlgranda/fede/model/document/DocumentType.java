@@ -38,5 +38,6 @@ public enum DocumentType {
     REVISTA,
     OFICIO,
     SOLICITUD,
-    DIGITALIZADO
+    DIGITALIZADO;
+
 }
