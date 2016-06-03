@@ -52,16 +52,17 @@ import org.slf4j.LoggerFactory;
 @DiscriminatorValue(value = "INV")
 @PrimaryKeyJoinColumn(name = "invoiceId")
 @NamedQueries({
-    @NamedQuery(name = "Invoice.findAll", query = "select i FROM Invoice i ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.findByDocumentType", query = "select i FROM Invoice i WHERE i.documentType = ?1 ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthor", query = "select i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.findByDocumentTypeAndOwner", query = "select i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 ORDER BY i.id DESC"),
-    @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "select count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2"),
-    @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "select count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2"),
+    @NamedQuery(name = "Invoice.findAll", query = "SELECT i FROM Invoice i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentType", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.createdOn BETWEEN ?2 AND ?3 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthor", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentTypeAndOwner", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.author = ?2 AND i.createdOn BETWEEN ?3 AND ?4 ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2 AND i.createdOn BETWEEN ?3 AND ?4"),
+    @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2"),
 })
 public class Invoice extends BussinesEntity {
     
     private static Logger log = LoggerFactory.getLogger(Invoice.class);
+    private static final long serialVersionUID = 2087202727290952436L;
     
     private EnvironmentType environmentType;
     
