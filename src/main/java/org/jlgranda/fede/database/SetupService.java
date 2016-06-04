@@ -207,7 +207,9 @@ public class SetupService implements Serializable {
         props.put("app.management.tarea.documentos.allowTypes", "/(\\.|\\/)(xml|zip|pdf|txt)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
         props.put("app.admin.subject.sizeLimit", "1048576:Tamaño máximo de carga de archivo:UI"); //maximo tamaño de archivo a subir
         props.put("app.admin.subject.fileLimit", "34:Número máximo de archivos a cargar:UI"); //Maximo de archivos a subir
-        props.put("app.admin.subject.allowTypes", "/(\\.|\\/)(xml|zip|pdf|txt)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
+        props.put("app.admin.subject.allowTypes", "/(\\.|\\/)(gif|jpe?g|png)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
+        props.put("app.profile.photo.width", "100:Ancho de Imagen:UI"); //Ancho de imágenes
+        props.put("app.profile.photo.height", "100:Alto de Imagen:UI"); //Alto de imágenes
 
         String label = null;
         String value = null;
