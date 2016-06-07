@@ -25,8 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.jpapi.model.BussinesEntity;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -92,6 +92,8 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
 
     public void setProduct(Product product) {
         this.product = product;
+        if (product != null)
+            setProductId(product.getId());
     }
 
     public Long getProductId() {
@@ -128,11 +130,18 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
     
     @Override
     public int hashCode() {
-        return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
-                // if deriving: appendSuper(super.hashCode()).
-                append(getInvoice()).
-                append(getProductId()).
-                toHashCode();
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+        if (getProduct() != null) {
+            hcb.append(getInvoice()).
+                    append(getProductId()).
+                    append(getProduct());
+        } else {
+            hcb.append(getInvoice()).
+                    append(getProductId());
+        }
+
+        return hcb.toHashCode();
     }
 
     @Override
@@ -147,16 +156,29 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
             return false;
         }
         Detail other = (Detail) obj;
-        return new org.apache.commons.lang.builder.EqualsBuilder().
-                append(getProductId(), other.getProductId()).
-                append(getInvoice(), other.getInvoice()).
-                append(getAmount(), other.getAmount()).
-                isEquals();
+        EqualsBuilder eb = new EqualsBuilder();
+        
+        if (other.getProduct() != null) {
+            eb.append(getProductId(), other.getProductId()).
+                    append(getProduct(), other.getProduct()).
+                    append(getInvoice(), other.getInvoice());
+        } else {
+            eb.append(getProductId(), other.getProductId()).
+                    append(getInvoice(), other.getInvoice());
+
+        }
+        return eb.isEquals();
     }
 
     @Override
     public String toString() {
-        return "(" + Math.round(getAmount()) + ") " + getProduct().getName();//To change body of generated methods, choose Tools | Templates.
+        StringBuilder str = new StringBuilder();
+        str.append("(")
+        .append(getAmount())
+        .append(")")
+        .append(" ")
+        .append(getProduct() == null ? getProductId() : getProduct().getName());
+        return str.toString();
     }
 
     @Override

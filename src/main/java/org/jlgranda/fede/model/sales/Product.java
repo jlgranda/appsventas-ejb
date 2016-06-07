@@ -45,6 +45,8 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
 })
 public class Product extends BussinesEntity {
+
+    private static final long serialVersionUID = -1320148041663418996L;
     
     @Column
     private String icon;
@@ -84,4 +86,31 @@ public class Product extends BussinesEntity {
         this.photo = photo;
     }
     
+    @Override
+    public int hashCode() {
+        return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                append(getCode()).
+                append(getName()).
+                toHashCode();
+    }
+    
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Product other = (Product) obj;
+        return new org.apache.commons.lang.builder.EqualsBuilder().
+                append(getCode(), other.getCode()).
+                append(getName(), other.getName()).
+                isEquals();
+    }
+
 }

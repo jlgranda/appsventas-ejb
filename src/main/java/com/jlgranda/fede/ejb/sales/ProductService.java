@@ -37,6 +37,8 @@ import org.jpapi.util.Dates;
  */
 @Stateless
 public class ProductService extends BussinesEntityHome<Product> {
+
+    private static final long serialVersionUID = -6428094275651428620L;
     
     @PersistenceContext
     EntityManager em;

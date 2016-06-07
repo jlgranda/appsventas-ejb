@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -46,12 +47,19 @@ public class DetailService extends BussinesEntityHome<Detail> {
     @Override
     public Detail createInstance() {
 
+        return createInstance(0);
+    }
+
+    public Detail createInstance(float amount) {
+
         Detail _instance = new Detail();
+        _instance.setAmount(amount);
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setUuid(UUID.randomUUID().toString());
         return _instance;
     }
     

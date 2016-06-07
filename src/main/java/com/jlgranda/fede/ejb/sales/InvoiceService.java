@@ -40,6 +40,8 @@ import org.jpapi.util.Dates;
  */
 @Stateless
 public class InvoiceService extends BussinesEntityHome<Invoice> {
+
+    private static final long serialVersionUID = -4487467890746594655L;
     
     @PersistenceContext
     EntityManager em;

@@ -217,6 +217,7 @@ public class Invoice extends BussinesEntity {
     }
 
     public Detail replaceDetail(Detail detail) {
+    
         getDetails().set(getDetails().indexOf(detail), detail);
         return detail;
     }
