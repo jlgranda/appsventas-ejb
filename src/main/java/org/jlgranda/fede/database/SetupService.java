@@ -112,34 +112,32 @@ public class SetupService implements Serializable {
 //            getEntityManager().persist(group);
 //        }
 //    }
-    
     private void validateGroups() {
-        
+
         Group singleResult = null;
         Map<String, String> props = new HashMap<>();
-        
+
         //Grupos de arranque del sistema
-        
         props.put("fede", "fede:1");
         props.put("salud", "Salud:2");
         props.put("alimentos", "Alimentos:3");
         props.put("ropa", "Ropa:4");
         props.put("educacion", "Educación:5");
         props.put("vivienda", "Vivienda:6");
-        
+
         props.put("favorito", "Favoritos:7");
 
         String value = null;
         String name = null;
         Short orden = null;
-        for (String key : props.keySet()){
+        for (String key : props.keySet()) {
             value = props.get(key);
             try {
                 TypedQuery<Group> query = getEntityManager().createQuery("from Group g where g.code='" + key + "'",
                         Group.class);
                 singleResult = query.getSingleResult();
             } catch (NoResultException e) {
-                
+
                 java.util.Date now = Dates.now();
                 name = value.split(":")[0];
                 orden = Short.valueOf(value.split(":")[1]);
@@ -156,12 +154,12 @@ public class SetupService implements Serializable {
             log.info("Added group code: {} name: [{}]", key, singleResult.getName());
         }
     }
-    
+
     private void validateSetting() {
-        
+
         Setting singleResult = null;
         Map<String, String> props = new HashMap<>();
-        
+
         //email settings
 //        props.put("mail.from", "fede@jlgranda.com:Remitente de correo electrónico");
 //        props.put("mail.host", "jlgranda.com:Servidor de correo electrónico");
@@ -174,11 +172,10 @@ public class SetupService implements Serializable {
 //        
 //        props.put("mail.store.protocol", "imap:Protocolo de sessión de correo");
 //        props.put("mail.transport.protocol", "smtps:Protocolo seguro de sessión de correo");
-        
         props.put("mail.imap.host", "jlgranda.com:Servidor IMAP:IMAP");
         props.put("mail.imap.port", "25:Puerto IMAP:IMAP");
         props.put("mail.imaps.ssl.trust", "*:SSL TRUST:SMTPS");
-        
+
         props.put("mail.smtps.port", "25:Puerto SMTP:SMTPS");
         props.put("mail.smtps.host", "jlgranda.com:Servidor de envios SMTPS:SMTPS");
         props.put("mail.smtps.from", "AppsVentas <consiguemas@jlgranda.com>:Remitente de correo:SMTPS");
@@ -187,15 +184,14 @@ public class SetupService implements Serializable {
         props.put("mail.smtps.auth", "true:Usar autenticación:SMTPS");
         props.put("mail.smtps.ssl", "true:SSL:SMTPS");
         props.put("mail.smtp.starttls.enable", "false:Usar TTLS:SMTPS");
-        
+
         //XML utils settings
         props.put("fede.xml.tag.numeroAutorizacion", "<numeroAutorizacion></numeroAutorizacion>:Etiqueta de número de autorización en XML:XML");
         props.put("fede.xml.tag.fechaAutorizacion", "<fechaAutorizacion></fechaAutorizacion>:Etiqueta de fecha de autorización en XML:XML");
-        
+
         //dates patterns
         props.put("fede.date.pattern", "dd/MM/yyyy:Formato de fecha:SYSTEM");
-        
-        
+
         //UI settings
         props.put("fede.group.default", "fede:Grupo por defecto:UI");
         props.put("fede.dashboard.timeline.length", "10:Longitud de lista en dashboard::UI");
@@ -209,12 +205,16 @@ public class SetupService implements Serializable {
         props.put("app.management.tarea.documentos.sizeLimit", "1048576:Tamaño máximo de carga de archivo:UI"); //maximo tamaño de archivo a subir
         props.put("app.management.tarea.documentos.fileLimit", "34:Número máximo de archivos a cargar:UI"); //Maximo de archivos a subir
         props.put("app.management.tarea.documentos.allowTypes", "/(\\.|\\/)(xml|zip|pdf|txt)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
-      
-        
+        props.put("app.admin.subject.sizeLimit", "1048576:Tamaño máximo de carga de archivo:UI"); //maximo tamaño de archivo a subir
+        props.put("app.admin.subject.fileLimit", "34:Número máximo de archivos a cargar:UI"); //Maximo de archivos a subir
+        props.put("app.admin.subject.allowTypes", "/(\\.|\\/)(gif|jpe?g|png)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
+        props.put("app.profile.photo.width", "100:Ancho de Imagen:UI"); //Ancho de imágenes
+        props.put("app.profile.photo.height", "100:Alto de Imagen:UI"); //Alto de imágenes
+
         String label = null;
         String value = null;
         String category = null;
-        for (String key : props.keySet()){
+        for (String key : props.keySet()) {
             value = props.get(key).split(":")[0];
             label = props.get(key).split(":")[1];
             category = props.get(key).split(":")[2];
@@ -249,7 +249,7 @@ public class SetupService implements Serializable {
             getEntityManager().persist(singleResult);
         }
     }
-    
+
     private Subject createAdministrator() {
         Subject singleResult = new Subject();
         singleResult.setEmail("admin@fede.com");
