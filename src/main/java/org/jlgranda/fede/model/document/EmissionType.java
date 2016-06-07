@@ -25,5 +25,6 @@ public enum EmissionType {
     NORMAL,
     SYSTEM_UNAVAILABLE,
     SALE,
-    PURCHASE
+    PURCHASE,
+    CANCELED
 }
