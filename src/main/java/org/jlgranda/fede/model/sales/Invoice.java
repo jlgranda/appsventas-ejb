@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Invoice document in matidoo
+ * A Invoice document in fede
  * @author jlgranda
  */
 @Entity
@@ -87,6 +87,9 @@ public class Invoice extends BussinesEntity {
     private List<Detail> details = new ArrayList<>();
     
     private String sequencial;
+    
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
+    private List<Payment> payments = new ArrayList<>();
     
     public EnvironmentType getEnvironmentType() {
         return environmentType;
@@ -145,6 +148,7 @@ public class Invoice extends BussinesEntity {
         }
         return detail;
     }
+    
     public List<Detail> getDetails() {
         return details;
     }
@@ -160,6 +164,25 @@ public class Invoice extends BussinesEntity {
     public void setSequencial(String sequencial) {
         this.sequencial = sequencial;
     }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+    
+    public Payment addPayment(Payment payment){
+        payment.setInvoice(this);
+        if (this.payments.contains(payment)){
+            replacePayment(payment);
+        } else {
+            this.payments.add(payment);
+        }
+        return payment;
+    }
+    
     
     @Transient
     public String getSummary(){
@@ -213,6 +236,12 @@ public class Invoice extends BussinesEntity {
     
         getDetails().set(getDetails().indexOf(detail), detail);
         return detail;
+    }
+    
+    public Payment replacePayment(Payment payment) {
+    
+        getPayments().set(getPayments().indexOf(payment), payment);
+        return payment;
     }
 
 }
