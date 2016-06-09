@@ -69,6 +69,7 @@ public class SetupService implements Serializable {
         validateDB();
         //validateIdentityObjectTypes();
         validateSecurity();
+        validateDefaultCustomer();
         validateSetting();
 
     }
@@ -249,12 +250,41 @@ public class SetupService implements Serializable {
             getEntityManager().persist(singleResult);
         }
     }
+    private void validateDefaultCustomer() {
+        Subject singleResult = null;
+        try {
+            TypedQuery<Subject> query = getEntityManager().createQuery("from Subject s where s.username='consumidorfinal'",
+                    Subject.class);
+            singleResult = query.getSingleResult();
+        } catch (NoResultException e) {
+            singleResult = createDefaultCustomer();
+            getEntityManager().persist(singleResult);
+        }
+    }
 
     private Subject createAdministrator() {
         Subject singleResult = new Subject();
         singleResult.setEmail("admin@fede.com");
         singleResult.setUsername("admin");
-        singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("fede")));
+        singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("consumidorfinal")));
+        singleResult.setUsernameConfirmed(true);
+        singleResult.setCreatedOn(Dates.now());
+        singleResult.setLastUpdate(Dates.now());
+        singleResult.setCodeType(CodeType.NONE);
+        singleResult.setSubjectType(Subject.Type.SYSTEM);
+
+        getEntityManager().persist(singleResult);
+        return singleResult;
+    }
+    private Subject createDefaultCustomer() {
+        Subject singleResult = new Subject();
+        singleResult.setEmail("consumidorfinal@fede.com");
+        singleResult.setUsername("consumidorfinal");
+        singleResult.setFirstname("Consumidor");
+        singleResult.setSurname("Final");
+        singleResult.setCode("9999999999999");
+        singleResult.setCodeType(CodeType.RUC);
+        singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("c0nsum1d0rf1n4l")));
         singleResult.setUsernameConfirmed(true);
         singleResult.setCreatedOn(Dates.now());
         singleResult.setLastUpdate(Dates.now());
