@@ -70,6 +70,7 @@ public class SetupService implements Serializable {
         //validateIdentityObjectTypes();
         validateSecurity();
         validateDefaultCustomer();
+        validateDefaultSupplier();
         validateSetting();
 
     }
@@ -261,6 +262,17 @@ public class SetupService implements Serializable {
             getEntityManager().persist(singleResult);
         }
     }
+    private void validateDefaultSupplier() {
+        Subject singleResult = null;
+        try {
+            TypedQuery<Subject> query = getEntityManager().createQuery("from Subject s where s.username='proveedorsinfactura'",
+                    Subject.class);
+            singleResult = query.getSingleResult();
+        } catch (NoResultException e) {
+            singleResult = createDefaultSupplier();
+            getEntityManager().persist(singleResult);
+        }
+    }
 
     private Subject createAdministrator() {
         Subject singleResult = new Subject();
@@ -271,6 +283,23 @@ public class SetupService implements Serializable {
         singleResult.setCreatedOn(Dates.now());
         singleResult.setLastUpdate(Dates.now());
         singleResult.setCodeType(CodeType.NONE);
+        singleResult.setSubjectType(Subject.Type.SYSTEM);
+
+        getEntityManager().persist(singleResult);
+        return singleResult;
+    }
+    private Subject createDefaultSupplier() {
+        Subject singleResult = new Subject();
+        singleResult.setEmail("proveedorsinfactura@fede.com");
+        singleResult.setUsername("proveedorsinfactura");
+        singleResult.setFirstname("Proveedor");
+        singleResult.setSurname("Sin factura");
+        singleResult.setCode("000000000000");
+        singleResult.setCodeType(CodeType.RUC);
+        singleResult.setPassword((new org.apache.commons.codec.digest.Crypt().crypt("pr0v33d0r")));
+        singleResult.setUsernameConfirmed(true);
+        singleResult.setCreatedOn(Dates.now());
+        singleResult.setLastUpdate(Dates.now());
         singleResult.setSubjectType(Subject.Type.SYSTEM);
 
         getEntityManager().persist(singleResult);
@@ -288,7 +317,6 @@ public class SetupService implements Serializable {
         singleResult.setUsernameConfirmed(true);
         singleResult.setCreatedOn(Dates.now());
         singleResult.setLastUpdate(Dates.now());
-        singleResult.setCodeType(CodeType.NONE);
         singleResult.setSubjectType(Subject.Type.SYSTEM);
 
         getEntityManager().persist(singleResult);

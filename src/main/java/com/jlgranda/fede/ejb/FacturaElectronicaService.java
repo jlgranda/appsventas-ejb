@@ -113,6 +113,7 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
     public FacturaElectronica createInstance() {
 
         FacturaElectronica _instance = new FacturaElectronica();
+        _instance.setFechaEmision(Dates.now());
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
