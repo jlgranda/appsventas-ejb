@@ -212,6 +212,10 @@ public class SetupService implements Serializable {
         props.put("app.admin.subject.allowTypes", "/(\\.|\\/)(gif|jpe?g|png)$/:Tipos de archivos permitidos:UI"); //Tipo de archivo permitidos
         props.put("app.profile.photo.width", "100:Ancho de Imagen:UI"); //Ancho de imágenes
         props.put("app.profile.photo.height", "100:Alto de Imagen:UI"); //Alto de imágenes
+        
+        props.put("app.fede.decimalSeparator", ".:Separador de decimales:CORE");
+        props.put("app.fede.thousandSeparator", ",:Separador de miles:CORE");
+        props.put("app.fede.decimalPlaces", "2:Número de digitos a mostrar en campos tipo número:CORE");
 
         String label = null;
         String value = null;

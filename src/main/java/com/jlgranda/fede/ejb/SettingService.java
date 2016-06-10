@@ -37,11 +37,12 @@ public class SettingService extends BussinesEntityHome<Setting> {
     }
 
     public Setting findByName(String name) {
-        return findByName(name, null);
+        List<Setting> settings = this.findByNamedQuery("Setting.findByName", name);
+        return settings.isEmpty() ? null : settings.get(0);
     }
 
     public Setting findByName(String name, Subject owner) {
-        List<Setting> settings = this.findByNamedQuery("Setting.findByName", name);
+        List<Setting> settings = this.findByNamedQuery("Setting.findByNameAndOwner", name, owner);
         return settings.isEmpty() ? null : settings.get(0);
     }
 
