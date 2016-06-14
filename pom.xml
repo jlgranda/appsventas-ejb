@@ -12,7 +12,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.0.7.Final</hibernate.version>
+        <hibernate.version>5.2.0.Final</hibernate.version>
         <!-- WildFly dependency versions -->
         <version.wildfly.maven.plugin>1.0.1.Final</version.wildfly.maven.plugin>
 
@@ -26,6 +26,10 @@
         <repository>
             <id>org.apache.james</id>
             <url>http://repo1.maven.org/maven2/org/apache/james/</url>
+        </repository>
+        <repository>
+            <id>public-boss</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/org/hibernate/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -50,7 +54,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
+            <version>5.1.0.Final</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -123,22 +127,7 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-        <!--   
-             JSF dependencies 
-            <dependency>  
-                <groupId>org.primefaces</groupId>  
-                <artifactId>primefaces</artifactId>  
-                <version>${primefaces.version}</version>
-            </dependency>  
-        -->
-        <!--        <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>omnifaces</artifactId>
-            <version>1.2</version>
-        </dependency>-->
-        
-        <!--jlgranda.com dependencies-->
-        
+   
         <dependency>
             <groupId>org.jpapi</groupId>
             <artifactId>jpapi</artifactId>

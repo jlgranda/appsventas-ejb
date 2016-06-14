@@ -17,10 +17,8 @@
  */
 package com.jlgranda.fede.ejb;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -28,16 +26,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.jlgranda.fede.model.document.EmissionType;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jlgranda.fede.model.document.FacturaElectronica_;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
-import org.jpapi.util.QuerySortOrder;
-import org.jpapi.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jpapi.model.profile.Subject;
 
 /**
  *
@@ -62,53 +58,7 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         setEntityClass(FacturaElectronica.class);
     }
 
-    /**
-     * Obtener el top de las facturas electrónicas para portada
-     * @return 
-     */
-    @Deprecated
-    public List<FacturaElectronica> listarFacturasElectronicas(int max) {
-        return this.find(0, Strings.toInt(max), FacturaElectronica_.fechaEmision.getName(), QuerySortOrder.DESC, new HashMap<String, Object>()).getResult();
-    }
-    
-    /**
-     * Obtener facturas electrónicas por tag
-     * @return 
-     */
-    @Deprecated
-    public List<FacturaElectronica> listarFacturasElectronicas(String tag) {
-        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwner", tag);
-    }
-    
-    /**
-     * Obtener facturas electrónicas por tag, dueño entre fechas
-     * @return lista de facturas electrónicas que responden a los criterios dados.
-     */
-    @Deprecated
-    public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end) {
-        return this.findByNamedQuery("FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", tag, owner, start, end);
-    }
-    
-    /**
-     * Obtener facturas electrónicas por tag, dueño entre fechas, con la relación indicada
-     * @return lista de facturas electrónicas que responden a los criterios dados, con la relación indicada
-     */
-    @Deprecated
-    public List<FacturaElectronica> listarFacturasElectronicas(String tag, Subject owner, Date start, Date end, String relation) {
-        logger.info("Recuperando listado para los criterios {}, {}, {}, {}, {}", tag, owner, start, end, relation);
-        List<FacturaElectronica> lst = new ArrayList<>();
-        for (FacturaElectronica f : this.listarFacturasElectronicas(tag, owner, start, end)){
-            if (Subject.class.getName().equals(relation)){
-                f.getAuthor().getInitials(); //forzar llenado de organization
-                lst.add(f);
-            } else {
-                //Dummy
-            }
-        }
-        logger.info("Listado recuperado {}", lst);
-        return lst;
-    }
-    
+
     @Override
     public FacturaElectronica createInstance() {
 
@@ -120,6 +70,8 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setEmissionType(EmissionType.PURCHASE_CASH); //Establecer al usuario actual
+        _instance.setTotalDescuento(BigDecimal.ZERO);
         return _instance;
     }
     
