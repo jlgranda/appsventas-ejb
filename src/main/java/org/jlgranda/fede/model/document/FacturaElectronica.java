@@ -18,19 +18,25 @@
 package org.jlgranda.fede.model.document;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.jlgranda.fede.model.sales.Payment;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.SourceType;
 
@@ -102,6 +108,12 @@ public class FacturaElectronica extends BussinesEntity {
     private String claveAcceso;
 
     private String numeroAutorizacion;
+    
+    /**
+     * Para el seguimiento de pagos en facturas a crédito
+     */
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
+    private List<Payment> payments = new ArrayList<>();
 
     public BigDecimal getTotalSinImpuestos() {
         return totalSinImpuestos;
@@ -197,6 +209,29 @@ public class FacturaElectronica extends BussinesEntity {
 
     public void setNumeroAutorizacion(String numeroAutorizacion) {
         this.numeroAutorizacion = numeroAutorizacion;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+    
+    public Payment addPayment(Payment payment){
+        payment.setFacturaElectronica(this);
+        if (this.payments.contains(payment)){
+            replacePayment(payment);
+        } else {
+            this.payments.add(payment);
+        }
+        return payment;
+    }
+    
+    public Payment replacePayment(Payment payment) {
+        getPayments().set(getPayments().indexOf(payment), payment);
+        return payment;
     }
 
 }

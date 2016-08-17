@@ -192,6 +192,10 @@ public class Invoice extends BussinesEntity {
         return Lists.toString(list);
     }
     
+    /**
+     * Calcula el subtotal del detalle de la factura de venta
+     * @return 
+     */
     @Transient
     public BigDecimal getTotal(){
         BigDecimal total = new BigDecimal(0);
@@ -199,6 +203,51 @@ public class Invoice extends BussinesEntity {
             total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())));
         }
         
+        return total;
+    }
+    
+    @Transient
+    public BigDecimal getPaymentsDiscount(){
+        return getPaymentsField("discount");
+    }
+    
+    @Transient
+    public BigDecimal getPaymentsAmount(){
+        return getPaymentsField("amount");
+    }
+    
+    @Transient
+    public BigDecimal getPaymentsCash(){
+        return getPaymentsField("cash");
+    }
+    
+    @Transient
+    public BigDecimal getPaymentsChange(){
+        return getPaymentsField("change");
+    }
+    
+    @Transient
+    public BigDecimal getPaymentsField(String field) {
+        BigDecimal total = new BigDecimal(0);
+        for (Payment p : getPayments()) {
+            if (null != field) switch (field) {
+                case "amount":
+                    total = total.add(p.getAmount());
+                    break;
+                case "cash":
+                    total = total.add(p.getCash());
+                    break;
+                case "change":
+                    total = total.add(p.getChange());
+                    break;
+                case "discount":
+                    total = total.add(p.getDiscount());
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return total;
     }
 

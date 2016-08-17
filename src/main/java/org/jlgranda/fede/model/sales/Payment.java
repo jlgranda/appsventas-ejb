@@ -26,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -38,9 +39,13 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
 
     private static final long serialVersionUID = -6685382197357879651L;
 
-    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+    @ManyToOne(optional = true, cascade = {CascadeType.ALL})
     @JoinColumn(name = "invoice_id", insertable=true, updatable=true, nullable=true)
     private Invoice invoice;
+    
+    @ManyToOne(optional = true, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "factura_electronica_id", insertable=true, updatable=true, nullable=true)
+    private FacturaElectronica facturaElectronica;
     
     private String method;
     /**
@@ -69,6 +74,14 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
 
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
+    }
+
+    public FacturaElectronica getFacturaElectronica() {
+        return facturaElectronica;
+    }
+
+    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
+        this.facturaElectronica = facturaElectronica;
     }
 
     public String getMethod() {
@@ -134,7 +147,7 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Detail other = (Detail) obj;
+        Payment other = (Payment) obj;
         EqualsBuilder eb = new EqualsBuilder();
         
         eb.append(getId(), other.getId()).

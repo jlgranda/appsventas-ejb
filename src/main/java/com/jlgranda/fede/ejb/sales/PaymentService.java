@@ -67,5 +67,21 @@ public class PaymentService extends BussinesEntityHome<Payment> {
         return _instance;
     }
     
+    public Payment createInstance(String method, BigDecimal amount, BigDecimal cash, BigDecimal discount) {
+
+        Payment _instance = new Payment();
+        _instance.setMethod(method);
+        _instance.setAmount(amount);
+        _instance.setCash(cash);
+        _instance.setDiscount(discount);
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setUuid(UUID.randomUUID().toString());
+        return _instance;
+    }
+    
 }
 
