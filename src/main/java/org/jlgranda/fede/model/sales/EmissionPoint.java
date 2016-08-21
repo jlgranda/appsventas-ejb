@@ -35,6 +35,8 @@ import org.jpapi.model.BussinesEntity;
 @DiscriminatorValue(value = "EMPT")
 @PrimaryKeyJoinColumn(name = "emissionPointId")
 public class EmissionPoint  extends BussinesEntity {
+
+    private static final long serialVersionUID = 2921099283173813039L;
     
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "establishment_id", insertable=false, updatable=false, nullable=false)

@@ -65,6 +65,11 @@ public class Invoice extends BussinesEntity {
     
     private static final long serialVersionUID = 2087202727290952436L;
     
+    /**
+     * Número de mesa en la que se generó en invoice.
+     */
+    private String boardNumber;
+    
     private EnvironmentType environmentType;
     
     private EmissionType emissionType;
@@ -90,7 +95,15 @@ public class Invoice extends BussinesEntity {
     
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
-    
+
+    public String getBoardNumber() {
+        return boardNumber;
+    }
+
+    public void setBoardNumber(String boardNumber) {
+        this.boardNumber = boardNumber;
+    }
+
     public EnvironmentType getEnvironmentType() {
         return environmentType;
     }
