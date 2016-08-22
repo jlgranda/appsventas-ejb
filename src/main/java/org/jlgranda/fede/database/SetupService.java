@@ -216,6 +216,7 @@ public class SetupService implements Serializable {
         props.put("app.fede.decimalSeparator", ".:Separador de decimales:CORE");
         props.put("app.fede.thousandSeparator", ",:Separador de miles:CORE");
         props.put("app.fede.decimalPlaces", "2:Número de digitos a mostrar en campos tipo número:CORE");
+        props.put("app.fede.inventory.top", "10:Número de elementos en listas top:CORE");
 
         String label = null;
         String value = null;

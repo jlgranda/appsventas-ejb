@@ -58,6 +58,9 @@ public class Product extends BussinesEntity {
     @Column
     private BigDecimal price;
     
+    @Column
+    private ProductType productType;
+    
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
@@ -88,6 +91,14 @@ public class Product extends BussinesEntity {
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
+    }
+
+    public ProductType getProductType() {
+        return productType;
+    }
+
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
     }
     
     @Override

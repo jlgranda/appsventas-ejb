@@ -94,7 +94,7 @@
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
       <property name="hibernate.hbm2ddl.auto" value="update"/>
-      <property name="hibernate.show_sql" value="false"/>
+      <property name="hibernate.show_sql" value="true"/>
       <!--https://coderwall.com/p/e5fxrw/use-hibernate-4-3-x-with-jta-on-glassfish-4-->
       <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />-->
       <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
