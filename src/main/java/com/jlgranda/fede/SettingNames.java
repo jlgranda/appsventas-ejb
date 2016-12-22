@@ -56,5 +56,7 @@ public class SettingNames {
     public static String MODULE = "module-";
     public static String POPUP_FORMULARIO_CAMBIAR_CLAVE = "popup_cambiar_clave";
     public static String POPUP_SELECCIONAR_GRUPOS_USUARIO = "seleccionar_grupos_usuario";
+    
+    public static String INVOICE_NOTIFY_GAP = "fede.invoice.notify.gap";
 
 }
