@@ -112,4 +112,5 @@
       <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
     </properties>
   </persistence-unit>
+  
 </persistence>

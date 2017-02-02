@@ -58,5 +58,7 @@ public class SettingNames {
     public static String POPUP_SELECCIONAR_GRUPOS_USUARIO = "seleccionar_grupos_usuario";
     
     public static String INVOICE_NOTIFY_GAP = "fede.invoice.notify.gap";
+    
+    public static String PRODUCT_TOP_RANGE = "fede.sales.product.top.range";
 
 }
