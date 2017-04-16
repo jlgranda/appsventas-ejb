@@ -18,6 +18,7 @@
 package com.jlgranda.fede.ejb.sales;
 
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -65,6 +66,7 @@ public class InvoiceService extends BussinesEntityHome<Invoice> {
         _instance.setEnvironmentType(EnvironmentType.TEST);
         _instance.setEmissionType(EmissionType.SALE);
         _instance.setDocumentType(DocumentType.PRE_INVOICE);
+        
         return _instance;
     }
     

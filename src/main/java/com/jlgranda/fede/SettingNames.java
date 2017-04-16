@@ -49,6 +49,8 @@ public class SettingNames {
     public static String MYLASTS_RANGE = "app.fede.mylasts.range";
     public static String POPUP_WIDTH = "fede.popup.width";
     public static String POPUP_HEIGHT = "fede.popup.height";
+    public static String POPUP_LEFT = "fede.popup.left";
+    public static String POPUP_TOP = "fede.popup.top";
     public static String POPUP_SMALL_WIDTH = "fede.popup.small.width";
     public static String POPUP_SMALL_HEIGHT = "fede.popup.small.height";
     //MYMETYPE
