@@ -58,6 +58,7 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findByDocumentTypeAndOwner", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.owner = ?2 AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5 ORDER BY i.id DESC"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2 AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 AND i.active=?3"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.createdOn >= ?2 and i.createdOn <= ?3"),
 })
 public class Invoice extends BussinesEntity {
     
