@@ -52,7 +52,7 @@ import org.jpapi.model.PersistentObject;
  *
  */
 @Entity
-@Table(name = "SRI_DETALLE_IMPUËSTO")
+@Table(name = "SRI_DETALLE_IMPUESTO")
 public class DetalleImpuesto extends PersistentObject implements Comparable<DetalleImpuesto>, Serializable {
 
     private static final long serialVersionUID = -8619333609976064859L;
