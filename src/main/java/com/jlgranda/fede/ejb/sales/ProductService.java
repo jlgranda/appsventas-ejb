@@ -26,6 +26,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.sales.Product;
+import org.jlgranda.fede.model.sales.ProductType;
 import org.jlgranda.fede.model.sales.Product_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
@@ -59,6 +60,7 @@ public class ProductService extends BussinesEntityHome<Product> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setProductType(ProductType.RAW_MATERIAL);
         return _instance;
     }
     

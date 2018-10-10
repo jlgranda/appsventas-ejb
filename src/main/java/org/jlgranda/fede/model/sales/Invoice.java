@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findAll", query = "SELECT i FROM Invoice i ORDER BY i.id DESC"),
     @NamedQuery(name = "Invoice.findByDocumentType", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.active=?2 AND i.createdOn BETWEEN ?3 AND ?4 ORDER BY i.lastUpdate DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthor", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2  AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5 ORDER BY i.lastUpdate DESC"),
+    @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthorOrderByCode", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2  AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5 ORDER BY i.code DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndOwner", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.owner = ?2 AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5 ORDER BY i.id DESC"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2 AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 AND i.active=?3"),

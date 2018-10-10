@@ -44,7 +44,7 @@ import org.jlgranda.fede.util.FacturaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
+import org.jlgranda.fede.sri.factura.v110.Factura;
 
 /**
  *
@@ -131,7 +131,7 @@ public class FacturaElectronicaMailReader {
         List<FacturaReader> result = new ArrayList<>();
         ByteArrayOutputStream os = null;
         String filename = null;
-        Factura factura = null;
+        org.jlgranda.fede.sri.jaxb.factura.v110.Factura factura = null;
         EmailHelper emailHelper = new EmailHelper();
         if (mime4jMessage.isMultipart()) {
             org.apache.james.mime4j.dom.Multipart mime4jMultipart = (org.apache.james.mime4j.dom.Multipart) mime4jMessage.getBody();

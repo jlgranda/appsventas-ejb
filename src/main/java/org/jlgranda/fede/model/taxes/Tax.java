@@ -20,7 +20,7 @@ import org.jpapi.model.BussinesEntity;
 @Table(name = "IMPUESTO")
 @DiscriminatorValue(value = "TAX")
 @PrimaryKeyJoinColumn(name = "taxId")
-public class Impuesto extends BussinesEntity {
+public class Tax extends BussinesEntity {
     private static final long serialVersionUID = 1139635351877573337L;
     
     private String codigoPorcentaje;

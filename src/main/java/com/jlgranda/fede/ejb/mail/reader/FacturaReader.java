@@ -19,6 +19,7 @@ package com.jlgranda.fede.ejb.mail.reader;
 
 import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
 
+
 /**
  * Contenedor para procesamiento de un archivo xml que contiene la factura electrónica
  * @author jlgranda

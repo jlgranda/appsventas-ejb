@@ -46,6 +46,7 @@ public class SettingNames {
 
     //Properties
     public static String DASHBOARD_RANGE = "fede.dashboard.range";
+    public static String DASHBOARD__SUMMARY_RANGE = "fede.dashboard.summary.range";
     public static String MYLASTS_RANGE = "app.fede.mylasts.range";
     public static String POPUP_WIDTH = "fede.popup.width";
     public static String POPUP_HEIGHT = "fede.popup.height";

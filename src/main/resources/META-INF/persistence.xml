@@ -33,23 +33,6 @@
     <class>org.jpapi.model.Setting</class>
     <class>org.jpapi.model.Structure</class>
     <class>org.jpapi.model.profile.Subject</class>
-    <!-- Security persistence model from picketlink sample simple -->
-    <class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.AccountTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.RelationshipTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.AttributedTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.AttributeTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.AbstractCredentialTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.X509CredentialTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.GroupTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.OTPCredentialTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.TokenCredentialTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.RoleTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.PasswordCredentialTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.RelationshipIdentityTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.DigestCredentialTypeEntity</class>
-    <class>org.picketlink.idm.jpa.model.sample.simple.PermissionTypeEntity</class>
     <class>org.jlgranda.fede.model.document.FacturaElectronica</class>
     <class>org.jlgranda.fede.model.management.Diagnostic</class>
     <class>org.jlgranda.fede.model.management.Initiative</class>
@@ -90,6 +73,18 @@
     <class>net.tecnopro.document.model.Template</class>
     <class>net.tecnopro.mailing.Message</class>
     <class>net.tecnopro.mailing.Notification</class>
+    <!--SRI esquema v110-->
+    <class>org.jlgranda.fede.sri.factura.v110.Factura</class>
+    <class>org.jlgranda.fede.sri.factura.v110.InfoTributaria</class>
+    <class>org.jlgranda.fede.sri.factura.v110.InfoFactura</class>
+    <class>org.jlgranda.fede.sri.factura.v110.Pago</class>
+    <class>org.jlgranda.fede.sri.factura.v110.TotalImpuesto</class>
+    <class>org.jlgranda.fede.sri.factura.v110.Detalle</class>
+    <class>org.jlgranda.fede.sri.factura.v110.DetalleImpuesto</class>
+    <class>org.jlgranda.fede.sri.factura.v110.ReembolsoDetalle</class>
+    <class>org.jlgranda.fede.sri.factura.v110.Retencion</class>
+    <class>org.jlgranda.fede.sri.factura.v110.CampoAdicional</class>
+    <class>org.jlgranda.fede.sri.factura.v110.Impuesto</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
@@ -112,5 +107,4 @@
       <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
     </properties>
   </persistence-unit>
-  
 </persistence>
