@@ -61,7 +61,7 @@ public class InvoiceService extends BussinesEntityHome<Invoice> {
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
-        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        //_instance.setExpirationTime();
         _instance.setAuthor(null); //Establecer al usuario actual
         _instance.setEnvironmentType(EnvironmentType.TEST);
         _instance.setEmissionType(EmissionType.SALE);

@@ -29,6 +29,7 @@ public enum DocumentType {
     UNDEFINED,
     PRE_INVOICE,
     INVOICE,
+    OVERDUE,
     CREDIT_NOTE,
     DEBIT_NOTE,
     REMISSION_GUIDE,
