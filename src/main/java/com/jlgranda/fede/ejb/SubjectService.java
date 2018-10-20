@@ -76,7 +76,7 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         CriteriaQuery<Subject> query = builder.createQuery(Subject.class);
 
         Root<Subject> from = query.from(Subject.class);
-        query.select(from).orderBy(builder.desc(from.get(Subject_.name)));
+        query.select(from).orderBy(builder.desc(from.get(Subject_.lastUpdate)));
         return getResultList(query, maxresults, firstresult);
     }
     

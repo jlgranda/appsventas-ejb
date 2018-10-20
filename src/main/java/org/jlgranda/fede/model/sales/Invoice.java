@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 @PrimaryKeyJoinColumn(name = "invoiceId")
 @NamedQueries({
     @NamedQuery(name = "Invoice.findAll", query = "SELECT i FROM Invoice i ORDER BY i.id DESC"),
+    @NamedQuery(name = "Invoice.findByCode", query = "SELECT i FROM Invoice i WHERE i.code = ?1"),
     @NamedQuery(name = "Invoice.findByDocumentType", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.active=?2 AND i.createdOn BETWEEN ?3 AND ?4 ORDER BY i.lastUpdate DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthor", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2  AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5 ORDER BY i.lastUpdate DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthorOrderByCode", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2  AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5 ORDER BY i.code DESC"),
@@ -60,6 +61,7 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2 AND i.active=?3 AND i.createdOn BETWEEN ?4 AND ?5"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 AND i.active=?3"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.createdOn >= ?4 and i.createdOn <= ?5"),
+    @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.createdOn >= ?4 and i.createdOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountByOwnerBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.owner=?2 and i.documentType=?3 and i.status=?4 and i.createdOn >= ?5 and i.createdOn <= ?6"),
 })
 public class Invoice extends BussinesEntity {
