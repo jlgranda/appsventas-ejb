@@ -15,26 +15,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jlgranda.fede.model.talentohumano;
+package com.jlgranda.shiro.ejb;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import org.jpapi.model.PersistentObject;
+import com.jlgranda.shiro.Roles;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author jlgranda
  */
-@Entity
-@Table(name = "JORNADA")
-public class Jornada  extends PersistentObject implements Comparable<Jornada>, Serializable {
+@Stateless
+public class RolesFacade extends AbstractFacade<Roles> {
 
-    private static final long serialVersionUID = -2746655196942302436L;
+    @PersistenceContext(unitName = "fede")
+    private EntityManager em;
 
     @Override
-    public int compareTo(Jornada t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public RolesFacade() {
+        super(Roles.class);
     }
     
 }
