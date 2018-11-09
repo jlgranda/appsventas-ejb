@@ -87,7 +87,7 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
 
     @Override
     public int compareTo(Journal t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getBeginTime().compareTo(getEndTime());
     }
 
     @Override

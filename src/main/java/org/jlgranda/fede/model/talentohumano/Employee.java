@@ -28,6 +28,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.jpapi.model.PersistentObject;
 
@@ -49,6 +50,7 @@ public class Employee extends PersistentObject implements Comparable<Employee>, 
     private JobRole role;
     
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "employee", fetch = FetchType.LAZY)
+    @OrderBy("beginTime ASC")
     private List<Journal> journals = new ArrayList<>();
 
     public JobRole getRole() {
