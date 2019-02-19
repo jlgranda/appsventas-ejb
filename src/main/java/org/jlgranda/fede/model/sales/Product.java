@@ -126,6 +126,7 @@ public class Product extends BussinesEntity {
         }
         Product other = (Product) obj;
         return new org.apache.commons.lang.builder.EqualsBuilder().
+                append(getId(), other.getId()).
                 append(getCode(), other.getCode()).
                 append(getName(), other.getName()).
                 isEquals();
