@@ -50,7 +50,7 @@ public class Employee extends PersistentObject implements Comparable<Employee>, 
     private JobRole role;
     
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "employee", fetch = FetchType.LAZY)
-    @OrderBy("beginTime ASC")
+    @OrderBy("beginTime DESC")
     private List<Journal> journals = new ArrayList<>();
 
     public JobRole getRole() {
