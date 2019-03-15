@@ -17,11 +17,16 @@
  */
 package com.jlgranda.fede.ejb.talentohumano;
 
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.talentohumano.Journal;
+import org.jlgranda.fede.model.talentohumano.Journal_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -55,5 +60,19 @@ public class JournalService extends BussinesEntityHome<Journal> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
+    }
+    
+    public List<Journal> find(int maxresults, int firstresult) {
+
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Journal> query = builder.createQuery(Journal.class);
+
+        Root<Journal> from = query.from(Journal.class);
+        query.select(from).orderBy(builder.desc(from.get(Journal_.name)));
+        return getResultList(query, maxresults, firstresult);        
+    }
+    
+    public long count() {
+        return super.count(Journal.class); 
     }
 }
