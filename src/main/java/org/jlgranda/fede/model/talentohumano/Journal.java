@@ -24,10 +24,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import org.jpapi.model.PersistentObject;
+import org.jpapi.util.Dates;
 
 /**
  *
@@ -35,6 +39,10 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "JOURNAL")
+@NamedQueries({
+    @NamedQuery(name = "Journal.findById", query = "select j FROM Journal j WHERE j.id = ?1"),
+    @NamedQuery(name = "Journal.findLastForOwner", query = "select j FROM Journal j WHERE j.owner = ?1 ORDER BY j.beginTime DESC"),
+})
 public class Journal  extends PersistentObject implements Comparable<Journal>, Serializable {
 
     private static final long serialVersionUID = -2746655196942302436L;
@@ -85,6 +93,11 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
         this.employeeId = employeeId;
     }
 
+    @Transient
+    public boolean isJustChecked(){
+        return Dates.calculateNumberOfMinutesBetween(Dates.now(), getBeginTime()) < 1; //reciente si es menor a un minuto
+    }
+    
     @Override
     public int compareTo(Journal t) {
         return getBeginTime().compareTo(getEndTime());

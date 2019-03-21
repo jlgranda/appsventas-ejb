@@ -40,6 +40,7 @@ import org.jpapi.model.BussinesEntity;
 @NamedQueries({
     @NamedQuery(name = "Product.findById", query = "select p FROM Product p WHERE p.id = ?1"),
     @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p ORDER BY p.id DESC"),
+    @NamedQuery(name = "Product.findByProductType", query = "select p FROM Product p WHERE p.productType = ? ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findLastProduct", query = "select p FROM Product p ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProducts", query = "select p FROM Product p ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProductIdsBetween", query = "SELECT p.id,  d.lastUpdate FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.lastUpdate >= ? and d.lastUpdate <= ? ORDER BY 2 DESC"),
