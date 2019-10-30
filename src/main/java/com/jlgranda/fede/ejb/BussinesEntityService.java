@@ -41,6 +41,8 @@ import org.slf4j.LoggerFactory;
 @Stateless
 public class BussinesEntityService extends BussinesEntityHome<BussinesEntity> 
         implements Serializable {
+
+    private static final long serialVersionUID = 3850172047784032317L;
     
     Logger  logger = LoggerFactory.getLogger(BussinesEntityService.class);
     

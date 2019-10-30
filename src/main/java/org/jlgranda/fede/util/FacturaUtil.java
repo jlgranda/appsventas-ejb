@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
-import org.jlgranda.fede.sri.jaxb.factura.v110.ObjectFactory;
+import org.jlgranda.fede.sri.factura.v110.Factura;
+//import org.jlgranda.fede.sri.factura.v110.ObjectFactory;
 
 
 /**
@@ -57,7 +57,7 @@ public class FacturaUtil implements Serializable {
         
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+            jaxbContext = JAXBContext.newInstance(Factura.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String comprobante = extraerComprobante(xml);
             if (comprobante != null){

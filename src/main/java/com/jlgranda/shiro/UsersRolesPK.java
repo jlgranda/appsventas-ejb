@@ -31,6 +31,8 @@ import javax.validation.constraints.Size;
 @Embeddable
 public class UsersRolesPK implements Serializable {
 
+    private static final long serialVersionUID = -5247908906770272397L;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)

@@ -29,7 +29,8 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class UsersRolesFacade extends AbstractFacade<UsersRoles> {
 
-    @PersistenceContext(unitName = "fede")
+    //@PersistenceContext(unitName = "fede")
+    @PersistenceContext
     private EntityManager em;
 
     @Override

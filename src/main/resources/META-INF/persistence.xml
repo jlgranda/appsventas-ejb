@@ -88,8 +88,8 @@
     <class>org.jlgranda.fede.model.talentohumano.Employee</class>
     <class>org.jlgranda.fede.model.talentohumano.Journal</class>
     <class>org.jlgranda.fede.model.talentohumano.JobRole</class>
-    <class>org.jlgranda.shiro.Roles</class>
-    <class>org.jlgranda.shiro.UsersRoles</class>
+    <class>com.jlgranda.shiro.Roles</class>
+    <class>com.jlgranda.shiro.UsersRoles</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

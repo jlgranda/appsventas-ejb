@@ -131,7 +131,7 @@ public class FacturaElectronicaMailReader {
         List<FacturaReader> result = new ArrayList<>();
         ByteArrayOutputStream os = null;
         String filename = null;
-        org.jlgranda.fede.sri.jaxb.factura.v110.Factura factura = null;
+        org.jlgranda.fede.sri.factura.v110.Factura factura = null;
         EmailHelper emailHelper = new EmailHelper();
         if (mime4jMessage.isMultipart()) {
             org.apache.james.mime4j.dom.Multipart mime4jMultipart = (org.apache.james.mime4j.dom.Multipart) mime4jMessage.getBody();
