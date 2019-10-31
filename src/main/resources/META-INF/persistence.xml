@@ -90,6 +90,7 @@
     <class>org.jlgranda.fede.model.talentohumano.JobRole</class>
     <class>com.jlgranda.shiro.Roles</class>
     <class>com.jlgranda.shiro.UsersRoles</class>
+    <class>org.jlgranda.fede.model.gifts.GiftEntity</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
