@@ -116,4 +116,5 @@ public class GiftService extends BussinesEntityHome<GiftEntity> {
         query.select(from).orderBy(builder.desc(from.get(GiftEntity_.name)));
         return getResultList(query, maxresults, firstresult);
     }
+    
 }
