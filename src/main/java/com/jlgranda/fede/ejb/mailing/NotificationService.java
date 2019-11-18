@@ -22,9 +22,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import net.tecnopro.mailing.Notification;
-import org.jlgranda.fede.model.sales.Detail;
 import org.jpapi.controller.BussinesEntityHome;
-import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 
 /**

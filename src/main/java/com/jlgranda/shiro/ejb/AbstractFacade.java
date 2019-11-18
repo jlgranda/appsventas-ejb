@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 /**
  *
  * @author jlgranda
+ * @param <T>
  */
 public abstract class AbstractFacade<T> {
 

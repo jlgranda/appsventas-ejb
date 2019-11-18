@@ -52,7 +52,7 @@ public class SubjectService extends BussinesEntityHome<Subject> {
     }
 
     public boolean usersExist() {
-        Query q = em.createQuery("SELECT U FROM AccountTypeEntity U");
+        Query q = em.createQuery("SELECT U FROM Subject U");
         return !q.getResultList().isEmpty();
     }
 
@@ -64,6 +64,7 @@ public class SubjectService extends BussinesEntityHome<Subject> {
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setConfirmed(true);
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual

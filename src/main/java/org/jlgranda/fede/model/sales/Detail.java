@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.PersistentObject;
@@ -59,9 +60,9 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
 
     public Detail() {
         this.product = null;
-//        this.productId = null;
         this.amount = 0;
         this.unit = "u";
+        this.showAmountInSummary = true;
     }
 
     public Detail(Product product, float amount) {
@@ -69,6 +70,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
         this.productId = product.getId();
         this.amount = amount;
         this.unit = "u";
+        this.showAmountInSummary = true;
     }
     
     public Detail(Product product, float amount, String unit) {
@@ -76,6 +78,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
         this.product = product;
         this.amount = amount;
         this.unit = unit;
+        this.showAmountInSummary = true;
     }
 
     public Invoice getInvoice() {
@@ -173,12 +176,28 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("(")
-        .append(getAmount())
-        .append(")")
-        .append(" ")
-        .append(getProduct() == null ? getProductId() : getProduct().getName());
+        
+        if (isShowAmountInSummary()){
+            str.append("(")
+            .append(getAmount())
+            .append(")")
+            .append(" ")
+            .append(getProduct() == null ? getProductId() : getProduct().getName());
+        } else {
+            str.append(getProduct() == null ? getProductId() : getProduct().getName());
+        }
         return str.toString();
+    }
+    
+    @Transient
+    private boolean showAmountInSummary;
+
+    public boolean isShowAmountInSummary() {
+        return showAmountInSummary;
+    }
+
+    public void setShowAmountInSummary(boolean showAmountInSummary) {
+        this.showAmountInSummary = showAmountInSummary;
     }
 
     @Override

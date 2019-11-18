@@ -68,7 +68,7 @@ public class GiftService extends BussinesEntityHome<GiftEntity> {
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
-        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 7));
         _instance.setAuthor(null); //Establecer al usuario actual
         _instance.setShared(false);
         _instance.setSharingCount(0);

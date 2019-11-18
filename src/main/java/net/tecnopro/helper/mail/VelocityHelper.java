@@ -33,8 +33,8 @@ public  class VelocityHelper {
       
         String rendererMessage = writer.toString();
         /* show the World */
-        //System.out.println("VelocityHelper: Se renderizó el mensaje: " + rendererMessage );
-        destroyTemporaryFileTemplate(templateFileName);
+        System.out.println("VelocityHelper: Se renderizó el mensaje: " + rendererMessage );
+        //destroyTemporaryFileTemplate(templateFileName);
         return rendererMessage;
 		
 	}
@@ -69,7 +69,7 @@ public  class VelocityHelper {
 			FileOutputStream stream = new FileOutputStream(tmp);
 			stream.write(message.getBytes());
 			stream.close();
-			 //System.out.println("VelocityHelper: se creo el archivo plantilla temporal: " + tmp.getAbsolutePath());
+			System.out.println("VelocityHelper: se creo el archivo plantilla temporal: " + tmp.getAbsolutePath());
 		} else {
 			return "failure";
 		}

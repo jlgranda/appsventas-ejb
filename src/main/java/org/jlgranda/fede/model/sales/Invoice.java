@@ -210,6 +210,7 @@ public class Invoice extends BussinesEntity {
         return Lists.toString(list);
     }
     
+    
     /**
      * Calcula el subtotal del detalle de la factura de venta
      * @return 
