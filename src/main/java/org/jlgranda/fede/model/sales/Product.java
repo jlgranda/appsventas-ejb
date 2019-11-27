@@ -132,5 +132,10 @@ public class Product extends BussinesEntity {
                 append(getName(), other.getName()).
                 isEquals();
     }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(getId());
+    }
 
 }
