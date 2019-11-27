@@ -18,7 +18,19 @@
 package org.jlgranda.fede.model.talentohumano;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,12 +66,14 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
     @Column(name = "endTime", updatable = false, nullable = false)
     protected Date endTime;
     
-    @ManyToOne(optional = true, cascade = {CascadeType.ALL})
+    @ManyToOne(optional = true, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "employee_id", insertable=false, updatable=false, nullable=false)
     private Employee employee;
     
     @Column(name = "employee_id", insertable=true, updatable=true, nullable=false)
     private Long employeeId;
+    
+    private String day;
 
     public Date getBeginTime() {
         return beginTime;
@@ -72,7 +86,7 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
     public Date getEndTime() {
         return endTime;
     }
-
+    
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
@@ -98,14 +112,114 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
         return Dates.calculateNumberOfMinutesBetween(Dates.now(), getBeginTime()) < 1; //reciente si es menor a un minuto
     }
     
+    @Transient
+    public boolean isJustCreated(){
+        return Dates.calculateNumberOfMinutesBetween(Dates.now(), getCreatedOn()) < 15; //reciente si es menor a un minuto
+    }
+    
+    @Transient
+    public String getDayHour(){
+        if (getBeginTime() == null){
+            return null;
+        }
+        return "" + Dates.get(getBeginTime(), Calendar.MONTH) + Dates.get(getBeginTime(), Calendar.DAY_OF_MONTH);
+    }
+    
+    @Transient
+    public String getDayOfWeek(){
+        if (getBeginTime() == null){
+            return null;
+        }
+        
+        LocalDate localDate = LocalDate.of(Dates.get(getBeginTime(), Calendar.YEAR), Dates.get(getBeginTime(), Calendar.MONTH) + 1, Dates.get(getBeginTime(), Calendar.DAY_OF_MONTH));
+        Locale spanishLocale=new Locale("es", "ES");
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+        return dayOfWeek.getDisplayName(TextStyle.FULL, spanishLocale).toUpperCase();
+    }
+
+//    public static void main(String[] args) throws ParseException {
+//        //2019-09-01 10:03:37.782
+//        //Date date = new Date("2019-09-01 10:03:37.782");
+//       // Date date = Dates.toDate("2019-09-01 10:03:37.782");
+//        Date date = Dates.addDays(Dates.now(), -(27+30+30));
+//        System.out.println(">>> date: " + date);
+//        System.out.println(">>> month: " + Dates.get(date, Calendar.MONTH));
+//        System.out.println(">>> day: " + Dates.get(date, Calendar.DAY_OF_MONTH));
+//        System.out.println(">>> date: " + Dates.get(date, Calendar.DATE));
+//        LocalDate localDate = LocalDate.of(Dates.get(date, Calendar.YEAR), Dates.get(date, Calendar.MONTH)+1, Dates.get(date, Calendar.DAY_OF_MONTH));
+//        
+//        //Day of week and month in Spanish
+//        Locale spanishLocale=new Locale("es", "ES");
+//       // String dateInSpanish = localDate.format(DateTimeFormatter.ofPattern("EEEE, dd MMMM, yyyy", spanishLocale));
+//        //System.out.println("'2019-09-01' in Spanish: "+dateInSpanish);
+//    
+//        
+//        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+//        System.out.println(">>> " + dayOfWeek.getDisplayName(TextStyle.FULL, spanishLocale));
+//        
+//    }
+    @Transient
+    public String getDayOfMonth(){
+        if (getBeginTime() == null){
+            return null;
+        }
+        return "" + Dates.get(getBeginTime(), Calendar.DAY_OF_MONTH);
+    }
+
+    @Transient
+    public String getDay() {
+        return day;
+    }
+
+    @Transient
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    
     @Override
     public int compareTo(Journal t) {
-        return getBeginTime().compareTo(getEndTime());
+        return getBeginTime().compareTo(t.getBeginTime());
     }
 
     @Override
     public String toString() {
-        return getName();
+//        return String.format("%s[id=%d, beginDate=%s, endDate=%s]", getClass().getSimpleName(), getId(), getBeginTime(), getEndTime());
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(getId());
+        hash = 41 * hash + Objects.hashCode(this.beginTime);
+        hash = 41 * hash + Objects.hashCode(this.employee);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Journal other = (Journal) obj;
+        if (!Objects.equals(getId(), other.getId())) {
+            return false;
+        }
+        if (!Objects.equals(this.beginTime, other.beginTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.employee, other.employee)) {
+            return false;
+        }
+        return true;
+    }
+
     
 }

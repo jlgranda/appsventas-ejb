@@ -39,7 +39,8 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "EMPLOYEE")
 @NamedQueries({
-    @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1")
+    @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1"),
+    @NamedQuery(name = "Employee.findByOwnerCodeAndName", query = "SELECT e FROM Employee e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
 })
 public class Employee extends PersistentObject implements Comparable<Employee>, Serializable {
 
@@ -49,7 +50,7 @@ public class Employee extends PersistentObject implements Comparable<Employee>, 
     @JoinColumn(name = "role", nullable = true)
     private JobRole role;
     
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "employee", fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.MERGE}, mappedBy = "employee", fetch = FetchType.LAZY)
     @OrderBy("beginTime DESC")
     private List<Journal> journals = new ArrayList<>();
 
@@ -72,7 +73,16 @@ public class Employee extends PersistentObject implements Comparable<Employee>, 
     
     @Override
     public int compareTo(Employee t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getId() == null  && t != null && t.getId() != null)
+            return -1;
+        if (getId() != null  && t == null)
+            return 1;
+        return getId().compareTo(t.getId());
+    }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(getId());
     }
     
 }
