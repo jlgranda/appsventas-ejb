@@ -43,7 +43,7 @@ public class ProductCache {
     @EJB
     ProductService productService;
     
-    private final Map<Long, Product> products = new HashMap<Long, Product>();
+    private final Map<Long, Product> products = new HashMap<>();
     
     @PostConstruct
     public void init() {

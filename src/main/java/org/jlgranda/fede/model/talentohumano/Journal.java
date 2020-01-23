@@ -18,14 +18,8 @@
 package org.jlgranda.fede.model.talentohumano;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Calendar;
 import java.util.Date;
