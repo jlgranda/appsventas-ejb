@@ -71,9 +71,10 @@ public class Template extends BussinesEntity implements Comparable<Template>, Se
         this.signature = signature;
     }
 
+
     @Override
-    public int compareTo(Template o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int compareTo(Template t) {
+        return this.getId().compareTo(t.getId());
     }
     
 }

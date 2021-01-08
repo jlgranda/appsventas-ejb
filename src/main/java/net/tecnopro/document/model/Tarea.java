@@ -47,7 +47,7 @@ public class Tarea extends BussinesEntity implements Serializable {
     private Date fechaEnvio;
     @Basic(optional = false)
     @NotNull
-    private String Departamento;
+    private String departamento;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private UrgenciaTipo urgenciaTipo;
@@ -69,7 +69,7 @@ public class Tarea extends BussinesEntity implements Serializable {
             String Departamento, UrgenciaTipo urgencyType,
             EstadoTipo estadoType) {
 
-        this.Departamento = Departamento;
+        this.departamento = Departamento;
         this.urgenciaTipo = urgencyType;
         this.estadoTipo = estadoType;
     }
@@ -83,11 +83,11 @@ public class Tarea extends BussinesEntity implements Serializable {
     }
 
     public String getDepartamento() {
-        return Departamento;
+        return departamento;
     }
 
     public void setDepartamento(String Departamento) {
-        this.Departamento = Departamento;
+        this.departamento = Departamento;
     }
 
     public UrgenciaTipo getUrgencyType() {
