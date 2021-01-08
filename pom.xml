@@ -12,7 +12,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.2.0.Final</hibernate.version>
+        <hibernate.version>5.3.6.Final</hibernate.version>
         <!-- WildFly dependency versions -->
         <version.wildfly.maven.plugin>1.0.1.Final</version.wildfly.maven.plugin>
 
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.1.0.Final</version>
+            <version>5.3.6.Final</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
+            <version>5.3.6.Final</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -94,7 +94,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator-annotation-processor</artifactId>
-            <version>5.2.4.Final</version>
+            <version>5.3.6.Final</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -125,7 +125,7 @@
         <dependency>    
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
+            <version>3.2.2</version>
         </dependency>
    
         <dependency>
