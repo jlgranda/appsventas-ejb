@@ -217,13 +217,21 @@ public class Invoice extends BussinesEntity {
      * @return 
      */
     @Transient
-    public BigDecimal getTotal(){
+    public BigDecimal getTotalSinImpuesto(){
         BigDecimal total = new BigDecimal(0);
         for (Detail d : getDetails()){
             total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())));
         }
         
         return total;
+    }
+    /**
+     * Calcula el subtotal del detalle de la factura de venta
+     * @return 
+     */
+    @Transient
+    public BigDecimal getTotal(){
+        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA));
     }
     
     /**
