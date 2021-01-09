@@ -237,7 +237,7 @@ public class Invoice extends BussinesEntity {
         for (Detail d : getDetails()){
             if (taxType.equals(d.getProduct().getTaxType())){
                 //TODO identificar el porcentaje en función del tipo de impuesto
-                total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())).multiply(BigDecimal.valueOf(0.08333)));
+                total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())).multiply(BigDecimal.valueOf(0.12)));
             }
         }
         
