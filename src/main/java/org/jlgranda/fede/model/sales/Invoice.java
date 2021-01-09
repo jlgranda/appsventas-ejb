@@ -227,11 +227,10 @@ public class Invoice extends BussinesEntity {
     }
     
     /**
-     * Calcula el subtotal del detalle de la factura de venta
+     * Calcula el subtotal del detalle de la factura de venta por tipo de impuesto
      * @param taxType
      * @return 
      */
-    @Transient
     public BigDecimal getTotalTax(TaxType taxType){
         BigDecimal total = new BigDecimal(0);
         for (Detail d : getDetails()){

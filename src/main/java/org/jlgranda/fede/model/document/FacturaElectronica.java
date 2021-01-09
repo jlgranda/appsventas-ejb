@@ -70,9 +70,12 @@ public class FacturaElectronica extends BussinesEntity {
 
     private BigDecimal totalSinImpuestos;
 
+    private BigDecimal totalIVA0 = BigDecimal.ZERO;
+
+    private BigDecimal totalIVA12;
+
     private BigDecimal totalDescuento;
 
-    //TODO agregar lista de impuestos, cuando sea necesario
     private BigDecimal importeTotal;
 
     private String moneda;
@@ -122,6 +125,22 @@ public class FacturaElectronica extends BussinesEntity {
 
     public void setTotalSinImpuestos(BigDecimal totalSinImpuestos) {
         this.totalSinImpuestos = totalSinImpuestos;
+    }
+
+    public BigDecimal getTotalIVA0() {
+        return totalIVA0;
+    }
+
+    public void setTotalIVA0(BigDecimal totalIVA0) {
+        this.totalIVA0 = totalIVA0;
+    }
+
+    public BigDecimal getTotalIVA12() {
+        return totalIVA12;
+    }
+
+    public void setTotalIVA12(BigDecimal totalIVA12) {
+        this.totalIVA12 = totalIVA12;
     }
 
     public BigDecimal getTotalDescuento() {

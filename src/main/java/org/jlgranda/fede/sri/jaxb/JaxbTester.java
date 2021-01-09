@@ -21,8 +21,9 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-//import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
-//import org.jlgranda.fede.sri.jaxb.factura.v110.ObjectFactory;
+//import org.jlgranda.fede.sri.factura.v110.Factura;
+import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
+import org.jlgranda.fede.sri.jaxb.factura.v110.ObjectFactory;
 
 
 /**
@@ -31,17 +32,17 @@ import javax.xml.bind.Unmarshaller;
  */
 public class JaxbTester {
     public static void main(String[] args) throws JAXBException{
-//         JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
-//         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-//         Factura factura = (Factura) unmarshaller.unmarshal(new File("/home/jlgranda/NetBeansProjects/fede/src/main/resources/sri/esquemasXmlVersion1.1.0/FAC-020-903-000002385.xml"));
-//         //Factura factura = (Factura) unmarshaller.unmarshal(new File("/home/jlgranda/NetBeansProjects/fede/src/main/resources/sri/esquemasXmlVersion1.1.0/1101201501119000682000120010030000029141234567812.xml"));
-//         
-//         System.out.println("jlgranda.com --> " + factura.getId());
-//         System.out.println("jlgranda.com --> " + factura.getInfoTributaria().getRuc());
-//         System.out.println("jlgranda.com --> " + factura.getInfoTributaria().getNombreComercial());
-//         System.out.println("jlgranda.com --> " + factura.getInfoTributaria().getRazonSocial());
-//         System.out.println("jlgranda.com --> " + factura.getInfoFactura().getIdentificacionComprador());
-//         System.out.println("jlgranda.com --> " + factura.getInfoFactura().getRazonSocialComprador());
-//         System.out.println("jlgranda.com --> " + factura.getInfoFactura().getImporteTotal());
+         JAXBContext jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
+         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+         Factura factura = (Factura) unmarshaller.unmarshal(new File("/home/jlgranda/Descargas/001-026-000587161.xml"));
+         //Factura factura = (Factura) unmarshaller.unmarshal(new File("/home/jlgranda/NetBeansProjects/fede/src/main/resources/sri/esquemasXmlVersion1.1.0/1101201501119000682000120010030000029141234567812.xml"));
+         
+         System.out.println("jlgranda.com --> " + factura.getId());
+         System.out.println("jlgranda.com --> " + factura.getInfoTributaria().getRuc());
+         System.out.println("jlgranda.com --> " + factura.getInfoTributaria().getNombreComercial());
+         System.out.println("jlgranda.com --> " + factura.getInfoTributaria().getRazonSocial());
+         System.out.println("jlgranda.com --> " + factura.getInfoFactura().getIdentificacionComprador());
+         System.out.println("jlgranda.com --> " + factura.getInfoFactura().getRazonSocialComprador());
+         System.out.println("jlgranda.com --> " + factura.getInfoFactura().getImporteTotal());
     }
 }

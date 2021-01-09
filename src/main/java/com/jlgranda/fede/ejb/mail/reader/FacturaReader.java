@@ -17,7 +17,8 @@
  */
 package com.jlgranda.fede.ejb.mail.reader;
 
-import org.jlgranda.fede.sri.factura.v110.Factura;
+import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
+
 
 
 /**

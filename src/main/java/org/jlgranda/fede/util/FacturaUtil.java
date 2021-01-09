@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import org.jlgranda.fede.sri.factura.v110.Factura;
-//import org.jlgranda.fede.sri.factura.v110.ObjectFactory;
+import org.jlgranda.fede.sri.jaxb.factura.v110.Factura;
+import org.jlgranda.fede.sri.jaxb.factura.v110.ObjectFactory;
 
 
 /**
@@ -43,7 +43,7 @@ public class FacturaUtil implements Serializable {
     
        
     /**
-     * Lee el contenido XML de la factura electrónica a un objeto factura
+     * Lee el contenido XML de la factura electrónica a un objeto factura JAXB
      * @param xml contenido XML de la factura electrónica
      * @return la instancia factura representada por el XML
      */
@@ -57,7 +57,7 @@ public class FacturaUtil implements Serializable {
         
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(Factura.class);
+            jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String comprobante = extraerComprobante(xml);
             if (comprobante != null){
@@ -97,7 +97,7 @@ public class FacturaUtil implements Serializable {
                 indiceFinTagComprobante = xml.indexOf(FIN_TAG_COMPROBANTE_SIN_CDATA);
             }
         } 
-        return (indiceInicioTagComprobante == -1 || indiceFinTagComprobante == -1) ? null : xml.substring(indiceInicioTagComprobante, indiceFinTagComprobante);
+        return (indiceInicioTagComprobante == -1 || indiceFinTagComprobante == -1) ? xml : xml.substring(indiceInicioTagComprobante, indiceFinTagComprobante);
     }
     
     public static String extraerURL(String xml, String inicioTagURL, String finTagURL) {
@@ -466,6 +466,100 @@ public class FacturaUtil implements Serializable {
 "</div><br><br clear=\"all\"><br>-- <br><div class=\"gmail_signature\">fede</div>\n" +
 "</div>", "<b> <a href=\"", "\" target=\"_blank\">Descarga formato XML</a>");
     
-    System.err.println(url);
+    //System.err.println(url);
+    
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+"<factura id=\"comprobante\" version=\"1.1.0\">   <infoTributaria>     <ambiente>2</ambiente>     <tipoEmision>1</tipoEmision>     <razonSocial>BANCO DE LOJA S.A.</razonSocial>     <nombreComercial>BANCO DE LOJA S.A.</nombreComercial>     <ruc>1190002213001</ruc>     <claveAcceso>3011202001119000221300120010260005871611234567810</claveAcceso>     <codDoc>01</codDoc>     <estab>001</estab>     <ptoEmi>026</ptoEmi>     <secuencial>000587161</secuencial>     <dirMatriz>BOLIVAR Y ROCAFUERTE</dirMatriz>   </infoTributaria>   <infoFactura>     <fechaEmision>30/11/2020</fechaEmision>     <dirEstablecimiento>Bolivar 15814 y Rocafuerte</dirEstablecimiento>     <contribuyenteEspecial>3997</contribuyenteEspecial>     <obligadoContabilidad>SI</obligadoContabilidad>     <tipoIdentificacionComprador>05</tipoIdentificacionComprador>     <razonSocialComprador>GRANDA SIVISAPA JOSE LUIS</razonSocialComprador>     <identificacionComprador>1103826960</identificacionComprador>     <totalSinImpuestos>4</totalSinImpuestos>     <totalDescuento>0.00</totalDescuento>     <totalConImpuestos>       <totalImpuesto>         <codigo>2</codigo>         <codigoPorcentaje>2</codigoPorcentaje>         <baseImponible>4.00</baseImponible>         <valor>0.48</valor>       </totalImpuesto>     </totalConImpuestos>     <propina>00.00</propina>     <importeTotal>4.48</importeTotal>     <moneda>DOLAR</moneda>     <pagos>       <pago>         <formaPago>20</formaPago>         <total>4.48</total>       </pago>     </pagos>   </infoFactura>   <detalles>     <detalle>       <codigoPrincipal>4053069A1</codigoPrincipal>       <descripcion>COSTO TRANSFERENCIA WEB</descripcion>       <cantidad>3</cantidad>       <precioUnitario>0.36</precioUnitario>       <descuento>00.00</descuento>       <precioTotalSinImpuesto>1.08</precioTotalSinImpuesto>       <impuestos>         <impuesto>           <codigo>2</codigo>           <codigoPorcentaje>2</codigoPorcentaje>           <tarifa>12</tarifa>           <baseImponible>1.08</baseImponible>           <valor>0.13</valor>         </impuesto>       </impuestos>     </detalle>     <detalle>       <codigoPrincipal>4053099B2</codigoPrincipal>       <descripcion>COSTO PAGO EERSSA WEB</descripcion>       <cantidad>1</cantidad>       <precioUnitario>0.27</precioUnitario>       <descuento>00.00</descuento>       <precioTotalSinImpuesto>0.27</precioTotalSinImpuesto>       <impuestos>         <impuesto>           <codigo>2</codigo>           <codigoPorcentaje>2</codigoPorcentaje>           <tarifa>12</tarifa>           <baseImponible>0.27</baseImponible>           <valor>0.03</valor>         </impuesto>       </impuestos>     </detalle>     <detalle>       <codigoPrincipal>4244067C3</codigoPrincipal>       <descripcion>SRVP TRAN INTER WEB</descripcion>       <cantidad>4</cantidad>       <precioUnitario>0.36</precioUnitario>       <descuento>00.00</descuento>       <precioTotalSinImpuesto>1.44</precioTotalSinImpuesto>       <impuestos>         <impuesto>           <codigo>2</codigo>           <codigoPorcentaje>2</codigoPorcentaje>           <tarifa>12</tarifa>           <baseImponible>1.44</baseImponible>           <valor>0.17</valor>         </impuesto>       </impuestos>     </detalle>     <detalle>       <codigoPrincipal>4053092D4</codigoPrincipal>       <descripcion>COSTO TRANSFERENCIA PAGO DIRECTO</descripcion>       <cantidad>1</cantidad>       <precioUnitario>0.20</precioUnitario>       <descuento>00.00</descuento>       <precioTotalSinImpuesto>0.20</precioTotalSinImpuesto>       <impuestos>         <impuesto>           <codigo>2</codigo>           <codigoPorcentaje>2</codigoPorcentaje>           <tarifa>12</tarifa>           <baseImponible>0.20</baseImponible>           <valor>0.02</valor>         </impuesto>       </impuestos>     </detalle>     <detalle>       <codigoPrincipal>4285086E5</codigoPrincipal>       <descripcion>TRANSFERENCIAS SCI RECIBIDAS</descripcion>       <cantidad>1</cantidad>       <precioUnitario>0.20</precioUnitario>       <descuento>00.00</descuento>       <precioTotalSinImpuesto>0.20</precioTotalSinImpuesto>       <impuestos>         <impuesto>           <codigo>2</codigo>           <codigoPorcentaje>2</codigoPorcentaje>           <tarifa>12</tarifa>           <baseImponible>0.20</baseImponible>           <valor>0.02</valor>         </impuesto>       </impuestos>     </detalle>     <detalle>       <codigoPrincipal>4031095F6</codigoPrincipal>       <descripcion>COSTO PAGO EMAALEP</descripcion>       <cantidad>3</cantidad>       <precioUnitario>0.27</precioUnitario>       <descuento>00.00</descuento>       <precioTotalSinImpuesto>0.81</precioTotalSinImpuesto>       <impuestos>         <impuesto>           <codigo>2</codigo>           <codigoPorcentaje>2</codigoPorcentaje>           <tarifa>12</tarifa>           <baseImponible>0.81</baseImponible>           <valor>0.10</valor>         </impuesto>       </impuestos>     </detalle>   </detalles> <ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\" xmlns:etsi=\"http://uri.etsi.org/01903/v1.3.2#\" Id=\"Signature995092\">\n" +
+"<ds:SignedInfo Id=\"Signature-SignedInfo363246\">\n" +
+"<ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"></ds:CanonicalizationMethod>\n" +
+"<ds:SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\"></ds:SignatureMethod>\n" +
+"<ds:Reference Id=\"SignedPropertiesID503724\" Type=\"http://uri.etsi.org/01903#SignedProperties\" URI=\"#Signature995092-SignedProperties478702\">\n" +
+"<ds:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></ds:DigestMethod>\n" +
+"<ds:DigestValue>hCX/TNOOuNqyVio5E5EvFRplJBE=</ds:DigestValue>\n" +
+"</ds:Reference>\n" +
+"<ds:Reference URI=\"#Certificate1181313\">\n" +
+"<ds:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></ds:DigestMethod>\n" +
+"<ds:DigestValue>jeR86RfD0aIoRk8chrIa8c35fcs=</ds:DigestValue>\n" +
+"</ds:Reference>\n" +
+"<ds:Reference Id=\"Reference-ID-395235\" URI=\"#comprobante\">\n" +
+"<ds:Transforms>\n" +
+"<ds:Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"></ds:Transform>\n" +
+"</ds:Transforms>\n" +
+"<ds:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></ds:DigestMethod>\n" +
+"<ds:DigestValue>FLu3dGzEOGbsrwqIjINpqIzXo2Q=</ds:DigestValue>\n" +
+"</ds:Reference>\n" +
+"</ds:SignedInfo>\n" +
+"<ds:SignatureValue Id=\"SignatureValue935596\">\n" +
+"LM+kSoTbui/p9QegYoNbnO2grTFw0Yy8n/t/uSpVlWUC+v7TGqCnl2YXS0EIb50U3bCuGbn2LpJg\n" +
+"zSDn8l4Id4FlZrNckuaFy7gREGfcq7vDXjh+zjOM/JT2EtSEGMPz/uTSmmozQh6BaXib4lHJm9S0\n" +
+"UWPooUtcO8jZ+smh2pqguR60OH/1t9E7kj7rIJYfeopN7dAzQF/MwAWNVBvwEmaYuN661UirsW6y\n" +
+"qFfvYx0X2GAG/6TKrIt87VTlOfGy02QmO1lQpeCMMxcXdxrxAd9FR71SZPjVHMt0kiwHPAzBvSBa\n" +
+"amouHXyW+xLKZqiRLAEI33d/7IJE9F9Ac9/YUw==\n" +
+"</ds:SignatureValue>\n" +
+"<ds:KeyInfo Id=\"Certificate1181313\">\n" +
+"<ds:X509Data>\n" +
+"<ds:X509Certificate>\n" +
+"MIIJ6jCCB9KgAwIBAgIEW2I/4TANBgkqhkiG9w0BAQsFADCBoTELMAkGA1UEBhMCRUMxIjAgBgNV\n" +
+"BAoTGUJBTkNPIENFTlRSQUwgREVMIEVDVUFET1IxNzA1BgNVBAsTLkVOVElEQUQgREUgQ0VSVElG\n" +
+"SUNBQ0lPTiBERSBJTkZPUk1BQ0lPTi1FQ0lCQ0UxDjAMBgNVBAcTBVFVSVRPMSUwIwYDVQQDExxB\n" +
+"QyBCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMB4XDTIwMDEwOTE3MTM1MFoXDTIyMDEwOTE3NDM1\n" +
+"MFowgbMxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlCQU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcw\n" +
+"NQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4w\n" +
+"DAYDVQQHEwVRVUlUTzE3MBEGA1UEBRMKMDAwMDA0MjgyODAiBgNVBAMTG0VOQSBNQVJJQU5FTEEg\n" +
+"R1VFUlJFUk8gTU9SQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAM9+P1PVJjQHUswD\n" +
+"LkdB0CuD032+WfO/4d+bhBOf2u0WzTEQk/7yzL3plB7N71vorFWvWPa5gPG3G7spCpWO7XIWPDPE\n" +
+"2NsHMqoKUw4nvsZJKM5iuDJk6n982yZTMH+3l+gseV/CjRfaq+kiOCZUqBy+gepiapVQJACZSjDP\n" +
+"RXF43gISJYIzWYkFpJobA05YPUajkrD+U3OyCbMU/Pqdy9Oe6PiaTwCtczrmnJuJyfxGEXdS/ksT\n" +
+"t3U5pwUJgk1DvB7d+jlosCVHiOrY2hv8DxMpOhebDF9/A8Y+hvCOVLcUa9XGisYI3sTdXezlPrMr\n" +
+"CgYGWjZ6Z7Vpd1b6I/pSBDUCAwEAAaOCBRQwggUQMAsGA1UdDwQEAwIHgDBnBgNVHSAEYDBeMFwG\n" +
+"CysGAQQBgqg7AgIBME0wSwYIKwYBBQUHAgEWP2h0dHA6Ly93d3cuZWNpLmJjZS5lYy9wb2xpdGlj\n" +
+"YS1jZXJ0aWZpY2Fkby9wZXJzb25hLWp1cmlkaWNhLnBkZjCBkQYIKwYBBQUHAQEEgYQwgYEwPgYI\n" +
+"KwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmVjaS5iY2UuZWMvZWpiY2EvcHVibGljd2ViL3N0YXR1cy9v\n" +
+"Y3NwMD8GCCsGAQUFBzABhjNodHRwOi8vb2NzcDEuZWNpLmJjZS5lYy9lamJjYS9wdWJsaWN3ZWIv\n" +
+"c3RhdHVzL29jc3AwIAYKKwYBBAGCqDsDCgQSExBCQU5DTyBERSBMT0pBIFNBMB0GCisGAQQBgqg7\n" +
+"AwsEDxMNMTE5MDAwMjIxMzAwMTAaBgorBgEEAYKoOwMBBAwTCjExMDM1OTY1MjIwHQYKKwYBBAGC\n" +
+"qDsDAgQPEw1FTkEgTUFSSUFORUxBMBgGCisGAQQBgqg7AwMEChMIR1VFUlJFUk8wFAYKKwYBBAGC\n" +
+"qDsDBAQGEwRNT1JBMCQGCisGAQQBgqg7AwUEFhMUSkVGRSBERSBDT05UQUJJTElEQUQwJAYKKwYB\n" +
+"BAGCqDsDBwQWExRCT0xJVkFSIFkgUk9DQUZVRVJURTAZBgorBgEEAYKoOwMIBAsTCTA3MzcwMTYw\n" +
+"MDAUBgorBgEEAYKoOwMJBAYTBExvamEwFwYKKwYBBAGCqDsDDAQJEwdFQ1VBRE9SMCAGCisGAQQB\n" +
+"gqg7AzMEEhMQU09GVFdBUkUtQVJDSElWTzAqBgNVHREEIzAhgR9lbmFfZ3VlcnJlcm9AYmFuY29k\n" +
+"ZWxvamEuZmluLmVjMIIB3wYDVR0fBIIB1jCCAdIwggHOoIIByqCCAcaGgdVsZGFwOi8vYmNlcWxk\n" +
+"YXBzdWJwMS5iY2UuZWMvY249Q1JMOTAyLGNuPUFDJTIwQkFOQ08lMjBDRU5UUkFMJTIwREVMJTIw\n" +
+"RUNVQURPUixsPVFVSVRPLG91PUVOVElEQUQlMjBERSUyMENFUlRJRklDQUNJT04lMjBERSUyMElO\n" +
+"Rk9STUFDSU9OLUVDSUJDRSxvPUJBTkNPJTIwQ0VOVFJBTCUyMERFTCUyMEVDVUFET1IsYz1FQz9j\n" +
+"ZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jhc2WGNGh0dHA6Ly93d3cuZWNpLmJjZS5lYy9DUkwv\n" +
+"ZWNpX2JjZV9lY19jcmxmaWxlY29tYi5jcmykgbUwgbIxCzAJBgNVBAYTAkVDMSIwIAYDVQQKExlC\n" +
+"QU5DTyBDRU5UUkFMIERFTCBFQ1VBRE9SMTcwNQYDVQQLEy5FTlRJREFEIERFIENFUlRJRklDQUNJ\n" +
+"T04gREUgSU5GT1JNQUNJT04tRUNJQkNFMQ4wDAYDVQQHEwVRVUlUTzElMCMGA1UEAxMcQUMgQkFO\n" +
+"Q08gQ0VOVFJBTCBERUwgRUNVQURPUjEPMA0GA1UEAxMGQ1JMOTAyMCsGA1UdEAQkMCKADzIwMjAw\n" +
+"MTA5MTcxMzUwWoEPMjAyMjAxMDkxNzQzNTBaMB8GA1UdIwQYMBaAFEii3yMfHfgsUXqMA81JMqUJ\n" +
+"wZSrMB0GA1UdDgQWBBSz9fYgiLUXWQkg2f51tuzs8P58tTAJBgNVHRMEAjAAMBkGCSqGSIb2fQdB\n" +
+"AAQMMAobBFY4LjEDAgSwMA0GCSqGSIb3DQEBCwUAA4ICAQDHNAwJaoa53orefCnzszxBs1ZVssSk\n" +
+"Gc+bXqr2mBW7pe2oiwqEwEBJ1B/XRsuTnBL+CEZgcr6cJy2kNd3DGeUfk7+I8kpB25TdPjGRV/Oo\n" +
+"bqFigbBh+zPo42NOFX9XhWxmM/O5mGItZ2FtRFEtDpQSKTMKbdAaSSxz9pO/f3PhsjJfKZjvoqhI\n" +
+"8aHWnpmC5qQRtb7ycPycmSCOsUdm/dF2zvaJWt40RnKmCTfXFDreyUgWmWIMlzDd0NsvoqACmuLY\n" +
+"62ttF1QlPb5hdXw6K/IbI9t+8hrPMf5/KC0Gpmd84USXmL7HErWKnNqAcqJrBCZxORvQ6g7a+RCz\n" +
+"6Bh+GYxWYpedBE2fyzRczzdlCVa3TfBGZ41TnVCqNM37Zgo71zrJw43OvfR9AJSW9QCyoETCcQ92\n" +
+"09v6+Xj9rRawq0tw9OvbRxFW9B8grz38CluP47dWIlkkX4/xLQ41I5bSXT6X8P41deImeQlR5CVS\n" +
+"KrHP3UiO8dLnR6SJHuONnPrAlLDA7YPv10O2DArR+OPSFRjrwAktjP1NWsGFS6+qlFXKVmgx44mv\n" +
+"lnP6ddZl8sr7Ue21PsL6NYrB327i0CJuaLtA16qjPcf7D0Eme6tJya5JFNT9aUgJ/kb+NQam6/8h\n" +
+"JtQUIYKzRIky9MlvDnZ27J9xPflQZLO0vtY3/YPQiKkKJQ==\n" +
+"</ds:X509Certificate>\n" +
+"</ds:X509Data>\n" +
+"<ds:KeyValue>\n" +
+"<ds:RSAKeyValue>\n" +
+"<ds:Modulus>\n" +
+"z34/U9UmNAdSzAMuR0HQK4PTfb5Z87/h35uEE5/a7RbNMRCT/vLMvemUHs3vW+isVa9Y9rmA8bcb\n" +
+"uykKlY7tchY8M8TY2wcyqgpTDie+xkkozmK4MmTqf3zbJlMwf7eX6Cx5X8KNF9qr6SI4JlSoHL6B\n" +
+"6mJqlVAkAJlKMM9FcXjeAhIlgjNZiQWkmhsDTlg9RqOSsP5Tc7IJsxT8+p3L057o+JpPAK1zOuac\n" +
+"m4nJ/EYRd1L+SxO3dTmnBQmCTUO8Ht36OWiwJUeI6tjaG/wPEyk6F5sMX38Dxj6G8I5UtxRr1caK\n" +
+"xgjexN1d7OU+sysKBgZaNnpntWl3Vvoj+lIENQ==\n" +
+"</ds:Modulus>\n" +
+"<ds:Exponent>AQAB</ds:Exponent>\n" +
+"</ds:RSAKeyValue>\n" +
+"</ds:KeyValue>\n" +
+"</ds:KeyInfo>\n" +
+"<ds:Object Id=\"Signature995092-Object378421\"><etsi:QualifyingProperties Target=\"#Signature995092\"><etsi:SignedProperties Id=\"Signature995092-SignedProperties478702\"><etsi:SignedSignatureProperties><etsi:SigningTime>2020-12-01T19:38:49-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></ds:DigestMethod><ds:DigestValue>JnO16qgWnMpPs+Ux4Si9ewq/zVY=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>CN=AC BANCO CENTRAL DEL ECUADOR,L=QUITO,OU=ENTIDAD DE CERTIFICACION DE INFORMACION-ECIBCE,O=BANCO CENTRAL DEL ECUADOR,C=EC</ds:X509IssuerName><ds:X509SerialNumber>1533165537</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignerRole><etsi:ClaimedRoles><etsi:ClaimedRole>Rol de firma</etsi:ClaimedRole></etsi:ClaimedRoles></etsi:SignerRole></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference=\"#Reference-ID-395235\"><etsi:Description>contenido firma</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>";
+        System.out.println(FacturaUtil.read(xml).getId());
     }
 }
