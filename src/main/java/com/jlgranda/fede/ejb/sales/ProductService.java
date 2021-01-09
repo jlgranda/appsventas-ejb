@@ -30,6 +30,7 @@ import org.jlgranda.fede.model.sales.ProductType;
 import org.jlgranda.fede.model.sales.Product_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.TaxType;
 import org.jpapi.util.Dates;
 
 /**
@@ -61,6 +62,7 @@ public class ProductService extends BussinesEntityHome<Product> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
         _instance.setProductType(ProductType.RAW_MATERIAL);
+        _instance.setTaxType(TaxType.IVA);
         return _instance;
     }
     

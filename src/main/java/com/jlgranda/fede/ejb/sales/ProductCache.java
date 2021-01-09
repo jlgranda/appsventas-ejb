@@ -47,7 +47,7 @@ public class ProductCache {
     
     @PostConstruct
     public void init() {
-        List<Product> productList = productService.findByNamedQuery("Product.findByProductType", ProductType.PRODUCT);
+        List<Product> productList = productService.findByNamedQuery("Product.findByOrganization");
         for (Product p : productList){
             products.put(p.getId(), p);
         }
@@ -87,11 +87,21 @@ public class ProductCache {
         return Optional.fromNullable(item);
     }
 
-     public List<Product> lookup(String key) {
+    public List<Product> lookup(String key) {
          List<Product> matches = new ArrayList<>();
         for (Product product : products.values()) {
-            
             if (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))){
+                matches.add(product);
+            }
+        } 
+        return matches; //devolver por defecto la clave buscada
+    }
+    
+    public List<Product> lookup(String key, ProductType productType) {
+        List<Product> matches = new ArrayList<>();
+        for (Product product : products.values()) {
+            if (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
+                    && product.getProductType().equals(productType)){
                 matches.add(product);
             }
         } 

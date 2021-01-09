@@ -18,6 +18,7 @@
 package org.jlgranda.fede.model.sales;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -28,6 +29,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.TaxType;
 
 /**
  *
@@ -39,7 +41,7 @@ import org.jpapi.model.BussinesEntity;
 @PrimaryKeyJoinColumn(name = "productId")
 @NamedQueries({
     @NamedQuery(name = "Product.findById", query = "select p FROM Product p WHERE p.id = ?1"),
-    @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p ORDER BY p.id DESC"),
+    @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findByProductType", query = "select p FROM Product p WHERE p.productType = ?1 ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findLastProduct", query = "select p FROM Product p ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProducts", query = "select p FROM Product p ORDER BY p.id DESC"),
@@ -64,6 +66,9 @@ public class Product extends BussinesEntity {
     
     @Column
     private ProductType productType;
+    
+    @Column
+    private TaxType taxType;
     
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
@@ -103,6 +108,14 @@ public class Product extends BussinesEntity {
 
     public void setProductType(ProductType productType) {
         this.productType = productType;
+    }
+
+    public TaxType getTaxType() {
+        return taxType;
+    }
+
+    public void setTaxType(TaxType taxType) {
+        this.taxType = taxType;
     }
     
     @Override

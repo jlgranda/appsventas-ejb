@@ -98,9 +98,9 @@
       <property name="hibernate.show_sql" value="false"/>
       <!--https://coderwall.com/p/e5fxrw/use-hibernate-4-3-x-with-jta-on-glassfish-4-->
       <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" />-->
-      <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
+      <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>-->
       <!--<property name="hibernate.transaction.flush_before_completion" value="true"/>-->
-      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider"/>
+      <!--<property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider"/>-->
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <!-- Properties for EclipseLink (default provider for GlassFish) 
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
@@ -111,6 +111,9 @@
       <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
       <!--http://stackoverflow.com/questions/26591521/java-lang-illegalstateexception-multiple-representations-of-the-same-entity-wit-->
       <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
+      
+      <property name="hibernate.cache.use_second_level_cache" value="false"/>
+      
     </properties>
   </persistence-unit>
 </persistence>

@@ -39,6 +39,7 @@ import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
 import org.jlgranda.fede.model.management.Organization;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.TaxType;
 import org.jpapi.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,6 +221,24 @@ public class Invoice extends BussinesEntity {
         BigDecimal total = new BigDecimal(0);
         for (Detail d : getDetails()){
             total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())));
+        }
+        
+        return total;
+    }
+    
+    /**
+     * Calcula el subtotal del detalle de la factura de venta
+     * @param taxType
+     * @return 
+     */
+    @Transient
+    public BigDecimal getTotalTax(TaxType taxType){
+        BigDecimal total = new BigDecimal(0);
+        for (Detail d : getDetails()){
+            if (taxType.equals(d.getProduct().getTaxType())){
+                //TODO identificar el porcentaje en función del tipo de impuesto
+                total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())).multiply(BigDecimal.valueOf(0.08333)));
+            }
         }
         
         return total;
