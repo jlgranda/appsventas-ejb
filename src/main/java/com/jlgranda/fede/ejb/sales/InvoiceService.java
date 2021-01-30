@@ -66,6 +66,7 @@ public class InvoiceService extends BussinesEntityHome<Invoice> {
         _instance.setEnvironmentType(EnvironmentType.TEST);
         _instance.setEmissionType(EmissionType.SALE);
         _instance.setDocumentType(DocumentType.PRE_INVOICE);
+        _instance.setEmissionOn(Dates.now()); 
         
         return _instance;
     }
