@@ -131,27 +131,6 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
         return dayOfWeek.getDisplayName(TextStyle.FULL, spanishLocale).toUpperCase();
     }
 
-//    public static void main(String[] args) throws ParseException {
-//        //2019-09-01 10:03:37.782
-//        //Date date = new Date("2019-09-01 10:03:37.782");
-//       // Date date = Dates.toDate("2019-09-01 10:03:37.782");
-//        Date date = Dates.addDays(Dates.now(), -(27+30+30));
-//        System.out.println(">>> date: " + date);
-//        System.out.println(">>> month: " + Dates.get(date, Calendar.MONTH));
-//        System.out.println(">>> day: " + Dates.get(date, Calendar.DAY_OF_MONTH));
-//        System.out.println(">>> date: " + Dates.get(date, Calendar.DATE));
-//        LocalDate localDate = LocalDate.of(Dates.get(date, Calendar.YEAR), Dates.get(date, Calendar.MONTH)+1, Dates.get(date, Calendar.DAY_OF_MONTH));
-//        
-//        //Day of week and month in Spanish
-//        Locale spanishLocale=new Locale("es", "ES");
-//       // String dateInSpanish = localDate.format(DateTimeFormatter.ofPattern("EEEE, dd MMMM, yyyy", spanishLocale));
-//        //System.out.println("'2019-09-01' in Spanish: "+dateInSpanish);
-//    
-//        
-//        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-//        System.out.println(">>> " + dayOfWeek.getDisplayName(TextStyle.FULL, spanishLocale));
-//        
-//    }
     @Transient
     public String getDayOfMonth(){
         if (getBeginTime() == null){
