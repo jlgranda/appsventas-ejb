@@ -109,6 +109,12 @@ public class Invoice extends BussinesEntity {
     
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
+    
+    @Column(nullable = true)
+    private Boolean printAlias;
+    
+    @Column(nullable = true, length = 1024)
+    protected String printAliasSummary;
 
     public String getBoardNumber() {
         return boardNumber;
@@ -217,7 +223,22 @@ public class Invoice extends BussinesEntity {
         }
         return payment;
     }
-    
+
+    public Boolean getPrintAlias() {
+        return printAlias;
+    }
+
+    public void setPrintAlias(Boolean printAlias) {
+        this.printAlias = printAlias;
+    }
+
+    public String getPrintAliasSummary() {
+        return printAliasSummary;
+    }
+
+    public void setPrintAliasSummary(String printAliasSummary) {
+        this.printAliasSummary = printAliasSummary;
+    }
     
     @Transient
     public String getSummary(){
