@@ -61,6 +61,7 @@ import org.jpapi.model.SourceType;
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOwner", query = "select count(f) FROM FacturaElectronica f WHERE f.owner = ?1"),
     @NamedQuery(name = "FacturaElectronica.findLastsByOwner", query = "select f FROM FacturaElectronica f where f.owner=?1 ORDER BY f.id DESC"),
     @NamedQuery(name = "FacturaElectronica.findTotalBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.createdOn <= ?3"),
+    @NamedQuery(name = "FacturaElectronica.findTopTotalProviderIdsBetween", query = "select sb.firstname, sb.initials, sum(f.importeTotal) from FacturaElectronica f JOIN f.author sb WHERE f.author=sb.id and f.fechaEmision >= ?1 and f.createdOn <= ?2 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
 })
 @XmlRootElement
 public class FacturaElectronica extends BussinesEntity {
