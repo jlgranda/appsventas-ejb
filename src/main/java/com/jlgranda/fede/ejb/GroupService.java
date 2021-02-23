@@ -66,6 +66,13 @@ public class GroupService extends BussinesEntityHome<Group>{
         return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
     }
     
+    public List<Group> findByType(Group.Type groupType){        
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("groupType", groupType);
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+    }
+    
     public List<Group> findByOwnerAndModuleAndType(Subject owner, String module, Group.Type groupType){
         List<String> modules = new ArrayList<>();
         modules.add(SettingNames.GENERAL_MODULE);
@@ -76,7 +83,7 @@ public class GroupService extends BussinesEntityHome<Group>{
         params.put("groupType", groupType);
         return this.find(-1, -1, "module, orden, name", QuerySortOrder.ASC, params).getResult();
     }
-    
+       
     @Override
     public Group createInstance() {
 

@@ -24,5 +24,6 @@ package org.jlgranda.fede.model.sales;
 public enum ProductType {
     RAW_MATERIAL,
     PRODUCT,
-    DEPRECATED
+    DEPRECATED,
+    SERVICE
 }
