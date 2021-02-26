@@ -66,6 +66,7 @@ public class SettingNames {
     public static String INVOICE_NOTIFY_GAP = "fede.invoice.notify.gap";
     
     public static String PRODUCT_TOP_RANGE = "fede.sales.product.top.range";
+    public static String GROUP_TOP_RANGE = "fede.sales.group.top.range";
     public static String JOURNAL_REPORT_DEFAULT_RANGE = "fede.report.journal.default.range";
 
 }

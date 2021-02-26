@@ -26,10 +26,14 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.jpapi.controller.BussinesEntityHome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jpapi.model.Group;
+import org.jpapi.model.Group_;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
@@ -40,50 +44,21 @@ import org.jpapi.util.QuerySortOrder;
  * @author jlgranda
  */
 @Stateless
-public class GroupService extends BussinesEntityHome<Group>{
-    
+public class GroupService extends BussinesEntityHome<Group> {
+
     private static final long serialVersionUID = 6625285171825651429L;
-     
-    Logger  logger = LoggerFactory.getLogger(GroupService.class);
-    
+
+    Logger logger = LoggerFactory.getLogger(GroupService.class);
 
     @PersistenceContext
     EntityManager em;
 
     @PostConstruct
-    private void init(){
+    private void init() {
         setEntityClass(Group.class);
         setEntityManager(em);
     }
-    
-    
-    public Group findByCode(String code){
-        List<Group> groups = this.findByNamedQuery("BussinesEntity.findByCode", code);
-        return groups.isEmpty() ? new Group(code, code) : groups.get(0);
-    }
-    
-    public List<Group> findAll(){
-        return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
-    }
-    
-    public List<Group> findByType(Group.Type groupType){        
-        
-        Map<String, Object> params = new HashMap<>();
-        params.put("groupType", groupType);
-        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
-    }
-    
-    public List<Group> findByOwnerAndModuleAndType(Subject owner, String module, Group.Type groupType){
-        List<String> modules = new ArrayList<>();
-        modules.add(SettingNames.GENERAL_MODULE);
-        modules.add(module);
-        Map<String, Object> params = new HashMap<>();
-        params.put("owner", owner);
-        params.put("module", modules);
-        params.put("groupType", groupType);
-        return this.find(-1, -1, "module, orden, name", QuerySortOrder.ASC, params).getResult();
-    }
-       
+
     @Override
     public Group createInstance() {
 
@@ -96,4 +71,45 @@ public class GroupService extends BussinesEntityHome<Group>{
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
+
+    //soporte para Lazy Data model
+    public long count() {
+        return super.count(Group.class);
+    }
+
+    public List<Group> find(int maxresults, int firstresult) {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Group> query = builder.createQuery(Group.class);
+
+        Root<Group> from = query.from(Group.class);
+        query.select(from).orderBy(builder.desc(from.get(Group_.name)));
+        return getResultList(query, maxresults, firstresult);
+    }
+
+    public List<Group> findAll() {
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, null).getResult();
+    }
+
+    public Group findByCode(String code) {
+        List<Group> groups = this.findByNamedQuery("BussinesEntity.findByCode", code);
+        return groups.isEmpty() ? new Group(code, code) : groups.get(0);
+    }
+
+    public List<Group> findByType(Group.Type groupType) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("groupType", groupType);
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+    }
+
+    public List<Group> findByOwnerAndModuleAndType(Subject owner, String module, Group.Type groupType) {
+        List<String> modules = new ArrayList<>();
+        modules.add(SettingNames.GENERAL_MODULE);
+        modules.add(module);
+        Map<String, Object> params = new HashMap<>();
+        params.put("owner", owner);
+        params.put("module", modules);
+        params.put("groupType", groupType);
+        return this.find(-1, -1, "module, orden, name", QuerySortOrder.ASC, params).getResult();
+    }
+
 }
