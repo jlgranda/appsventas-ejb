@@ -71,6 +71,19 @@ public class GroupService extends BussinesEntityHome<Group> {
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
+    
+    public Group createInstance(Group.Type type) {
+
+        Group _instance = new Group();
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setGroupType(type);
+        return _instance;
+    }
 
     //soporte para Lazy Data model
     public long count() {
