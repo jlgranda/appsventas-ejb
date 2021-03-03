@@ -28,6 +28,7 @@ public enum EmissionType {
     PURCHASE,
     PURCHASE_CASH,
     PURCHASE_CREDIT,
+    TRANSFER,
     CANCELED,
     CASH_PURCHASE,
     CREDIT_PURCHASE,
