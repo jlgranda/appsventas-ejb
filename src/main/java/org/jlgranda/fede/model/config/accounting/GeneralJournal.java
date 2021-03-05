@@ -32,10 +32,10 @@ import org.jpapi.model.PersistentObject;
  * @author jlgranda
  */
 @Entity
-@Table(name = "Journal")
+@Table(name = "GeneralJournal")
 @NamedQueries({ @NamedQuery(name = "Journal.findByName", query = "select s FROM Journal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Journal.findByNameAndOwner", query = "select s FROM Journal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public class Journal extends PersistentObject<Journal> implements Comparable<Journal>, Serializable {
+public class GeneralJournal extends PersistentObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
     
     @OneToMany(mappedBy = "journal")
     List<Record> records = new ArrayList<>();
@@ -55,7 +55,7 @@ public class Journal extends PersistentObject<Journal> implements Comparable<Jou
     }
 
     @Override
-    public int compareTo(Journal t) {
+    public int compareTo(GeneralJournal t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

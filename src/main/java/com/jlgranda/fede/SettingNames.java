@@ -67,6 +67,8 @@ public class SettingNames {
     
     public static String PRODUCT_TOP_RANGE = "fede.sales.product.top.range";
     public static String GROUP_TOP_RANGE = "fede.sales.group.top.range";
+    public static String ACCOUNT_TOP_RANGE = "fede.sales.account.top.range";
+    public static String JOURNAL_TOP_RANGE = "fede.sales.journal.top.range";
     public static String JOURNAL_REPORT_DEFAULT_RANGE = "fede.report.journal.default.range";
 
 }

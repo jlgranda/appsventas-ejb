@@ -91,6 +91,10 @@
     <class>com.jlgranda.shiro.Roles</class>
     <class>com.jlgranda.shiro.UsersRoles</class>
     <class>org.jlgranda.fede.model.gifts.GiftEntity</class>
+    <class>org.jlgranda.fede.model.config.accounting.Account</class>
+    <class>org.jlgranda.fede.model.config.accounting.GeneralJournal</class>
+    <class>org.jlgranda.fede.model.config.accounting.Record</class>
+    <class>org.jlgranda.fede.model.config.accounting.RecordDetail</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
@@ -111,9 +115,7 @@
       <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
       <!--http://stackoverflow.com/questions/26591521/java-lang-illegalstateexception-multiple-representations-of-the-same-entity-wit-->
       <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
-      
       <property name="hibernate.cache.use_second_level_cache" value="false"/>
-      
     </properties>
   </persistence-unit>
 </persistence>

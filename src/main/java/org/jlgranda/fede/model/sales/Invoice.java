@@ -66,9 +66,17 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2 AND i.active=?3 AND i.emissionOn BETWEEN ?4 AND ?5"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 AND i.active=?3"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetween", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountByOwnerBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.owner=?2 and i.documentType=?3 and i.status=?4 and i.emissionOn >= ?5 and i.emissionOn <= ?6"),
 })
+//    SELECT 
+//bs.code, i.boardnumber, i.emissionon, pay.discount
+//	FROM public.payment as pay
+//	INNER JOIN public.invoice as i on i.invoiceid=pay.invoice_id
+//	INNER JOIN bussinesentity as bs on bs.id=i.invoiceid
+//	WHERE i.emissionon>='2021-03-01' AND i.emissionon<='2021-03-05' AND pay.discount>0;
+
 public class Invoice extends BussinesEntity {
     
     private static Logger log = LoggerFactory.getLogger(Invoice.class);
@@ -115,6 +123,9 @@ public class Invoice extends BussinesEntity {
     
     @Column(nullable = true, length = 1024)
     protected String printAliasSummary;
+    
+    @Column(nullable = true, length = 1024)
+    protected String pax;
 
     public String getBoardNumber() {
         return boardNumber;
@@ -238,6 +249,14 @@ public class Invoice extends BussinesEntity {
 
     public void setPrintAliasSummary(String printAliasSummary) {
         this.printAliasSummary = printAliasSummary;
+    }
+
+    public String getPax() {
+        return pax;
+    }
+
+    public void setPax(String pax) {
+        this.pax = pax;
     }
     
     @Transient
