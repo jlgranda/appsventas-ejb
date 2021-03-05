@@ -46,7 +46,7 @@ import org.jpapi.model.PersistentObject;
 public class Record extends PersistentObject<Account> implements Comparable<Account>, Serializable {
 
     @ManyToOne
-    Journal journal;
+    GeneralJournal journal;
     
     @OneToMany(mappedBy = "record")
     private List<RecordDetail> recordDetails = new ArrayList<>();
@@ -55,11 +55,11 @@ public class Record extends PersistentObject<Account> implements Comparable<Acco
     @Column(name = "emissionDate")
     private Date emissionDate;
 
-    public Journal getJournal() {
+    public GeneralJournal getJournal() {
         return journal;
     }
 
-    public void setJournal(Journal journal) {
+    public void setJournal(GeneralJournal journal) {
         this.journal = journal;
     }
 

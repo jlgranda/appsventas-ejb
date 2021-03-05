@@ -115,6 +115,9 @@ public class Invoice extends BussinesEntity {
     
     @Column(nullable = true, length = 1024)
     protected String printAliasSummary;
+    
+    @Column(nullable = true, length = 1024)
+    protected String pax;
 
     public String getBoardNumber() {
         return boardNumber;
@@ -238,6 +241,14 @@ public class Invoice extends BussinesEntity {
 
     public void setPrintAliasSummary(String printAliasSummary) {
         this.printAliasSummary = printAliasSummary;
+    }
+
+    public String getPax() {
+        return pax;
+    }
+
+    public void setPax(String pax) {
+        this.pax = pax;
     }
     
     @Transient
