@@ -101,7 +101,7 @@ public class ProductCache {
         List<Product> matches = new ArrayList<>();
         for (Product product : products.values()) {
             if (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
-                    && product.getProductType().equals(productType)){
+                    && productType.equals(product.getProductType())){
                 matches.add(product);
             }
         } 
