@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,9 +30,8 @@ import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 
 /**
  *
@@ -41,13 +39,11 @@ import org.jpapi.model.BussinesEntity;
  */
 @Entity
 @Table(name = "Organization")
-@DiscriminatorValue(value = "ORG")
-@PrimaryKeyJoinColumn(name = "id")
 @NamedQueries({
     @NamedQuery(name = "Organization.findByOwner", query = "select o FROM Organization o WHERE o.owner=?1 ORDER BY o.name ASC"),
     @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1"),
 })
-public class Organization extends BussinesEntity implements Serializable {
+public class Organization  extends DeletableObject<Organization> implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;
     private String ruc;
@@ -150,7 +146,6 @@ public class Organization extends BussinesEntity implements Serializable {
         this.principles = principles;
     }
 
-    @Override
     public String getCanonicalPath() {
         StringBuilder path = new StringBuilder();
         path.append(getName());

@@ -15,22 +15,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jlgranda.fede.model.config.accounting;
+package org.jlgranda.fede.model.accounting;
 
 //import com.sun.org.slf4j.internal.LoggerFactory;
 //import com.sun.org.slf4j.internal.LoggerFactory;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.jpapi.model.PersistentObject;
-import org.slf4j.Logger;
+import org.jpapi.model.DeletableObject;
 
 /**
  *
@@ -40,7 +34,7 @@ import org.slf4j.Logger;
 @Table(name = "Account")
 @NamedQueries({ @NamedQuery(name = "Account.findByName", query = "select s FROM Account s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public class Account extends PersistentObject<Account> implements Comparable<Account>, Serializable {
+public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
     
     private static final long serialVersionUID = -6428094275651428620L;
     
