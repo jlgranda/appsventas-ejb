@@ -44,6 +44,9 @@ public class Account extends PersistentObject<Account> implements Comparable<Acc
     
     private static final long serialVersionUID = -6428094275651428620L;
     
+    @Column(nullable = true, length = 1024)
+    protected Long cuentapadreid;
+    
     public Account(){
         
     }
@@ -52,7 +55,15 @@ public class Account extends PersistentObject<Account> implements Comparable<Acc
         setCode(code); 
         setName(name);        
     }
-        
+
+    public Long getCuentapadreid() {
+        return cuentapadreid;
+    }
+
+    public void setCuentapadreid(Long cuentapadreid) {
+        this.cuentapadreid = cuentapadreid;
+    }
+    
     @Override
     public int hashCode() {
         return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers

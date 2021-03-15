@@ -24,11 +24,15 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.Group;
 import org.jpapi.model.TaxType;
 
 /**
@@ -53,8 +57,17 @@ import org.jpapi.model.TaxType;
     @NamedQuery(name = "Product.countProduct", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.id = ?1 AND d.createdOn BETWEEN ?2 AND ?3 GROUP BY p.id ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countSoldProductByOwner", query = "SELECT p,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.owner = ?1 AND d.createdOn BETWEEN ?2 AND ?3 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
+    @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
 })
-
+//SELECT
+//b.name,
+//count(p.group_id)
+//FROM public.product as p
+//INNER JOIN public.ggroup as g on g.groupid=p.group_id
+//INNER JOIN bussinesentity as b on b.id=g.groupid
+//WHERE not p.productid in (75, 676,672) AND
+// b.createdon >='2021-03-01' AND b.createdon <='2021-03-14'
+//GROUP BY p.group_id, b.name;
 public class Product extends BussinesEntity {
 
     private static final long serialVersionUID = -1320148041663418996L;
@@ -74,6 +87,10 @@ public class Product extends BussinesEntity {
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
+    
+    @ManyToOne
+    @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
+    private Group category;
 
     public Product() {
         icon = "fa fa-question-circle "; //icon by default
@@ -117,6 +134,14 @@ public class Product extends BussinesEntity {
 
     public void setTaxType(TaxType taxType) {
         this.taxType = taxType;
+    }
+
+    public Group getCategory() {
+        return category;
+    }
+
+    public void setCategory(Group category) {
+        this.category = category;
     }
     
     @Override
