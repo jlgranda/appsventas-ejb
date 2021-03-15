@@ -97,7 +97,7 @@ public class Invoice extends BussinesEntity {
     private Date emissionOn;
     
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=false, updatable=false, nullable=true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
     
     private DocumentType documentType;

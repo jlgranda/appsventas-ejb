@@ -30,7 +30,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import org.jpapi.model.PersistentObject;
+import org.jlgranda.fede.model.management.Organization;
+import org.jpapi.model.DeletableObject;
 
 /**
  *
@@ -39,12 +40,16 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "EMPLOYEE")
 @NamedQueries({
-    @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1"),
+    @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.deleted = false"),
     @NamedQuery(name = "Employee.findByOwnerCodeAndName", query = "SELECT e FROM Employee e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
 })
-public class Employee extends PersistentObject implements Comparable<Employee>, Serializable {
+public class Employee extends DeletableObject implements Comparable<Employee>, Serializable {
 
     private static final long serialVersionUID = -1016927888119107404L;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "role", nullable = true)
@@ -54,6 +59,14 @@ public class Employee extends PersistentObject implements Comparable<Employee>, 
     @OrderBy("beginTime DESC")
     private List<Journal> journals = new ArrayList<>();
 
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
     public JobRole getRole() {
         return role;
     }

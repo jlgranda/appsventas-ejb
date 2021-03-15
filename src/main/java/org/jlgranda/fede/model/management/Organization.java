@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,6 +43,7 @@ import org.jpapi.model.DeletableObject;
 @NamedQueries({
     @NamedQuery(name = "Organization.findByOwner", query = "select o FROM Organization o WHERE o.owner=?1 ORDER BY o.name ASC"),
     @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1"),
+    @NamedQuery(name = "Organization.findByEmployee", query = "select o FROM Employee e JOIN e.organization o WHERE e.owner = ?1 and e.deleted = false"),
 })
 public class Organization  extends DeletableObject<Organization> implements Serializable {
 
@@ -152,11 +154,6 @@ public class Organization  extends DeletableObject<Organization> implements Seri
         return path.toString();
     }
 
-    @Override
-    public String toString() {
-        return getName();
-    }
-
     public boolean addMission(Mission mission) {
         if (!this.getMissions().contains(mission)) {
             mission.setOrganization(this);
@@ -211,5 +208,41 @@ public class Organization  extends DeletableObject<Organization> implements Seri
     
     public List<Organization.Type> getOrganizationTypes() {
         return Arrays.asList(Organization.Type.values());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.ruc);
+        hash = 83 * hash + Objects.hashCode(this.initials);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Organization other = (Organization) obj;
+        if (!Objects.equals(this.ruc, other.ruc)) {
+            return false;
+        }
+        if (!Objects.equals(this.initials, other.initials)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    
+    @Override
+    public String toString() {
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
 }

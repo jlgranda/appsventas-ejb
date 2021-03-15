@@ -28,6 +28,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -36,6 +38,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.jlgranda.fede.model.management.Organization;
 import org.jlgranda.fede.model.sales.Payment;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.SourceType;
@@ -113,6 +116,10 @@ public class FacturaElectronica extends BussinesEntity {
     private String claveAcceso;
 
     private String numeroAutorizacion;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
     
     /**
      * Para el seguimiento de pagos en facturas a crédito
@@ -253,6 +260,14 @@ public class FacturaElectronica extends BussinesEntity {
     public Payment replacePayment(Payment payment) {
         getPayments().set(getPayments().indexOf(payment), payment);
         return payment;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
 }

@@ -24,10 +24,13 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import org.jlgranda.fede.model.management.Organization;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.TaxType;
 
@@ -74,6 +77,10 @@ public class Product extends BussinesEntity {
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
 
     public Product() {
         icon = "fa fa-question-circle "; //icon by default
@@ -118,6 +125,14 @@ public class Product extends BussinesEntity {
     public void setTaxType(TaxType taxType) {
         this.taxType = taxType;
     }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
     
     @Override
     public int hashCode() {
@@ -149,7 +164,7 @@ public class Product extends BussinesEntity {
     
     @Override
     public String toString() {
-        return String.valueOf(getId());
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
 
 }
