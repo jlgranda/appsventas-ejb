@@ -20,6 +20,7 @@ package org.jlgranda.fede.model.accounting;
 //import com.sun.org.slf4j.internal.LoggerFactory;
 //import com.sun.org.slf4j.internal.LoggerFactory;
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -38,6 +39,9 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     
     private static final long serialVersionUID = -6428094275651428620L;
     
+    @Column(nullable = true, length = 1024)
+    protected Long cuentaPadreId;
+    
     public Account(){
         
     }
@@ -46,7 +50,15 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
         setCode(code); 
         setName(name);        
     }
-        
+
+    public Long getCuentaPadreId() {
+        return cuentaPadreId;
+    }
+
+    public void setCuentaPadreId(Long cuentapadreid) {
+        this.cuentaPadreId = cuentapadreid;
+    }
+    
     @Override
     public int hashCode() {
         return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
