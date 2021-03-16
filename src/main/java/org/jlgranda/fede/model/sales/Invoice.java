@@ -41,7 +41,7 @@ import javax.persistence.Transient;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
-import org.jlgranda.fede.model.management.Organization;
+import org.jpapi.model.Organization;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.TaxType;
 import org.jpapi.util.Lists;
@@ -66,9 +66,12 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.countByDocumentTypeAndOwner", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.owner = ?2 AND i.active=?3 AND i.emissionOn BETWEEN ?4 AND ?5"),
     @NamedQuery(name = "Invoice.countByDocumentTypeAndAuthor", query = "SELECT count(i) FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2 AND i.active=?3"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesPaxBetween", query = "select sum(i.pax) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceSalesPaxBetweenOrg", query = "select sum(i.pax) from Invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesPaxEmissionBetween", query = "select i.pax, i.emissionOn from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetweenOrg", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetween", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetweenOrg", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountByOwnerBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.owner=?2 and i.documentType=?3 and i.status=?4 and i.emissionOn >= ?5 and i.emissionOn <= ?6"),
 })

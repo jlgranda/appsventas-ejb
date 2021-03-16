@@ -38,7 +38,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.jlgranda.fede.model.management.Organization;
+import org.jpapi.model.Organization;
 import org.jlgranda.fede.model.sales.Payment;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.SourceType;
@@ -65,6 +65,7 @@ import org.jpapi.model.SourceType;
     @NamedQuery(name = "FacturaElectronica.findLastsByOwner", query = "select f FROM FacturaElectronica f where f.owner=?1 ORDER BY f.id DESC"),
     @NamedQuery(name = "FacturaElectronica.findTotalBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3"),
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
+    @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetweenOrg", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetween", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.author=sb.id and f.fechaEmision >= ?1 and f.fechaEmision <= ?2 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
 })
 @XmlRootElement

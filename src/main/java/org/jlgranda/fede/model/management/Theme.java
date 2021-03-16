@@ -17,6 +17,7 @@
  */
 package org.jlgranda.fede.model.management;
 
+import org.jpapi.model.Organization;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
