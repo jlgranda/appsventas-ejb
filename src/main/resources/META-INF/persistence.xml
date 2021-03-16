@@ -42,7 +42,6 @@
     <class>org.jlgranda.fede.model.management.Method</class>
     <class>org.jlgranda.fede.model.management.Mission</class>
     <class>org.jlgranda.fede.model.management.Objetive</class>
-    <class>org.jlgranda.fede.model.management.Organization</class>
     <class>org.jlgranda.fede.model.management.Period</class>
     <class>org.jlgranda.fede.model.management.Perspective</class>
     <class>org.jlgranda.fede.model.management.Perspective</class>
@@ -95,6 +94,7 @@
     <class>org.jlgranda.fede.model.accounting.GeneralJournal</class>
     <class>org.jlgranda.fede.model.accounting.RecordDetail</class>
     <class>org.jlgranda.fede.model.accounting.Account</class>
+    <class>org.jpapi.model.Organization</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

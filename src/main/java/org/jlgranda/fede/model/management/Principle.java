@@ -17,6 +17,7 @@
  */
 package org.jlgranda.fede.model.management;
 
+import org.jpapi.model.Organization;
 import java.io.Serializable;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

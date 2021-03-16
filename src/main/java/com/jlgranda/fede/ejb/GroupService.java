@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jpapi.model.Group;
 import org.jpapi.model.Group_;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
@@ -113,6 +114,12 @@ public class GroupService extends BussinesEntityHome<Group> {
         params.put("groupType", groupType);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
+//    public List<Group> findByOrganizationAndType(Organization organization, Group.Type groupType) {
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("organization", organization);
+//        params.put("groupType", groupType);
+//        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+//    }
 
     public List<Group> findByOwnerAndModuleAndType(Subject owner, String module, Group.Type groupType) {
         List<String> modules = new ArrayList<>();
