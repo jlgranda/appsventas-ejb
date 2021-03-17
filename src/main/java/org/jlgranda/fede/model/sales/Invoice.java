@@ -73,6 +73,7 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetween", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetweenOrg", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
+    @NamedQuery(name = "Invoice.countTotalInvoiceBetweenOrg", query = "select count(i) from Invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountByOwnerBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.owner=?2 and i.documentType=?3 and i.status=?4 and i.emissionOn >= ?5 and i.emissionOn <= ?6"),
 })
 
