@@ -114,12 +114,12 @@ public class GroupService extends BussinesEntityHome<Group> {
         params.put("groupType", groupType);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-//    public List<Group> findByOrganizationAndType(Organization organization, Group.Type groupType) {
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("organization", organization);
-//        params.put("groupType", groupType);
-//        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
-//    }
+    public List<Group> findByOrganizationAndType(Organization organization, Group.Type groupType) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization", organization);
+        params.put("groupType", groupType);
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+    }
 
     public List<Group> findByOwnerAndModuleAndType(Subject owner, String module, Group.Type groupType) {
         List<String> modules = new ArrayList<>();
