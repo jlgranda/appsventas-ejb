@@ -62,11 +62,13 @@ import org.jpapi.model.SourceType;
     @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmisionAndEmissionType", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision  >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4 and f.active=?5 ORDER BY f.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOwner", query = "select count(f) FROM FacturaElectronica f WHERE f.owner = ?1"),
+    @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOrg", query = "select count(f) FROM FacturaElectronica f WHERE f.organization = ?1"),
     @NamedQuery(name = "FacturaElectronica.findLastsByOwner", query = "select f FROM FacturaElectronica f where f.owner=?1 ORDER BY f.id DESC"),
     @NamedQuery(name = "FacturaElectronica.findTotalBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3"),
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetweenOrg", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetween", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.author=sb.id and f.fechaEmision >= ?1 and f.fechaEmision <= ?2 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
+    @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetweenOrg", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
 })
 @XmlRootElement
 public class FacturaElectronica extends BussinesEntity {
