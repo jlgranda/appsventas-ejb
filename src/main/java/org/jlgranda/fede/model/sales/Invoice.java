@@ -84,6 +84,8 @@ public class Invoice extends BussinesEntity {
     
     private static final long serialVersionUID = 2087202727290952436L;
     
+    public static final double IVA=0d;
+    
     /**
      * Número de mesa en la que se generó en invoice.
      */
@@ -301,7 +303,7 @@ public class Invoice extends BussinesEntity {
         for (Detail d : getDetails()){
             if (taxType.equals(d.getProduct().getTaxType())){
                 //TODO identificar el porcentaje en función del tipo de impuesto
-                total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())).multiply(BigDecimal.valueOf(0.12)));
+                total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())).multiply(BigDecimal.valueOf(IVA)));
             }
         }
         
