@@ -20,7 +20,10 @@ package org.jlgranda.fede.model.talentohumano;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.jpapi.model.Organization;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -32,6 +35,10 @@ import org.jpapi.model.PersistentObject;
 public class JobRole extends PersistentObject implements Comparable<JobRole>, Serializable{
     
     private static final long serialVersionUID = -8790803118826094605L;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
     
     private BigDecimal remuneration;
     
@@ -52,8 +59,15 @@ public class JobRole extends PersistentObject implements Comparable<JobRole>, Se
     public void setDedication(BigDecimal dedication) {
         this.dedication = dedication;
     }
-    
 
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
     @Override
     public int compareTo(JobRole t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

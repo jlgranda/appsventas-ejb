@@ -290,7 +290,8 @@ public class Invoice extends BussinesEntity {
      */
     @Transient
     public BigDecimal getTotal(){
-        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA));
+//        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA)));
+        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA)).subtract(getPaymentsDiscount());
     }
     
     /**
