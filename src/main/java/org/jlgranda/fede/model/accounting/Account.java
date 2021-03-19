@@ -22,10 +22,13 @@ package org.jlgranda.fede.model.accounting;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.jpapi.model.DeletableObject;
+import org.jpapi.model.Organization;
 
 /**
  *
@@ -42,6 +45,10 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     @Column(nullable = true, length = 1024)
     protected Long cuentaPadreId;
     
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
+    
     public Account(){
         
     }
@@ -57,6 +64,14 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
 
     public void setCuentaPadreId(Long cuentapadreid) {
         this.cuentaPadreId = cuentapadreid;
+    }
+    
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
     
     @Override
