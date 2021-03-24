@@ -38,6 +38,9 @@ public class SettingNames {
     
     //Edición de clientes
     public static String POPUP_FORMULARIO_PROFILE = "popup_profile";
+    
+    //Edición de records
+    public static String POPUP_FORMULARIO_RECORD = "popup_record";
 
     //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";
