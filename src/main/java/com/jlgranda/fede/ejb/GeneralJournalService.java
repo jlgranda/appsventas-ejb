@@ -27,6 +27,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.GeneralJournal;
 import org.jlgranda.fede.model.accounting.GeneralJournal_;
+import org.jlgranda.fede.model.accounting.Record;
+import org.jlgranda.fede.model.accounting.RecordDetail;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -67,6 +69,29 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         return _instance;
     }
 
+    public Record createInstanceRecord() {
+
+        Record _instance = new Record();
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+//        _instance.setAuthor(null); //Establecer al usuario actual
+        return _instance;
+    }
+    
+    public RecordDetail createInstanceRecordDetail() {
+
+        RecordDetail _instance = new RecordDetail();
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+//        _instance.setAuthor(null); //Establecer al usuario actual
+        return _instance;
+    }
     //soporte para Lazy Data Model
     public long count() {
         return super.count(GeneralJournal.class);

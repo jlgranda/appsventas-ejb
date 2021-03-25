@@ -20,7 +20,9 @@ package org.jlgranda.fede.model.accounting;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -37,7 +39,7 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery(name = "Journal.findByNameAndOwner", query = "select s FROM Journal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
 public class GeneralJournal extends PersistentObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
     
-    @OneToMany(mappedBy = "journal")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "journal", fetch = FetchType.LAZY)
     List<Record> records = new ArrayList<>();
 
     public List<Record> getRecords() {

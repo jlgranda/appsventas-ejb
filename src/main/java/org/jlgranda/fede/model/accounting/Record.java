@@ -28,8 +28,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -45,10 +48,11 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
 public class Record extends PersistentObject<Account> implements Comparable<Account>, Serializable {
 
-    @ManyToOne
+    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
+    @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
     GeneralJournal journal;
     
-    @OneToMany(mappedBy = "record")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     private List<RecordDetail> recordDetails = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)

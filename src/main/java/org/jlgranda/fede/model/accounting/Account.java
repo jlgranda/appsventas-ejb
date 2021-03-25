@@ -104,12 +104,12 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     
     @Override
     public String toString() {
-        return String.valueOf(getId());
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
     
     @Override
     public int compareTo(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return getId().compareTo(t.getId());
     }
         
 }
