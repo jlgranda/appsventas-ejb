@@ -48,7 +48,7 @@ import org.jpapi.model.PersistentObject;
 @Table(name = "Record")
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public class Record extends PersistentObject<Account> implements Comparable<Record>, Serializable {
+public class Record extends PersistentObject<Record> implements Comparable<Record>, Serializable {
 
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
