@@ -25,7 +25,9 @@ package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -33,20 +35,23 @@ import javax.persistence.Table;
 import org.jpapi.model.PersistentObject;
 
 @Entity
-@Table(name = "Record")
+@Table(name = "Record_Detail")
 @NamedQueries({ @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
 public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
-    Account account;
-    
     String recordType;
     
     Long bussineEntityId;
     
     BigDecimal amount;
     
-    @ManyToOne
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
+    private Account account;
+    
+    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
+    @JoinColumn (name = "record_id", insertable = true, updatable = true, nullable = true)
     Record record;
 
     public Account getAccount() {
@@ -56,7 +61,7 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     public void setAccount(Account account) {
         this.account = account;
     }
-
+    
     public String getRecordType() {
         return recordType;
     }

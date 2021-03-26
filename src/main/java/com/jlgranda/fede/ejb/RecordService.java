@@ -25,15 +25,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.accounting.GeneralJournal;
-import org.jlgranda.fede.model.accounting.GeneralJournal_;
 import org.jlgranda.fede.model.accounting.Record;
 import org.jlgranda.fede.model.accounting.RecordDetail;
+import org.jlgranda.fede.model.accounting.Record_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  *
@@ -41,11 +41,11 @@ import org.slf4j.LoggerFactory;
  */
 
 @Stateless
-public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
+public class RecordService extends BussinesEntityHome<Record> {
 
     private static final long serialVersionUID = -6428094275651428620L;
     
-    Logger logger = LoggerFactory.getLogger(GeneralJournalService.class);
+    Logger logger = LoggerFactory.getLogger(RecordService.class);
 
     @PersistenceContext
     EntityManager em;
@@ -53,13 +53,13 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(GeneralJournal.class);
+        setEntityClass(Record.class);
     }
 
-    @Override                                     
-    public GeneralJournal createInstance() {
+//    @Override
+    public Record createInstanceRecord() {
 
-        GeneralJournal _instance = new GeneralJournal();
+        Record _instance = new Record();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
@@ -69,18 +69,29 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         return _instance;
     }
     
+    public RecordDetail createInstanceRecordDetail() {
+
+        RecordDetail _instance = new RecordDetail();
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+//        _instance.setAuthor(null); //Establecer al usuario actual
+        return _instance;
+    }
     //soporte para Lazy Data Model
     public long count() {
-        return super.count(GeneralJournal.class);
+        return super.count(Record.class);
     }
 
-    public List<GeneralJournal> find(int maxresults, int firstresult) {
+    public List<Record> find(int maxresults, int firstresult) {
         
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<GeneralJournal> query = builder.createQuery(GeneralJournal.class);
+        CriteriaQuery<Record> query = builder.createQuery(Record.class);
 
-        Root<GeneralJournal> from = query.from(GeneralJournal.class);
-        query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
+        Root<Record> from = query.from(Record.class);
+        query.select(from).orderBy(builder.desc(from.get(Record_.name)));
         return getResultList(query, maxresults, firstresult);
     }
 
