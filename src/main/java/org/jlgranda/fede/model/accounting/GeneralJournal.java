@@ -40,7 +40,7 @@ import org.jpapi.model.PersistentObject;
 @Table(name = "General_Journal")
 @NamedQueries({ @NamedQuery(name = "Journal.findByName", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Journal.findByNameAndOwner", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "Journal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<=2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery(name = "Journal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<= ?2 and s.organization = ?3 ORDER BY 1"),
 })
 public class GeneralJournal extends PersistentObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
     
