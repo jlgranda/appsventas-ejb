@@ -23,10 +23,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.jpapi.model.Organization;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -34,13 +37,25 @@ import org.jpapi.model.PersistentObject;
  * @author jlgranda
  */
 @Entity
-@Table(name = "GeneralJournal")
+@Table(name = "General_Journal")
 @NamedQueries({ @NamedQuery(name = "Journal.findByName", query = "select s FROM Journal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Journal.findByNameAndOwner", query = "select s FROM Journal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
 public class GeneralJournal extends PersistentObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
     
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "journal", fetch = FetchType.LAZY)
     List<Record> records = new ArrayList<>();
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
 
     public List<Record> getRecords() {
         return records;

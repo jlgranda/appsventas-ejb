@@ -40,13 +40,15 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
 public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
-    Account account;
-    
     String recordType;
     
     Long bussineEntityId;
     
     BigDecimal amount;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
+    private Account account;
     
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "record_id", insertable = true, updatable = true, nullable = true)
@@ -59,7 +61,7 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     public void setAccount(Account account) {
         this.account = account;
     }
-
+    
     public String getRecordType() {
         return recordType;
     }
