@@ -40,13 +40,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.PersistentObject;
 
 @Entity
 @Table(name = "Record")
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public class Record extends PersistentObject<Account> implements Comparable<Account>, Serializable {
+public class Record extends PersistentObject<Account> implements Comparable<Record>, Serializable {
 
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
@@ -89,8 +91,35 @@ public class Record extends PersistentObject<Account> implements Comparable<Acco
     }
     
     @Override
-    public int compareTo(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+        hcb.append(getId());
+
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Record other = (Record) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        
+        eb.append(getId(), other.getId());
+        return eb.isEquals();
+    }
+    
+    @Override
+    public int compareTo(Record other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
 
     

@@ -52,7 +52,16 @@ public class GeneralJournal extends PersistentObject<GeneralJournal> implements 
     
     public Record addRecord(Record record){
         record.setJournal(this);
-        this.records.add(record);
+        if(this.records.contains(record)){
+            replaceRecord(record);
+        }else{
+            this.records.add(record);
+        }
+        return record;
+    }
+    
+    public Record replaceRecord(Record record){
+        getRecords().set(getRecords().indexOf(record), record);
         return record;
     }
 
