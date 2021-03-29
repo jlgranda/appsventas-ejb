@@ -37,7 +37,9 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Account")
 @NamedQueries({ @NamedQuery(name = "Account.findByName", query = "select s FROM Account s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
+@NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
+})
 public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
     
     private static final long serialVersionUID = -6428094275651428620L;

@@ -57,7 +57,7 @@ public class RecordService extends BussinesEntityHome<Record> {
     }
 
 //    @Override
-    public Record createInstanceRecord() {
+    public Record createInstance() {
 
         Record _instance = new Record();
         _instance.setCreatedOn(Dates.now());
