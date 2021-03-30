@@ -37,22 +37,30 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jpapi.model.PersistentObject;
 
 @Entity
 @Table(name = "Record")
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
+@NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronica = ?1 ORDER BY 1"),
+})
 public class Record extends PersistentObject<Record> implements Comparable<Record>, Serializable {
 
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
     GeneralJournal journal;
+    
+    @OneToOne
+    @JoinColumn (name = "facturaElectronica_id")
+    private FacturaElectronica facturaElectronica;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     private List<RecordDetail> recordDetails = new ArrayList<>();
@@ -88,6 +96,18 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
     public void addRecordDetail(RecordDetail recordDetail) {
         recordDetail.setRecord(this);
         this.recordDetails.add(recordDetail);
+    }
+    
+    public void removeRecordDetails(){
+        this.recordDetails.removeAll(recordDetails);
+    }
+
+    public FacturaElectronica getFacturaElectronica() {
+        return facturaElectronica;
+    }
+
+    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
+        this.facturaElectronica = facturaElectronica;
     }
     
     @Override
