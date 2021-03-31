@@ -50,7 +50,7 @@ import org.jpapi.model.PersistentObject;
 @Table(name = "Record")
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronica = ?1 ORDER BY 1"),
+@NamedQuery(name = "Record.findByJournalAndFact", query = "select s FROM Record s WHERE s.journal = ?1 and s.facturaElectronica = ?2 ORDER BY 1"),
 })
 public class Record extends PersistentObject<Record> implements Comparable<Record>, Serializable {
 
@@ -93,15 +93,31 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
         this.emissionDate = emissionDate;
     }
 
+//    public void addRecordDetail(RecordDetail recordDetail) {
+//        recordDetail.setRecord(this);
+//        this.recordDetails.add(recordDetail);
+//    }
+    
     public void addRecordDetail(RecordDetail recordDetail) {
         recordDetail.setRecord(this);
-        this.recordDetails.add(recordDetail);
+        if(this.recordDetails.contains(recordDetail)){
+            replaceRecordDetail(recordDetail);
+        }else{
+            this.recordDetails.add(recordDetail);
+        }
     }
     
-    public void removeRecordDetails(){
-        this.recordDetails.removeAll(recordDetails);
+    public RecordDetail replaceRecordDetail(RecordDetail recordDetail){
+        getRecordDetails().set(getRecordDetails().indexOf(recordDetail), recordDetail);
+        return recordDetail;
     }
-
+    
+    public List<RecordDetail> removeRecordsDetails(){
+        this.recordDetails.removeAll(getRecordDetails());
+        setRecordDetails(this.recordDetails);
+        return getRecordDetails();
+    }
+    
     public FacturaElectronica getFacturaElectronica() {
         return facturaElectronica;
     }

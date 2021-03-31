@@ -41,11 +41,11 @@ import org.slf4j.LoggerFactory;
  */
 
 @Stateless
-public class RecordService extends BussinesEntityHome<Record> {
+public class RecordDetailService extends BussinesEntityHome<RecordDetail> {
 
     private static final long serialVersionUID = -6428094275651428620L;
     
-    Logger logger = LoggerFactory.getLogger(RecordService.class);
+    Logger logger = LoggerFactory.getLogger(RecordDetailService.class);
 
     @PersistenceContext
     EntityManager em;
@@ -53,13 +53,13 @@ public class RecordService extends BussinesEntityHome<Record> {
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(Record.class);
+        setEntityClass(RecordDetail.class);
     }
 
     @Override
-    public Record createInstance() {
+    public RecordDetail createInstance() {
 
-        Record _instance = new Record();
+        RecordDetail _instance = new RecordDetail();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());

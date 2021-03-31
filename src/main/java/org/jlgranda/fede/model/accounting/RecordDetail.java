@@ -32,6 +32,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.PersistentObject;
 
 @Entity
@@ -95,8 +97,35 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     }
 
     @Override
-    public int compareTo(RecordDetail t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+        hcb.append(getId());
+
+        return hcb.toHashCode();
+    }
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        RecordDetail other = (RecordDetail) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        
+//        eb.append(getAccount(), other.getAccount());
+        eb.append(getId(), other.getId()).append(getAccount(), other.getAccount());
+        return eb.isEquals();
+    }
+    
+    @Override
+    public int compareTo(RecordDetail other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
     
 }
