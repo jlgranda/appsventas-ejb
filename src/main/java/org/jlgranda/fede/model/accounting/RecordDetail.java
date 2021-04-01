@@ -40,7 +40,7 @@ import org.jpapi.model.PersistentObject;
 @Table(name = "Record_Detail")
 @NamedQueries({ @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByAccount", query = "select s FROM RecordDetail s WHERE s.account = ?1 ORDER BY 1"),
+@NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2 ORDER BY 1"),
 })
 public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
@@ -120,8 +120,8 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
         RecordDetail other = (RecordDetail) obj;
         EqualsBuilder eb = new EqualsBuilder();
         
-        eb.append(getAccount(), other.getAccount());
 //        eb.append(getId(), other.getId());
+        eb.append(getId(), other.getId()).append(getAccount(), other.getAccount());
         return eb.isEquals();
     }
     
