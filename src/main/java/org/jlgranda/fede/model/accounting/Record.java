@@ -93,10 +93,10 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
         this.emissionDate = emissionDate;
     }
 
-//    public void addRecordDetail(RecordDetail recordDetail) {
-//        recordDetail.setRecord(this);
-//        this.recordDetails.add(recordDetail);
-//    }
+    public void addRecordDetailNew(RecordDetail recordDetail) {
+        recordDetail.setRecord(this);
+        this.recordDetails.add(recordDetail);
+    }
     
     public void addRecordDetail(RecordDetail recordDetail) {
         recordDetail.setRecord(this);
