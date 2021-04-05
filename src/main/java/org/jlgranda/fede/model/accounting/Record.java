@@ -51,6 +51,7 @@ import org.jpapi.model.PersistentObject;
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
 @NamedQuery(name = "Record.findByJournalAndFact", query = "select s FROM Record s WHERE s.journal = ?1 and s.facturaElectronica = ?2 ORDER BY 1"),
+@NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronica = ?1 ORDER BY 1"),
 })
 public class Record extends PersistentObject<Record> implements Comparable<Record>, Serializable {
 
