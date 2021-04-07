@@ -26,7 +26,10 @@ package org.jlgranda.fede.model.accounting;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -41,10 +44,17 @@ import org.jpapi.model.PersistentObject;
 @NamedQueries({ @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2 ORDER BY 1"),
+@NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s WHERE s.account = ?1 and s.createdOn <=?2 and s.record.journal.organization =?3 ORDER BY 1"),
+@NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.createdOn, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s WHERE s.account = ?1 and s.createdOn >=?2 and s.createdOn <=?3 and s.record.journal.organization =?4 ORDER BY 1"),
 })
 public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
-    String recordType;
+    /*
+    Tipo de recordDetail
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)    
+    private RecordDetail.RecordTDetailType recordDetailType;
     
     Long bussineEntityId;
     
@@ -57,6 +67,11 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "record_id", insertable = true, updatable = true, nullable = true)
     Record record;
+    
+    public enum RecordTDetailType {
+        DEBE,
+        HABER;
+    }
 
     public Account getAccount() {
         return account;
@@ -66,12 +81,20 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
         this.account = account;
     }
     
-    public String getRecordType() {
-        return recordType;
+//    public String getRecordType() {
+//        return recordType;
+//    }
+//
+//    public void setRecordType(String recordType) {
+//        this.recordType = recordType;
+//    }
+
+    public RecordTDetailType getRecordDetailType() {
+        return recordDetailType;
     }
 
-    public void setRecordType(String recordType) {
-        this.recordType = recordType;
+    public void setRecordDetailType(RecordTDetailType recordDetailType) {
+        this.recordDetailType = recordDetailType;
     }
 
     public Long getBussineEntityId() {
