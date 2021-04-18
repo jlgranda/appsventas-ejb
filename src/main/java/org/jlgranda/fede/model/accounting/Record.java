@@ -24,7 +24,6 @@ package org.jlgranda.fede.model.accounting;
 
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,6 +61,10 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
     @OneToOne
     @JoinColumn (name = "facturaElectronica_id")
     private FacturaElectronica facturaElectronica;
+    
+    @OneToOne
+    @JoinColumn (name = "cashbox_id")
+    private CashBox cashbox;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     private List<RecordDetail> recordDetails = new ArrayList<>();
@@ -126,6 +129,14 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
     public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
         this.facturaElectronica = facturaElectronica;
     }
+
+    public CashBox getCashbox() {
+        return cashbox;
+    }
+
+    public void setCashbox(CashBox cashbox) {
+        this.cashbox = cashbox;
+    }
     
     @Override
     public int hashCode() {
@@ -159,5 +170,4 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
         return this.createdOn.compareTo(other.getCreatedOn());
     }
 
-    
 }

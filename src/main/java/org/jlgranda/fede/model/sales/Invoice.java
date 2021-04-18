@@ -71,6 +71,7 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesPaxEmissionBetween", query = "select i.pax, i.emissionOn from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetweenOrg", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceSalesMethodBetweenOrg", query = "select sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.method = ?6"),
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetween", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetweenOrg", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
@@ -290,8 +291,7 @@ public class Invoice extends BussinesEntity {
      */
     @Transient
     public BigDecimal getTotal(){
-//        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA)));
-        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA)).subtract(getPaymentsDiscount());
+        return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA));
     }
     
     /**

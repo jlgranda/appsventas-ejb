@@ -27,8 +27,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.GeneralJournal;
 import org.jlgranda.fede.model.accounting.GeneralJournal_;
-import org.jlgranda.fede.model.accounting.Record;
-import org.jlgranda.fede.model.accounting.RecordDetail;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
