@@ -47,7 +47,7 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
     
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "cashBox_id", insertable = true, updatable = true, nullable = true)
-    CashBox cashBox;
+    private CashBox cashBox;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)    
@@ -133,7 +133,9 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         CashBoxDetail other = (CashBoxDetail) obj;
         EqualsBuilder eb = new EqualsBuilder();
         
-        eb.append(getId(), other.getId()).append(getDenomination(), other.getDenomination());
+//        eb.append(getId(), other.getId());
+        eb.append(getDenomination(), other.getDenomination());
+        
         return eb.isEquals();
     }
     

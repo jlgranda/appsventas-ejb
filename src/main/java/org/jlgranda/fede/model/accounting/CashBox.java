@@ -40,17 +40,30 @@ import org.jpapi.model.PersistentObject;
  * @author kellypaulinc
  */
 @Entity
-@Table(name = "Cash_Box")
-@NamedQueries({
-@NamedQuery(name = "CashBox.findByName", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "CashBox.findByNameAndOwner", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "CashBox.findByNameAndOrg", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
-@NamedQuery(name = "CashBox.findByCreatedOnAndOrg", query = "SELECT s FROM CashBox s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+@Table (name = "CashBox")
+@NamedQueries({ @NamedQuery (name="CashBox.findByName", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+@NamedQuery (name="CashBox.findByNameAndOwner", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery (name="CashBox.findByNameAndOrg", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
+@NamedQuery (name="CashBox.findByCreatedOnAndOrg", query = "SELECT s FROM CashBox s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery (name="CashBox.findByCashBoxGeneral", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
+@NamedQuery (name="CashBox.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.owner = 2 ORDER BY 1"),
 })
 public class CashBox extends PersistentObject<CashBox> implements Comparable <CashBox>, Serializable {
     
+    @ManyToOne (optional = true)
+    @JoinColumn(name = "cashBoxGeneral_id", insertable=true, updatable=true, nullable=true)
+    private CashBoxGeneral cashBoxGeneral;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBox", fetch = FetchType.LAZY)
     private List<CashBoxDetail> cashboxDetails = new ArrayList<>();
+    
+    BigDecimal cashPartial;
+    
+    BigDecimal saldoPartial;
+    
+    BigDecimal missCashPartial;
+    
+    BigDecimal excessCashPartial;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
@@ -67,21 +80,13 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
     BigDecimal missingCash;
     
     BigDecimal excessCash;
-
-    public Account getAccount() {
-        return account;
+    
+    public CashBoxGeneral getCashBoxGeneral() {
+        return cashBoxGeneral;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setCashBoxGeneral(CashBoxGeneral cashBoxGeneral) {
+        this.cashBoxGeneral = cashBoxGeneral;
     }
     
     public List<CashBoxDetail> getCashboxDetails() {
@@ -104,6 +109,54 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail){
         getCashboxDetails().set(getCashboxDetails().indexOf(cashBoxDetail), cashBoxDetail);
         return cashBoxDetail;
+    }
+
+    public BigDecimal getCashPartial() {
+        return cashPartial;
+    }
+
+    public void setCashPartial(BigDecimal cashPartial) {
+        this.cashPartial = cashPartial;
+    }
+
+    public BigDecimal getSaldoPartial() {
+        return saldoPartial;
+    }
+
+    public void setSaldoPartial(BigDecimal saldoPartial) {
+        this.saldoPartial = saldoPartial;
+    }
+
+    public BigDecimal getMissCashPartial() {
+        return missCashPartial;
+    }
+
+    public void setMissCashPartial(BigDecimal missCashPartial) {
+        this.missCashPartial = missCashPartial;
+    }
+
+    public BigDecimal getExcessCashPartial() {
+        return excessCashPartial;
+    }
+
+    public void setExcessCashPartial(BigDecimal excessCashPartial) {
+        this.excessCashPartial = excessCashPartial;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public BigDecimal getAmountTotal() {
@@ -169,5 +222,5 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
     public int compareTo(CashBox other) {
         return this.createdOn.compareTo(other.getCreatedOn());
     }
-    
+ 
 }
