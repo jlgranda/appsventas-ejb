@@ -53,8 +53,6 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
     @Column(nullable = false)    
     private CashBoxDetail.DenominationType denomination_type;
             
-    Long bussineEntityId;
-    
     String denomination;
     BigDecimal valuer;
     Long quantity;
@@ -71,14 +69,6 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
 
     public void setCashBox(CashBox cashBox) {
         this.cashBox = cashBox;
-    }
-
-    public Long getBussineEntityId() {
-        return bussineEntityId;
-    }
-
-    public void setBussineEntityId(Long bussineEntityId) {
-        this.bussineEntityId = bussineEntityId;
     }
 
     public String getDenomination() {

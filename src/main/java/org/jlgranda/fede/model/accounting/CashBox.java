@@ -20,10 +20,8 @@ package org.jlgranda.fede.model.accounting;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -32,8 +30,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.Organization;
@@ -47,30 +43,30 @@ import org.jpapi.model.PersistentObject;
 @Table(name = "Cash_Box")
 @NamedQueries({
 @NamedQuery(name = "CashBox.findByName", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "CashBox.findByNameAndOwner", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 2"),
-@NamedQuery(name = "CashBox.findByNameAndOrg", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 2"),
-@NamedQuery(name = "CashBox.findByCreatedOnAndOrg", query = "SELECT s FROM CashBox s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?2 ORDER BY 2"),
+@NamedQuery(name = "CashBox.findByNameAndOwner", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery(name = "CashBox.findByNameAndOrg", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
+@NamedQuery(name = "CashBox.findByCreatedOnAndOrg", query = "SELECT s FROM CashBox s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
 })
 public class CashBox extends PersistentObject<CashBox> implements Comparable <CashBox>, Serializable {
     
-    @ManyToOne (optional = false, cascade = (CascadeType.ALL))
-    @JoinColumn (name = "account_id", insertable = true, updatable = true, nullable = true)
-    Account account;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBox", fetch = FetchType.LAZY)
+    private List<CashBoxDetail> cashboxDetails = new ArrayList<>();
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
+    private Account account;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBox", fetch = FetchType.LAZY)
-    private List<CashBoxDetail> cashboxDetails = new ArrayList<>();
+    BigDecimal amountTotal;
     
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "emissionDate")
-    private Date emissionDate;
-            
-    BigDecimal amount;
+    BigDecimal saldoCash;
     
-    BigDecimal saldo;
+    BigDecimal missingCash;
+    
+    BigDecimal excessCash;
 
     public Account getAccount() {
         return account;
@@ -88,8 +84,6 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
         this.organization = organization;
     }
     
-    
-    
     public List<CashBoxDetail> getCashboxDetails() {
         return cashboxDetails;
     }
@@ -98,31 +92,6 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
         this.cashboxDetails = cashboxDetails;
     }
 
-
-    public Date getEmissionDate() {
-        return emissionDate;
-    }
-
-    public void setEmissionDate(Date emissionDate) {
-        this.emissionDate = emissionDate;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public BigDecimal getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(BigDecimal saldo) {
-        this.saldo = saldo;
-    }
-    
     public void addCashBoxDetail(CashBoxDetail cashBoxDetail){
         cashBoxDetail.setCashBox(this);
         if(this.cashboxDetails.contains(cashBoxDetail)){
@@ -135,6 +104,38 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail){
         getCashboxDetails().set(getCashboxDetails().indexOf(cashBoxDetail), cashBoxDetail);
         return cashBoxDetail;
+    }
+
+    public BigDecimal getAmountTotal() {
+        return amountTotal;
+    }
+
+    public void setAmountTotal(BigDecimal amountTotal) {
+        this.amountTotal = amountTotal;
+    }
+
+    public BigDecimal getSaldoCash() {
+        return saldoCash;
+    }
+
+    public void setSaldoCash(BigDecimal saldoCash) {
+        this.saldoCash = saldoCash;
+    }
+
+    public BigDecimal getMissingCash() {
+        return missingCash;
+    }
+
+    public void setMissingCash(BigDecimal missingCash) {
+        this.missingCash = missingCash;
+    }
+
+    public BigDecimal getExcessCash() {
+        return excessCash;
+    }
+
+    public void setExcessCash(BigDecimal excessCash) {
+        this.excessCash = excessCash;
     }
     
     @Override
@@ -170,58 +171,3 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable <Ca
     }
     
 }
-
-//    public void addRecordDetailNew(RecordDetail recordDetail) {
-//        recordDetail.setRecord(this);
-//        this.recordDetails.add(recordDetail);
-//    }
-//    
-//    public void addRecordDetail(RecordDetail recordDetail) {
-//        recordDetail.setRecord(this);
-//        if(this.recordDetails.contains(recordDetail)){
-//            replaceRecordDetail(recordDetail);
-//        }else{
-//            this.recordDetails.add(recordDetail);
-//        }
-//    }
-//    
-//    public RecordDetail replaceRecordDetail(RecordDetail recordDetail){
-//        getRecordDetails().set(getRecordDetails().indexOf(recordDetail), recordDetail);
-//        return recordDetail;
-//    }
-//    
-
-//    @Override
-//    public int hashCode() {
-//        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
-//        // if deriving: appendSuper(super.hashCode()).
-//        hcb.append(getId());
-//
-//        return hcb.toHashCode();
-//    }
-//
-//    @Override
-//    public boolean equals(final Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (obj == null) {
-//            return false;
-//        }
-//        if (getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        Record other = (Record) obj;
-//        EqualsBuilder eb = new EqualsBuilder();
-//        
-//        eb.append(getId(), other.getId());
-//        return eb.isEquals();
-//    }
-//    
-//    @Override
-//    public int compareTo(Record other) {
-//        return this.createdOn.compareTo(other.getCreatedOn());
-//    }
-//
-//    
-//}
