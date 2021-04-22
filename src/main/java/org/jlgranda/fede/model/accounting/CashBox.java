@@ -96,21 +96,16 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
         System.out.println("\nifcashBoxDetails.contains: " + this.cashBoxDetails.contains(cashBoxDetail));
         if (this.cashBoxDetails.contains(cashBoxDetail)) {
             replaceCashBoxDetail(cashBoxDetail);
-            System.out.println("Entró al IF");
         } else {
             this.cashBoxDetails.add(cashBoxDetail);
-            System.out.println("Entró al ELSE");
         }
         System.out.println("\nTerminaAddCasBoxDetail");
     }
 
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
-        System.out.println("\nEmpiezaReplaceCashBoxDetail");
-        System.out.println("\netCashboxDetails().indexOf(cashBoxDetail): " + getCashBoxDetails().indexOf(cashBoxDetail));
         System.out.println("\ngetCashboxDetails(): " + getCashBoxDetails());
         getCashBoxDetails().set(getCashBoxDetails().indexOf(cashBoxDetail), cashBoxDetail);
         System.out.println("\ngetCashboxDetails(): " + getCashBoxDetails());
-        System.out.println("\nTerminaReplaceCashBoxDetail");
         return cashBoxDetail;
     }
 
@@ -178,8 +173,6 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
         EqualsBuilder eb = new EqualsBuilder();
 
         eb.append(getId(), other.getId());
-        System.out.println("\nIsEqualsCashBox: " + getId().equals(other.getId()));
-        System.out.println("<-------------------------------->\n");
         return eb.isEquals();
     }
 

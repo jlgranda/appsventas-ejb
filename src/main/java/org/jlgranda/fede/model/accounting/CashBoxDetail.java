@@ -137,6 +137,7 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         
 //        eb.append(getId(), other.getId());
         eb.append(getDenomination(), other.getDenomination());
+        System.out.println("getId: "+getId()+"->"+other.getId());
         System.out.println("getDenomination: "+getDenomination()+"->"+other.getDenomination());
         System.out.println("IsEqualsCashBoxDetail: "+getDenomination().equals(other.getDenomination())+"\n");
         System.out.println("\nTerminaelEquals");

@@ -62,10 +62,6 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
     @JoinColumn (name = "facturaElectronica_id")
     private FacturaElectronica facturaElectronica;
     
-    @OneToOne
-    @JoinColumn (name = "cashbox_id")
-    private CashBox cashbox;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     private List<RecordDetail> recordDetails = new ArrayList<>();
 
@@ -130,14 +126,6 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
         this.facturaElectronica = facturaElectronica;
     }
 
-    public CashBox getCashbox() {
-        return cashbox;
-    }
-
-    public void setCashbox(CashBox cashbox) {
-        this.cashbox = cashbox;
-    }
-    
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
