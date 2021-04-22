@@ -19,11 +19,19 @@ package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -37,9 +45,9 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "CashBox_General")
 @NamedQueries({ @NamedQuery (name="CashBoxGeneral.findByName", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery (name="CashBox.findByNameAndOwner", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery (name="CashBox.findByNameAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
-@NamedQuery (name="CashBox.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery (name="CashBoxGeneral.findByNameAndOwner", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery (name="CashBoxGeneral.findByNameAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
+@NamedQuery (name="CashBoxGeneral.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
 })
 public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable <CashBoxGeneral>, Serializable {
     
@@ -51,6 +59,9 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
     
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBoxGeneral", fetch = FetchType.LAZY)
+    private List<CashBox> cashBoxs = new ArrayList<>();
+    
     BigDecimal cashFinal;
     
     BigDecimal saldoFinal;
@@ -58,7 +69,16 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     BigDecimal missCashFinal;
     
     BigDecimal excessCashFinal;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)    
+    private CashBoxGeneral.Status statusCashBoxGeneral;
 
+    public enum Status {
+        OPEN,
+        CLOSED;
+    }
+    
     public Account getAccount() {
         return account;
     }
@@ -73,6 +93,29 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
 
     public void setOrganization(Organization organization) {
         this.organization = organization;
+    }
+
+    public List<CashBox> getCashBoxs() {
+        return cashBoxs;
+    }
+
+    public void setCashBoxs(List<CashBox> cashBoxs) {
+        this.cashBoxs = cashBoxs;
+    }
+    
+    public CashBox addCashBox(CashBox cashBox){
+        cashBox.setCashBoxGeneral(this);
+        if(this.cashBoxs.contains(cashBox)){
+            replaceCashBox(cashBox);
+        }else{
+            this.cashBoxs.add(cashBox);
+        }
+        return cashBox;
+    }
+    
+    public CashBox replaceCashBox(CashBox cashBox){
+        getCashBoxs().set(getCashBoxs().indexOf(cashBox), cashBox);
+        return cashBox;
     }
     
     public BigDecimal getCashFinal() {
@@ -107,6 +150,14 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
         this.excessCashFinal = excessCashFinal;
     }
 
+    public Status getStatusCashBoxGeneral() {
+        return statusCashBoxGeneral;
+    }
+
+    public void setStatusCashBoxGeneral(Status statusCashBoxGeneral) {
+        this.statusCashBoxGeneral = statusCashBoxGeneral;
+    }
+    
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
@@ -115,7 +166,6 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
 
         return hcb.toHashCode();
     }
-
 
     @Override
     public boolean equals(final Object obj) {

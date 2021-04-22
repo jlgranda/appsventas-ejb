@@ -111,6 +111,7 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         this.amount = amount;
     }
 
+    @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
         // if deriving: appendSuper(super.hashCode()).
@@ -121,6 +122,7 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
 
     @Override
     public boolean equals(final Object obj) {
+        System.out.println("\nEmpiezaelEquals");
         if (this == obj) {
             return true;
         }
@@ -135,7 +137,9 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         
 //        eb.append(getId(), other.getId());
         eb.append(getDenomination(), other.getDenomination());
-        
+        System.out.println("getDenomination: "+getDenomination()+"->"+other.getDenomination());
+        System.out.println("IsEqualsCashBoxDetail: "+getDenomination().equals(other.getDenomination())+"\n");
+        System.out.println("\nTerminaelEquals");
         return eb.isEquals();
     }
     
