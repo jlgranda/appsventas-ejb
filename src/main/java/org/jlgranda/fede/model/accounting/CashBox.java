@@ -47,7 +47,10 @@ import org.jpapi.model.PersistentObject;
     @NamedQuery(name = "CashBox.findByName", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
     @NamedQuery(name = "CashBox.findByNameAndOwner", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
     @NamedQuery(name = "CashBox.findByCashBoxGeneral", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
-    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY 1"),})
+    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.statusCashBox = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.statusCashBox = ?2 and s.id <> ?3 ORDER BY 1"),
+})
 public class CashBox extends PersistentObject<CashBox> implements Comparable<CashBox>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
