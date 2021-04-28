@@ -95,14 +95,11 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
 
     public void addCashBoxDetail(CashBoxDetail cashBoxDetail) {
         cashBoxDetail.setCashBox(this);
-        System.out.println("\nEmpiezaAddCasBoxDetail");
-        System.out.println("\nifcashBoxDetails.contains: " + this.cashBoxDetails.contains(cashBoxDetail));
         if (this.cashBoxDetails.contains(cashBoxDetail)) {
             replaceCashBoxDetail(cashBoxDetail);
         } else {
             this.cashBoxDetails.add(cashBoxDetail);
         }
-        System.out.println("\nTerminaAddCasBoxDetail");
     }
 
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
