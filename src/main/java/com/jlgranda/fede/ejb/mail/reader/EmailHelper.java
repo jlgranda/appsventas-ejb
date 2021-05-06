@@ -33,6 +33,7 @@ import javax.mail.Store;
 import javax.mail.Transport;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.james.mime4j.codec.DecoderUtil;
 import org.apache.james.mime4j.dom.Body;
 import org.apache.james.mime4j.dom.Entity;
 import org.apache.james.mime4j.dom.Multipart;
@@ -270,8 +271,7 @@ public class EmailHelper {
 
         // see EMSUI-614
         if (filename != null) {
-            filename = org.apache.james.mime4j.codec.DecoderUtil.decodeEncodedWords(filename, Charset.defaultCharset());
-
+            filename = DecoderUtil.decodeEncodedWords(filename, Charset.defaultCharset());
             // note: if combining LTR strings and RTL strings, DecoderUtil#decodeEncodedWords could return
             //        a string with some Unicode control characters. Sanitize this string.
             filename = sanitizeString(filename);

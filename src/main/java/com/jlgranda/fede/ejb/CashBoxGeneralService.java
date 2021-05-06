@@ -25,8 +25,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.accounting.GeneralJournal;
-import org.jlgranda.fede.model.accounting.GeneralJournal_;
+import org.jlgranda.fede.model.accounting.CashBoxGeneral;
+import org.jlgranda.fede.model.accounting.CashBoxGeneral_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
@@ -37,27 +37,24 @@ import org.slf4j.LoggerFactory;
  *
  * @author kellypaulinc
  */
-
 @Stateless
-public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
-
+public class CashBoxGeneralService extends BussinesEntityHome<CashBoxGeneral>{
     private static final long serialVersionUID = -6428094275651428620L;
     
-    Logger logger = LoggerFactory.getLogger(GeneralJournalService.class);
-
+    Logger logger = LoggerFactory.getLogger(CashBoxGeneralService.class);
+    
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
-    private void init() {
+    private void init(){
         setEntityManager(em);
-        setEntityClass(GeneralJournal.class);
+        setEntityClass(CashBoxGeneral.class);
     }
-
-    @Override                                     
-    public GeneralJournal createInstance() {
-
-        GeneralJournal _instance = new GeneralJournal();
+    
+    @Override
+    public CashBoxGeneral createInstance(){
+        CashBoxGeneral _instance = new CashBoxGeneral();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
@@ -69,17 +66,16 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
     
     //soporte para Lazy Data Model
     public long count() {
-        return super.count(GeneralJournal.class);
+        return super.count(CashBoxGeneral.class);
     }
-
-    public List<GeneralJournal> find(int maxresults, int firstresult) {
+    
+    public List<CashBoxGeneral> find(int maxresults, int firstresult){
         
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<GeneralJournal> query = builder.createQuery(GeneralJournal.class);
-
-        Root<GeneralJournal> from = query.from(GeneralJournal.class);
-        query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
+        CriteriaQuery<CashBoxGeneral> query = builder.createQuery(CashBoxGeneral.class);
+        
+        Root<CashBoxGeneral> from = query.from(CashBoxGeneral.class);
+        query.select(from).orderBy(builder.desc(from.get(CashBoxGeneral_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
 }
