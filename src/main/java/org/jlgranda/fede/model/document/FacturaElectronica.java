@@ -58,8 +58,11 @@ import org.jpapi.model.SourceType;
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.findByOrg", query = "SELECT f FROM FacturaElectronica f WHERE f.organization=?1 and f.active=?2 ORDER BY f.lastUpdate DESC"),
+    @NamedQuery(name = "FacturaElectronica.findCodeByOrg", query = "SELECT f.code FROM FacturaElectronica f WHERE f.organization=?1 and f.active=?2 ORDER BY f.lastUpdate DESC"),
     @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmision", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision  >= ?2 and f.fechaEmision <= ?3 and f.active=?4 ORDER BY f.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmisionAndEmissionType", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision  >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4 and f.active=?5 ORDER BY f.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmisionAndEmissionTypeAndOrg", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision>=?2 and f.fechaEmision<=?3 and f.emissionType=?4 and f.active=?5 and f.organization=?6 ORDER BY f.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOwner", query = "select count(f) FROM FacturaElectronica f WHERE f.owner = ?1"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOrg", query = "select count(f) FROM FacturaElectronica f WHERE f.organization = ?1"),
@@ -87,7 +90,7 @@ public class FacturaElectronica extends BussinesEntity {
     private BigDecimal importeTotal;
 
     private String moneda;
-
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fechaEmision")
     private Date fechaEmision;
@@ -131,6 +134,14 @@ public class FacturaElectronica extends BussinesEntity {
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fechaVencimiento")
+    private Date fechaVencimiento;
+    
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
+    private List<FacturaElectronicaDetail> facturaElectronicaDetails = new ArrayList<>();
+    
+    
     public BigDecimal getTotalSinImpuestos() {
         return totalSinImpuestos;
     }
@@ -274,4 +285,34 @@ public class FacturaElectronica extends BussinesEntity {
         this.organization = organization;
     }
 
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public List<FacturaElectronicaDetail> getFacturaElectronicaDetails() {
+        return facturaElectronicaDetails;
+    }
+
+    public void setFacturaElectronicaDetails(List<FacturaElectronicaDetail> facturaElectronicaDetails) {
+        this.facturaElectronicaDetails = facturaElectronicaDetails;
+    }
+    
+    public FacturaElectronicaDetail addFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail){
+        facturaElectronicaDetail.setFacturaElectronica(this);
+        if(this.facturaElectronicaDetails.contains(facturaElectronicaDetail)){
+            replaceFacturaElectronicaDetail(facturaElectronicaDetail);
+        }else{
+            this.facturaElectronicaDetails.add(facturaElectronicaDetail);
+        }
+        return facturaElectronicaDetail;
+    }
+    
+    public FacturaElectronicaDetail replaceFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail){
+        getFacturaElectronicaDetails().set(getFacturaElectronicaDetails().indexOf(facturaElectronicaDetail), facturaElectronicaDetail);
+        return facturaElectronicaDetail;
+    }
 }

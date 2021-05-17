@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 jlgranda
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,11 +15,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.jlgranda.fede.ejb.sales;
+package com.jlgranda.fede.ejb;
 
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,67 +26,57 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.sales.Product;
-import org.jlgranda.fede.model.sales.ProductType;
-import org.jlgranda.fede.model.sales.Product_;
+import org.jlgranda.fede.model.document.FacturaElectronicaDetail;
+import org.jlgranda.fede.model.document.FacturaElectronicaDetail_;
 import org.jpapi.controller.BussinesEntityHome;
-import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
-import org.jpapi.model.TaxType;
 import org.jpapi.util.Dates;
-import org.jpapi.util.QuerySortOrder;
 
 /**
  *
- * @author jlgranda
+ * @author author
  */
 @Stateless
-public class ProductService extends BussinesEntityHome<Product> {
-
-    private static final long serialVersionUID = -6428094275651428620L;
+public class FacturaElectronicaDetailService extends BussinesEntityHome<FacturaElectronicaDetail> {
     
     @PersistenceContext
     EntityManager em;
 
+    public FacturaElectronicaDetailService() {
+    }
+
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(Product.class);
+        setEntityClass(FacturaElectronicaDetail.class);
     }
 
-    @Override
-    public Product createInstance() {
 
-        Product _instance = new Product();
+    @Override
+    public FacturaElectronicaDetail createInstance() {
+
+        FacturaElectronicaDetail _instance = new FacturaElectronicaDetail();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
-        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
-        _instance.setProductType(ProductType.RAW_MATERIAL);
-        _instance.setTaxType(TaxType.IVA);
+        _instance.setQuantity(0L);
+        _instance.setUnit_value(BigDecimal.ZERO);
         return _instance;
     }
     
-    //soporte para lazy data model
     public long count() {
-        return super.count(Product.class); 
+        return super.count(FacturaElectronicaDetail.class); 
     }
-    
-    public List<Product> find(int maxresults, int firstresult) {
+    public List<FacturaElectronicaDetail> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+        CriteriaQuery<FacturaElectronicaDetail> query = builder.createQuery(FacturaElectronicaDetail.class);
 
-        Root<Product> from = query.from(Product.class);
-        query.select(from).orderBy(builder.desc(from.get(Product_.name)));
+        Root<FacturaElectronicaDetail> from = query.from(FacturaElectronicaDetail.class);
+        query.select(from).orderBy(builder.desc(from.get(FacturaElectronicaDetail_.name)));
         return getResultList(query, maxresults, firstresult);
     }
     
-    public List<Product> findByOrganization(Organization organization){
-        Map<String, Object> params = new HashMap<>();
-        params.put("organization", organization);
-        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
-    }
 }

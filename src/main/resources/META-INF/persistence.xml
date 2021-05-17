@@ -98,6 +98,9 @@
     <class>org.jlgranda.fede.model.accounting.CashBoxGeneral</class>
     <class>org.jlgranda.fede.model.accounting.CashBox</class>
     <class>org.jlgranda.fede.model.accounting.CashBoxDetail</class>
+    <class>org.jlgranda.fede.model.sales.Kardex</class>
+    <class>org.jlgranda.fede.model.sales.KardexDetail</class>
+    <class>org.jlgranda.fede.model.document.FacturaElectronicaDetail</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

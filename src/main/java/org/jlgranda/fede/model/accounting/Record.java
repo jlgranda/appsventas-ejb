@@ -93,11 +93,6 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
         this.emissionDate = emissionDate;
     }
 
-    public void addRecordDetailNew(RecordDetail recordDetail) {
-        recordDetail.setRecord(this);
-        this.recordDetails.add(recordDetail);
-    }
-    
     public void addRecordDetail(RecordDetail recordDetail) {
         recordDetail.setRecord(this);
         if(this.recordDetails.contains(recordDetail)){
@@ -111,13 +106,7 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
         getRecordDetails().set(getRecordDetails().indexOf(recordDetail), recordDetail);
         return recordDetail;
     }
-    
-    public List<RecordDetail> removeRecordsDetails(){
-        this.recordDetails.removeAll(getRecordDetails());
-        setRecordDetails(this.recordDetails);
-        return getRecordDetails();
-    }
-    
+
     public FacturaElectronica getFacturaElectronica() {
         return facturaElectronica;
     }

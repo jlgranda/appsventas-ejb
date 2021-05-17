@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 jlgranda
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,67 +27,60 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.sales.Product;
-import org.jlgranda.fede.model.sales.ProductType;
-import org.jlgranda.fede.model.sales.Product_;
+import org.jlgranda.fede.model.sales.Kardex;
+import org.jlgranda.fede.model.sales.KardexDetail;
+import org.jlgranda.fede.model.sales.KardexDetail_;
 import org.jpapi.controller.BussinesEntityHome;
-import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
-import org.jpapi.model.TaxType;
 import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 
 /**
  *
- * @author jlgranda
+ * @author author
  */
 @Stateless
-public class ProductService extends BussinesEntityHome<Product> {
-
-    private static final long serialVersionUID = -6428094275651428620L;
-    
+public class KardexDetailService extends BussinesEntityHome<KardexDetail> {
+   
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
-    private void init() {
+    private void init(){
         setEntityManager(em);
-        setEntityClass(Product.class);
+        setEntityClass(KardexDetail.class);
     }
-
+    
     @Override
-    public Product createInstance() {
-
-        Product _instance = new Product();
+    public KardexDetail createInstance(){
+        KardexDetail _instance = new KardexDetail();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
-        _instance.setProductType(ProductType.RAW_MATERIAL);
-        _instance.setTaxType(TaxType.IVA);
         return _instance;
     }
     
-    //soporte para lazy data model
-    public long count() {
-        return super.count(Product.class); 
+    //Soporte para lazy data model
+    public long count(){
+        return super.count(KardexDetail.class);
     }
     
-    public List<Product> find(int maxresults, int firstresult) {
-
+    public List<KardexDetail> find(int maxresults, int firstresult){
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<Product> query = builder.createQuery(Product.class);
-
-        Root<Product> from = query.from(Product.class);
-        query.select(from).orderBy(builder.desc(from.get(Product_.name)));
+        CriteriaQuery<KardexDetail> query = builder.createQuery(KardexDetail.class);
+        
+        Root<KardexDetail> from = query.from(KardexDetail.class);
+        query.select(from).orderBy(builder.desc(from.get(KardexDetail_.name)));
         return getResultList(query, maxresults, firstresult);
     }
     
-    public List<Product> findByOrganization(Organization organization){
+    public List<KardexDetail> findByKardexAndCode(Kardex kardex, String code){
         Map<String, Object> params = new HashMap<>();
-        params.put("organization", organization);
-        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+        params.put("kardex", kardex);
+        params.put("code", code);
+        return this.find(-1,-1, "code", QuerySortOrder.ASC, params).getResult();
     }
 }
