@@ -43,12 +43,11 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
     @JoinColumn(name = "facturaElectronica_id", insertable = true, updatable = true, nullable = true)
     private FacturaElectronica facturaElectronica;
-    
 
-    @ManyToOne(optional = true, cascade = {CascadeType.ALL})
-    @JoinColumn(name = "product_id", insertable=false, updatable=false, nullable=false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, nullable = true)
     private Product product;
-    
+
     private Long quantity;
     private BigDecimal unit_value;
     private BigDecimal total_value;
@@ -125,5 +124,5 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
     public int compareTo(FacturaElectronicaDetail other) {
         return this.createdOn.compareTo(other.getCreatedOn());
     }
-    
+
 }

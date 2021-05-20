@@ -42,35 +42,41 @@ import org.jpapi.model.PersistentObject;
  * @author kellypaulinc
  */
 @Entity
-@Table(name = "CashBox")
+@Table(name = "CashBox_Partial")
 @NamedQueries({
-    @NamedQuery(name = "CashBox.findByName", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    @NamedQuery(name = "CashBox.findByNameAndOwner", query = "SELECT s FROM CashBox s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-    @NamedQuery(name = "CashBox.findByCashBoxGeneral", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
-    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY 1"),
-    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.statusCashBox = ?2 ORDER BY 1"),
-    @NamedQuery(name = "CashBox.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBox s WHERE s.cashBoxGeneral = ?1 and s.statusCashBox = ?2 and s.id <> ?3 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByName", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.id <> ?3 ORDER BY 1"),
 })
-public class CashBox extends PersistentObject<CashBox> implements Comparable<CashBox>, Serializable {
+public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements Comparable<CashBoxPartial>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
     @JoinColumn(name = "cashBoxGeneral_id", insertable = true, updatable = true, nullable = true)
     private CashBoxGeneral cashBoxGeneral;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBox", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBoxPartial", fetch = FetchType.LAZY)
     private List<CashBoxDetail> cashBoxDetails = new ArrayList<>();
 
-    BigDecimal cashPartial;
+    BigDecimal cashPartial; //Todo el dinero en efectivo que se tenía antes de hacer un depósito (si hubiese, sería diferente al saldoPartial).
 
-    BigDecimal saldoPartial;
+    BigDecimal saldoPartial; //Dinero que queda luego de hacer un depósito y el que se va a desglosar.
+    
+    BigDecimal totalcashBills; //Subtotal de billetes.
+    
+    BigDecimal totalcashMoneys; //Subtotal de monedas.
+    
+    BigDecimal totalCashBreakdown; //Total de dinero desglosado (Suma de billetes y monedas).
 
-    BigDecimal missCashPartial;
+    BigDecimal missCashPartial; //Dinero faltante.
 
-    BigDecimal excessCashPartial;
+    BigDecimal excessCashPartial; //Dinero sobrante.
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
-    private CashBox.Status statusCashBox;
+    private CashBoxPartial.Status statusCashBoxPartial;
 
     public enum Status {
         OPEN,
@@ -94,7 +100,7 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
     }
 
     public void addCashBoxDetail(CashBoxDetail cashBoxDetail) {
-        cashBoxDetail.setCashBox(this);
+        cashBoxDetail.setCashBoxPartial(this);
         if (this.cashBoxDetails.contains(cashBoxDetail)) {
             replaceCashBoxDetail(cashBoxDetail);
         } else {
@@ -103,9 +109,7 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
     }
 
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
-        System.out.println("\ngetCashboxDetails(): " + getCashBoxDetails());
         getCashBoxDetails().set(getCashBoxDetails().indexOf(cashBoxDetail), cashBoxDetail);
-        System.out.println("\ngetCashboxDetails(): " + getCashBoxDetails());
         return cashBoxDetail;
     }
 
@@ -125,6 +129,30 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
         this.saldoPartial = saldoPartial;
     }
 
+    public BigDecimal getTotalcashBills() {
+        return totalcashBills;
+    }
+
+    public void setTotalcashBills(BigDecimal totalcashBills) {
+        this.totalcashBills = totalcashBills;
+    }
+
+    public BigDecimal getTotalcashMoneys() {
+        return totalcashMoneys;
+    }
+
+    public void setTotalcashMoneys(BigDecimal totalcashMoneys) {
+        this.totalcashMoneys = totalcashMoneys;
+    }
+
+    public BigDecimal getTotalCashBreakdown() {
+        return totalCashBreakdown;
+    }
+
+    public void setTotalCashBreakdown(BigDecimal totalCashBreakdown) {
+        this.totalCashBreakdown = totalCashBreakdown;
+    }
+
     public BigDecimal getMissCashPartial() {
         return missCashPartial;
     }
@@ -141,43 +169,43 @@ public class CashBox extends PersistentObject<CashBox> implements Comparable<Cas
         this.excessCashPartial = excessCashPartial;
     }
 
-    public Status getStatusCashBox() {
-        return statusCashBox;
+    public Status getStatusCashBoxPartial() {
+        return statusCashBoxPartial;
     }
 
-    public void setStatusCashBox(Status statusCashBox) {
-        this.statusCashBox = statusCashBox;
+    public void setStatusCashBoxPartial(Status statusCashBoxPartial) {
+        this.statusCashBoxPartial = statusCashBoxPartial;
     }
 
     @Override
-    public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
-        // if deriving: appendSuper(super.hashCode()).
+    public int hashCode(){
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
         hcb.append(getId());
-
         return hcb.toHashCode();
     }
-
+    
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
+    public boolean equals(final Object obj){
+        if(this==obj){
             return true;
         }
-        if (obj == null) {
+        if(obj == null){
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if(getClass()!=obj.getClass()){
             return false;
         }
-        CashBox other = (CashBox) obj;
+        
+        CashBoxPartial other = (CashBoxPartial) obj;
         EqualsBuilder eb = new EqualsBuilder();
-
+        
         eb.append(getId(), other.getId());
+        
         return eb.isEquals();
     }
 
     @Override
-    public int compareTo(CashBox other) {
+    public int compareTo(CashBoxPartial other) {
         return this.createdOn.compareTo(other.getCreatedOn());
     }
 

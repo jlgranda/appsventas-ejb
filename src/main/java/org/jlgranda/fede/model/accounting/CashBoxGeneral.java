@@ -52,16 +52,16 @@ import org.jpapi.model.PersistentObject;
 })
 public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable <CashBoxGeneral>, Serializable {
     
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
     private Account account;
     
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBoxGeneral", fetch = FetchType.LAZY)
-    private List<CashBox> cashBoxs = new ArrayList<>();
+    private List<CashBoxPartial> cashBoxPartials = new ArrayList<>();
     
     BigDecimal cashFinal;
     
@@ -96,27 +96,27 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
         this.organization = organization;
     }
 
-    public List<CashBox> getCashBoxs() {
-        return cashBoxs;
+    public List<CashBoxPartial> getCashBoxPartials() {
+        return cashBoxPartials;
     }
 
-    public void setCashBoxs(List<CashBox> cashBoxs) {
-        this.cashBoxs = cashBoxs;
+    public void setCashBoxPartials(List<CashBoxPartial> cashBoxPartials) {
+        this.cashBoxPartials = cashBoxPartials;
     }
     
-    public CashBox addCashBox(CashBox cashBox){
-        cashBox.setCashBoxGeneral(this);
-        if(this.cashBoxs.contains(cashBox)){
-            replaceCashBox(cashBox);
+    public CashBoxPartial addCashBoxPartial(CashBoxPartial cashBoxPartial){
+        cashBoxPartial.setCashBoxGeneral(this);
+        if(this.cashBoxPartials.contains(cashBoxPartial)){
+            replaceCashBoxPartial(cashBoxPartial);
         }else{
-            this.cashBoxs.add(cashBox);
+            this.cashBoxPartials.add(cashBoxPartial);
         }
-        return cashBox;
+        return cashBoxPartial;
     }
     
-    public CashBox replaceCashBox(CashBox cashBox){
-        getCashBoxs().set(getCashBoxs().indexOf(cashBox), cashBox);
-        return cashBox;
+    public CashBoxPartial replaceCashBoxPartial(CashBoxPartial cashBoxPartial){
+        getCashBoxPartials().set(getCashBoxPartials().indexOf(cashBoxPartial), cashBoxPartial);
+        return cashBoxPartial;
     }
     
     public BigDecimal getCashFinal() {

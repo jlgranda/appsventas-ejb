@@ -19,6 +19,7 @@ package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,16 +39,16 @@ import org.jpapi.model.PersistentObject;
  * @author kellypaulinc
  */
 @Entity
-@Table (name = "CashBox_Detail")
+@Table (name = "CashBox_detail")
 @NamedQueries({ @NamedQuery (name="CashBoxDetail.findByName", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery (name="CashBoxDetail.findByNameAndOwner", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery (name="CashBoxDetail.findByCashBox", query = "SELECT s FROM CashBoxDetail s WHERE s.cashBox = ?1 ORDER BY 1"),
+@NamedQuery (name="CashBoxDetail.findByCashBoxPartial", query = "SELECT s FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 ORDER BY 1"),
 })
 public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Comparable<CashBoxDetail>, Serializable {
     
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
-    @JoinColumn (name = "cashBox_id", insertable = true, updatable = true, nullable = true)
-    private CashBox cashBox;
+    @JoinColumn (name = "cashBoxPartial_id", insertable = true, updatable = true, nullable = true)
+    private CashBoxPartial cashBoxPartial;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)    
@@ -63,12 +64,12 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         MONEY;
     }
     
-    public CashBox getCashBox() {
-        return cashBox;
+    public CashBoxPartial getCashBoxPartial() {
+        return cashBoxPartial;
     }
 
-    public void setCashBox(CashBox cashBox) {
-        this.cashBox = cashBox;
+    public void setCashBoxPartial(CashBoxPartial cashBoxPartial) {
+        this.cashBoxPartial = cashBoxPartial;
     }
 
     public String getDenomination() {
@@ -111,39 +112,44 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         this.amount = amount;
     }
 
+//    @Override
+//    public int hashCode(){
+//        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+//        hcb.append(getCashBoxPartial()).append(getDenomination());
+//        return hcb.toHashCode();
+//    }
+    
     @Override
     public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
-        // if deriving: appendSuper(super.hashCode()).
-        hcb.append(getId());
-
-        return hcb.toHashCode();
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.cashBoxPartial);
+        hash = 17 * hash + Objects.hashCode(this.denomination);
+        return hash;
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
+    public boolean equals(final Object obj){
+        if(this==obj){
             return true;
         }
-        if (obj == null) {
+        if(obj == null){
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if(getClass()!=obj.getClass()){
             return false;
         }
+        
         CashBoxDetail other = (CashBoxDetail) obj;
         EqualsBuilder eb = new EqualsBuilder();
         
 //        eb.append(getId(), other.getId());
-        eb.append(getDenomination(), other.getDenomination());
+        eb.append(getCashBoxPartial(), other.getCashBoxPartial()).append(getDenomination(), other.getDenomination());
+        
         return eb.isEquals();
     }
-    
+
     @Override
     public int compareTo(CashBoxDetail other) {
         return this.createdOn.compareTo(other.getCreatedOn());
     }
 }
-
-
-

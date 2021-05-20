@@ -69,6 +69,7 @@ public class KardexDetail extends PersistentObject implements Comparable<KardexD
     
     public enum OperationType{
         EXISTENCIA_INICIAL,
+        PRODUCCION,
         COMPRA,
         VENTA,
         DEVOLUCION_COMPRA,

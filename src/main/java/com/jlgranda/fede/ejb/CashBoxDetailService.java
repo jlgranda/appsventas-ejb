@@ -30,8 +30,6 @@ import org.jlgranda.fede.model.accounting.CashBoxDetail_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -40,10 +38,6 @@ import org.slf4j.LoggerFactory;
 
 @Stateless
 public class CashBoxDetailService extends BussinesEntityHome<CashBoxDetail> {
-
-    private static final long serialVersionUID = -6428094275651428620L;
-    
-    Logger logger = LoggerFactory.getLogger(CashBoxDetailService.class);
 
     @PersistenceContext
     EntityManager em;
