@@ -90,4 +90,11 @@ public class ProductService extends BussinesEntityHome<Product> {
         params.put("organization", organization);
         return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
     }
+    
+    public List<Product> findByOrganizationAndType(Organization organization, ProductType productType){
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization", organization);
+        params.put("productType", productType);
+        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+    }
 }

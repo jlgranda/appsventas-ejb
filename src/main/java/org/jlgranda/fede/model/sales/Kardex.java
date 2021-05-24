@@ -26,6 +26,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,6 +42,9 @@ import org.jpapi.model.Organization;
  */
 @Entity
 @Table(name = "Kardex")
+@NamedQueries({
+    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2"),
+})
 public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex>, Serializable {
 
     @ManyToOne(optional = true)

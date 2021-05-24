@@ -115,7 +115,7 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
         EqualsBuilder eb = new EqualsBuilder();
 
 //        eb.append(getId(), other.getId());
-        eb.append(getId(), other.getId()).append(getProduct(), other.getProduct());
+        eb.append(getProduct(), other.getProduct());
 
         return eb.isEquals();
     }

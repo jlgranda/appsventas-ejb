@@ -42,6 +42,8 @@ import org.jpapi.model.PersistentObject;
 @Table(name = "Kardex_detail")
 @NamedQueries({
     @NamedQuery(name = "KardexDetail.findTotalQuantityByKardexAndCode", query = "SELECT kd.operation_type, sum(kd.quantity) FROM KardexDetail kd WHERE kd.kardex=?1 and kd.code=?2 GROUP BY kd.operation_type ORDER BY kd.operation_type"),
+    @NamedQuery(name = "KardexDetail.findByKardexAndInvoiceAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.invoice = ?2 and kd.operation_type = ?3"),
+    @NamedQuery(name = "KardexDetail.findByKardexAndFacturaAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.facturaElectronica = ?2 and kd.operation_type = ?3"),
 })
 public class KardexDetail extends PersistentObject implements Comparable<KardexDetail>, Serializable {
 

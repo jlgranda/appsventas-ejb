@@ -119,13 +119,6 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
 //        return hcb.toHashCode();
 //    }
     
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.cashBoxPartial);
-        hash = 17 * hash + Objects.hashCode(this.denomination);
-        return hash;
-    }
 
     @Override
     public boolean equals(final Object obj){
