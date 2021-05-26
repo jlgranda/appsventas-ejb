@@ -76,6 +76,15 @@ public class Product extends BussinesEntity {
     private BigDecimal price;
     
     @Column
+    private BigDecimal priceB;
+    
+    @Column
+    private BigDecimal priceC;
+    
+    @Column
+    private BigDecimal priceCost;
+    
+    @Column
     private ProductType productType;
     
     @Column
@@ -113,6 +122,30 @@ public class Product extends BussinesEntity {
         this.price = price;
     }
 
+    public BigDecimal getPriceB() {
+        return priceB;
+    }
+
+    public void setPriceB(BigDecimal priceB) {
+        this.priceB = priceB;
+    }
+
+    public BigDecimal getPriceC() {
+        return priceC;
+    }
+
+    public void setPriceC(BigDecimal priceC) {
+        this.priceC = priceC;
+    }
+
+    public BigDecimal getPriceCost() {
+        return priceCost;
+    }
+
+    public void setPriceCost(BigDecimal priceCost) {
+        this.priceCost = priceCost;
+    }
+    
     public byte[] getPhoto() {
         return photo;
     }

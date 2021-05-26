@@ -72,8 +72,7 @@ import org.jpapi.model.SourceType;
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetweenOrg", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypePayBetweenOrg", query = "select sum(p.amount) from Payment p LEFT JOIN p.facturaElectronica f WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetween", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.author=sb.id and f.fechaEmision >= ?1 and f.fechaEmision <= ?2 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
-    @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetweenOrg", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
-})
+    @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetweenOrg", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),})
 @XmlRootElement
 public class FacturaElectronica extends BussinesEntity {
 
@@ -90,7 +89,7 @@ public class FacturaElectronica extends BussinesEntity {
     private BigDecimal importeTotal;
 
     private String moneda;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fechaEmision")
     private Date fechaEmision;
@@ -105,11 +104,11 @@ public class FacturaElectronica extends BussinesEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected SourceType sourceType;
-    
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected EmissionType emissionType;
-    
+
     /**
      * Nombre de archivo de donde se importó la factura
      */
@@ -123,11 +122,11 @@ public class FacturaElectronica extends BussinesEntity {
     private String claveAcceso;
 
     private String numeroAutorizacion;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
+
     /**
      * Para el seguimiento de pagos en facturas a crédito
      */
@@ -137,11 +136,20 @@ public class FacturaElectronica extends BussinesEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fechaVencimiento")
     private Date fechaVencimiento;
-    
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
     private List<FacturaElectronicaDetail> facturaElectronicaDetails = new ArrayList<>();
-    
-    
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private FacturaElectronica.DocumentType document_type;
+
+    public enum DocumentType {
+        FACTURA,
+        NOTA_COMPRA,
+        PRODUCCION,
+    }
+
     public BigDecimal getTotalSinImpuestos() {
         return totalSinImpuestos;
     }
@@ -261,17 +269,17 @@ public class FacturaElectronica extends BussinesEntity {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
-    
-    public Payment addPayment(Payment payment){
+
+    public Payment addPayment(Payment payment) {
         payment.setFacturaElectronica(this);
-        if (this.payments.contains(payment)){
+        if (this.payments.contains(payment)) {
             replacePayment(payment);
         } else {
             this.payments.add(payment);
         }
         return payment;
     }
-    
+
     public Payment replacePayment(Payment payment) {
         getPayments().set(getPayments().indexOf(payment), payment);
         return payment;
@@ -300,19 +308,27 @@ public class FacturaElectronica extends BussinesEntity {
     public void setFacturaElectronicaDetails(List<FacturaElectronicaDetail> facturaElectronicaDetails) {
         this.facturaElectronicaDetails = facturaElectronicaDetails;
     }
-    
-    public FacturaElectronicaDetail addFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail){
+
+    public FacturaElectronicaDetail addFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail) {
         facturaElectronicaDetail.setFacturaElectronica(this);
-        if(this.facturaElectronicaDetails.contains(facturaElectronicaDetail)){
+        if (this.facturaElectronicaDetails.contains(facturaElectronicaDetail)) {
             replaceFacturaElectronicaDetail(facturaElectronicaDetail);
-        }else{
+        } else {
             this.facturaElectronicaDetails.add(facturaElectronicaDetail);
         }
         return facturaElectronicaDetail;
     }
-    
-    public FacturaElectronicaDetail replaceFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail){
+
+    public FacturaElectronicaDetail replaceFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail) {
         getFacturaElectronicaDetails().set(getFacturaElectronicaDetails().indexOf(facturaElectronicaDetail), facturaElectronicaDetail);
         return facturaElectronicaDetail;
+    }
+
+    public DocumentType getDocument_type() {
+        return document_type;
+    }
+
+    public void setDocument_type(DocumentType document_type) {
+        this.document_type = document_type;
     }
 }

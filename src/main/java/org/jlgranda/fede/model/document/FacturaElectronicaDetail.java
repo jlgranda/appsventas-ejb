@@ -52,6 +52,8 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
     private BigDecimal unit_value;
     private BigDecimal total_value;
 
+    private BigDecimal tax_value;
+    
     public FacturaElectronica getFacturaElectronica() {
         return facturaElectronica;
     }
@@ -90,6 +92,14 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
 
     public void setTotal_value(BigDecimal total_value) {
         this.total_value = total_value;
+    }
+
+    public BigDecimal getTax_value() {
+        return tax_value;
+    }
+
+    public void setTax_value(BigDecimal tax_value) {
+        this.tax_value = tax_value;
     }
 
     @Override

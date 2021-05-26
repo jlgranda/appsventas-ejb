@@ -75,6 +75,7 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         _instance.setTotalIVA12(BigDecimal.ZERO);
         _instance.setTotalSinImpuestos(BigDecimal.ZERO);
         _instance.setImporteTotal(BigDecimal.ZERO);
+        _instance.setDocument_type(FacturaElectronica.DocumentType.FACTURA);
         return _instance;
     }
     
