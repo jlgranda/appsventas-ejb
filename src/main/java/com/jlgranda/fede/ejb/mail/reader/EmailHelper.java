@@ -20,6 +20,7 @@ package com.jlgranda.fede.ejb.mail.reader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -270,8 +271,7 @@ public class EmailHelper {
 
         // see EMSUI-614
         if (filename != null) {
-            filename = DecoderUtil.decodeEncodedWords(filename, null);
-
+            filename = DecoderUtil.decodeEncodedWords(filename, Charset.defaultCharset());
             // note: if combining LTR strings and RTL strings, DecoderUtil#decodeEncodedWords could return
             //        a string with some Unicode control characters. Sanitize this string.
             filename = sanitizeString(filename);

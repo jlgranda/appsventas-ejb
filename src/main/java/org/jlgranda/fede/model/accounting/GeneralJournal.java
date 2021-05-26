@@ -29,6 +29,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.Organization;
 import org.jpapi.model.PersistentObject;
 
@@ -83,8 +85,34 @@ public class GeneralJournal extends PersistentObject<GeneralJournal> implements 
     }
 
     @Override
-    public int compareTo(GeneralJournal t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+        hcb.append(getId());
+
+        return hcb.toHashCode();
+    }
+    
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        GeneralJournal other = (GeneralJournal) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        
+        eb.append(getId(), other.getId());
+        return eb.isEquals();
+    }
+    @Override
+    public int compareTo(GeneralJournal other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
 
 }

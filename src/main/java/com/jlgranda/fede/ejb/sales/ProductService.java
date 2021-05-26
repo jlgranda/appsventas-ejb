@@ -17,7 +17,9 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -29,9 +31,11 @@ import org.jlgranda.fede.model.sales.Product;
 import org.jlgranda.fede.model.sales.ProductType;
 import org.jlgranda.fede.model.sales.Product_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.TaxType;
 import org.jpapi.util.Dates;
+import org.jpapi.util.QuerySortOrder;
 
 /**
  *
@@ -79,5 +83,18 @@ public class ProductService extends BussinesEntityHome<Product> {
         Root<Product> from = query.from(Product.class);
         query.select(from).orderBy(builder.desc(from.get(Product_.name)));
         return getResultList(query, maxresults, firstresult);
+    }
+    
+    public List<Product> findByOrganization(Organization organization){
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization", organization);
+        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+    }
+    
+    public List<Product> findByOrganizationAndType(Organization organization, ProductType productType){
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization", organization);
+        params.put("productType", productType);
+        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
     }
 }

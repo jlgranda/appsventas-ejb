@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 kellypaulinc
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,9 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.jlgranda.fede.ejb;
+package com.jlgranda.fede.ejb.sales;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,61 +27,60 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.accounting.GeneralJournal;
-import org.jlgranda.fede.model.accounting.GeneralJournal_;
+import org.jlgranda.fede.model.sales.Kardex;
+import org.jlgranda.fede.model.sales.Kardex_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jpapi.util.QuerySortOrder;
 
 /**
  *
- * @author kellypaulinc
+ * @author author
  */
-
 @Stateless
-public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
-
-    private static final long serialVersionUID = -6428094275651428620L;
+public class KardexService extends BussinesEntityHome<Kardex>{
     
-    Logger logger = LoggerFactory.getLogger(GeneralJournalService.class);
-
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
-    private void init() {
+    private void init(){
         setEntityManager(em);
-        setEntityClass(GeneralJournal.class);
+        setEntityClass(Kardex.class);
     }
-
-    @Override                                     
-    public GeneralJournal createInstance() {
-
-        GeneralJournal _instance = new GeneralJournal();
+    
+    @Override
+    public Kardex createInstance(){
+        Kardex _instance = new Kardex();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
     
-    //soporte para Lazy Data Model
-    public long count() {
-        return super.count(GeneralJournal.class);
+    //Soporte para lazy data model
+    public long count(){
+        return super.count(Kardex.class);
     }
-
-    public List<GeneralJournal> find(int maxresults, int firstresult) {
-        
+    
+    public List<Kardex> find(int maxresults, int firstresult){
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<GeneralJournal> query = builder.createQuery(GeneralJournal.class);
-
-        Root<GeneralJournal> from = query.from(GeneralJournal.class);
-        query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
+        CriteriaQuery<Kardex> query = builder.createQuery(Kardex.class);
+        
+        Root<Kardex> from = query.from(Kardex.class);
+        query.select(from).orderBy(builder.desc(from.get(Kardex_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
+    
+    public List<Kardex> findByOrganization(Organization organization){
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization", organization);
+        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+    }
+    
 }

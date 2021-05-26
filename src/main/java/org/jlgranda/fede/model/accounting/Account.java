@@ -37,13 +37,16 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Account")
 @NamedQueries({ @NamedQuery(name = "Account.findByName", query = "select s FROM Account s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
+@NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
+@NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 ORDER BY 1"),
+})
 public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
     
     private static final long serialVersionUID = -6428094275651428620L;
     
     @Column(nullable = true, length = 1024)
-    protected Long cuentaPadreId;
+    protected Long parentAccount_id;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
@@ -59,11 +62,11 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     }
 
     public Long getCuentaPadreId() {
-        return cuentaPadreId;
+        return parentAccount_id;
     }
 
-    public void setCuentaPadreId(Long cuentapadreid) {
-        this.cuentaPadreId = cuentapadreid;
+    public void setCuentaPadreId(Long parentAccount_id) {
+        this.parentAccount_id = parentAccount_id;
     }
     
     public Organization getOrganization() {

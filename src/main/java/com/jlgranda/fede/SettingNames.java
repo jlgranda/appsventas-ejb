@@ -41,6 +41,8 @@ public class SettingNames {
     
     //Edición de records
     public static String POPUP_FORMULARIO_RECORD = "popup_record";
+    //Popup Libro Mayor
+    public static String POPUP_FORMULARIO_GENERALLEDGER = "popup_general_ledger";
 
     //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";

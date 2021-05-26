@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 kellypaulinc
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -25,61 +26,57 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.accounting.GeneralJournal;
-import org.jlgranda.fede.model.accounting.GeneralJournal_;
+import org.jlgranda.fede.model.document.FacturaElectronicaDetail;
+import org.jlgranda.fede.model.document.FacturaElectronicaDetail_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author kellypaulinc
+ * @author author
  */
-
 @Stateless
-public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
-
-    private static final long serialVersionUID = -6428094275651428620L;
+public class FacturaElectronicaDetailService extends BussinesEntityHome<FacturaElectronicaDetail> {
     
-    Logger logger = LoggerFactory.getLogger(GeneralJournalService.class);
-
     @PersistenceContext
     EntityManager em;
+
+    public FacturaElectronicaDetailService() {
+    }
 
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(GeneralJournal.class);
+        setEntityClass(FacturaElectronicaDetail.class);
     }
 
-    @Override                                     
-    public GeneralJournal createInstance() {
 
-        GeneralJournal _instance = new GeneralJournal();
+    @Override
+    public FacturaElectronicaDetail createInstance() {
+
+        FacturaElectronicaDetail _instance = new FacturaElectronicaDetail();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
-        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setQuantity(0L);
+        _instance.setUnit_value(BigDecimal.ZERO);
         return _instance;
     }
     
-    //soporte para Lazy Data Model
     public long count() {
-        return super.count(GeneralJournal.class);
+        return super.count(FacturaElectronicaDetail.class); 
     }
+    public List<FacturaElectronicaDetail> find(int maxresults, int firstresult) {
 
-    public List<GeneralJournal> find(int maxresults, int firstresult) {
-        
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<GeneralJournal> query = builder.createQuery(GeneralJournal.class);
+        CriteriaQuery<FacturaElectronicaDetail> query = builder.createQuery(FacturaElectronicaDetail.class);
 
-        Root<GeneralJournal> from = query.from(GeneralJournal.class);
-        query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
+        Root<FacturaElectronicaDetail> from = query.from(FacturaElectronicaDetail.class);
+        query.select(from).orderBy(builder.desc(from.get(FacturaElectronicaDetail_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
+    
 }

@@ -65,15 +65,6 @@ import org.jpapi.model.TaxType;
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
     @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
 })
-//SELECT
-//b.name,
-//count(p.group_id)
-//FROM public.product as p
-//INNER JOIN public.ggroup as g on g.groupid=p.group_id
-//INNER JOIN bussinesentity as b on b.id=g.groupid
-//WHERE not p.productid in (75, 676,672) AND
-// b.createdon >='2021-03-01' AND b.createdon <='2021-03-14'
-//GROUP BY p.group_id, b.name;
 public class Product extends BussinesEntity {
 
     private static final long serialVersionUID = -1320148041663418996L;
@@ -83,6 +74,15 @@ public class Product extends BussinesEntity {
     
     @Column
     private BigDecimal price;
+    
+    @Column
+    private BigDecimal priceB;
+    
+    @Column
+    private BigDecimal priceC;
+    
+    @Column
+    private BigDecimal priceCost;
     
     @Column
     private ProductType productType;
@@ -122,6 +122,30 @@ public class Product extends BussinesEntity {
         this.price = price;
     }
 
+    public BigDecimal getPriceB() {
+        return priceB;
+    }
+
+    public void setPriceB(BigDecimal priceB) {
+        this.priceB = priceB;
+    }
+
+    public BigDecimal getPriceC() {
+        return priceC;
+    }
+
+    public void setPriceC(BigDecimal priceC) {
+        this.priceC = priceC;
+    }
+
+    public BigDecimal getPriceCost() {
+        return priceCost;
+    }
+
+    public void setPriceCost(BigDecimal priceCost) {
+        this.priceCost = priceCost;
+    }
+    
     public byte[] getPhoto() {
         return photo;
     }

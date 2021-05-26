@@ -26,7 +26,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.Record;
-import org.jlgranda.fede.model.accounting.RecordDetail;
 import org.jlgranda.fede.model.accounting.Record_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
@@ -56,8 +55,8 @@ public class RecordService extends BussinesEntityHome<Record> {
         setEntityClass(Record.class);
     }
 
-//    @Override
-    public Record createInstanceRecord() {
+    @Override
+    public Record createInstance() {
 
         Record _instance = new Record();
         _instance.setCreatedOn(Dates.now());
@@ -69,17 +68,6 @@ public class RecordService extends BussinesEntityHome<Record> {
         return _instance;
     }
     
-    public RecordDetail createInstanceRecordDetail() {
-
-        RecordDetail _instance = new RecordDetail();
-        _instance.setCreatedOn(Dates.now());
-        _instance.setLastUpdate(Dates.now());
-        _instance.setStatus(StatusType.ACTIVE.toString());
-        _instance.setActivationTime(Dates.now());
-        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
-        return _instance;
-    }
     //soporte para Lazy Data Model
     public long count() {
         return super.count(Record.class);
