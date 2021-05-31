@@ -31,6 +31,7 @@ import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import org.jlgranda.fede.model.sales.Product;
 import org.jlgranda.fede.model.sales.ProductType;
+import org.jpapi.model.Organization;
 import org.jpapi.util.Strings;
 
 /**
@@ -107,6 +108,7 @@ public class ProductCache {
     public List<Product> lookup(String key, ProductType productType) {
         return lookup(key, productType, 0);
     }
+    
     public List<Product> lookup(String key, ProductType productType, int attempt) {
         List<Product> matches = new ArrayList<>();
         products.values().stream().filter(product -> (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
@@ -115,5 +117,12 @@ public class ProductCache {
         }); 
         return matches; //devolver por defecto la clave buscada
     }
-     
+    
+    public List<Product> filterByOrganization(Organization organization){
+        List<Product> matches = new ArrayList<>();
+        products.values().stream().filter(product -> ( organization.equals(product.getOrganization()) )).forEachOrdered(product -> {
+                    matches.add(product);
+        }); 
+        return matches; //devolver por defecto la clave buscada
+    }
 }

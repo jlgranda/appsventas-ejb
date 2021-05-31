@@ -27,7 +27,12 @@ public enum EstadoTipo {
     CURSO,
     ESPERA,
     RESUELTO,
-    CERRADO;
+    CERRADO,
+    
+    ACCION_RESPONDER,
+    ACCION_REDIRECCIONAR;
+    
+    
 
     private EstadoTipo() {
 

@@ -23,7 +23,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
+import org.jpapi.model.Organization;
 
 /**
  *
@@ -41,7 +42,13 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "Tarea.countByOwner", query = "select count(i) FROM Tarea i WHERE i.owner = ?1"),
     @NamedQuery(name = "Tarea.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "Tarea.countBussinesEntityByOwner", query = "select count(t) FROM Tarea t WHERE t.owner = ?1")})
-public class Tarea extends BussinesEntity implements Serializable {
+public class Tarea extends DeletableObject<Tarea> implements Comparable<Tarea>, Serializable {
+
+    private static final long serialVersionUID = -5682792285963020179L;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
+    private Organization organization;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fechaEnvio;
@@ -121,6 +128,22 @@ public class Tarea extends BussinesEntity implements Serializable {
     public void setInstanciaProceso(InstanciaProceso instanciaProceso) {
         this.instanciaProceso = instanciaProceso;
     }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    public UrgenciaTipo getUrgenciaTipo() {
+        return urgenciaTipo;
+    }
+
+    public void setUrgenciaTipo(UrgenciaTipo urgenciaTipo) {
+        this.urgenciaTipo = urgenciaTipo;
+    }
     
     public boolean checkStatus(EstadoTipo estadoTipo){
         if (estadoTipo == null) return false;
@@ -134,6 +157,11 @@ public class Tarea extends BussinesEntity implements Serializable {
     public void addDocumento(Documento documento){
         documento.setTarea(this);
         this.documentos.add(documento);
+    }
+
+    @Override
+    public int compareTo(Tarea other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
 
 }

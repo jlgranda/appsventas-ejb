@@ -75,5 +75,8 @@ public class SettingNames {
     public static String ACCOUNT_TOP_RANGE = "fede.sales.account.top.range";
     public static String JOURNAL_TOP_RANGE = "fede.sales.journal.top.range";
     public static String JOURNAL_REPORT_DEFAULT_RANGE = "fede.report.journal.default.range";
+    
+    public static String DOCUMENTS_REPLY = "app.documents.task.reply";
+    public static String DOCUMENTS_FORWARD = "app.documents.task.forward";
 
 }

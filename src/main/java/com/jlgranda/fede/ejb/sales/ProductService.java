@@ -97,4 +97,8 @@ public class ProductService extends BussinesEntityHome<Product> {
         params.put("productType", productType);
         return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
     }
+    
+    public List<Product> findWhithoutKardex(Organization organization){
+        return super.findByNamedQuery("Product.findWhithoutKardex", organization);
+    }
 }

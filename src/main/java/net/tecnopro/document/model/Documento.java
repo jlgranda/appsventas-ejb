@@ -31,7 +31,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.jlgranda.fede.model.document.DocumentType;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
+import org.jpapi.model.Organization;
 
 /**
  *
@@ -49,9 +50,14 @@ import org.jpapi.model.BussinesEntity;
     @NamedQuery(name = "Documento.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "Documento.countBussinesEntityByOwner", query = "select count(t) FROM Documento t WHERE t.owner = ?1")})
 
-public class Documento extends BussinesEntity implements Serializable {
+public class Documento extends DeletableObject<Documento> implements Comparable<Documento>, Serializable {
 
     private static final long serialVersionUID = -5602792285963020179L;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
+    private Organization organization;
+
 
     @Basic(optional = false)
     @NotNull
@@ -142,5 +148,18 @@ public class Documento extends BussinesEntity implements Serializable {
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
+    @Override
+    public int compareTo(Documento other) {
+        return this.createdOn.compareTo(other.getCreatedOn());//To change body of generated methods, choose Tools | Templates.
     }
 }
