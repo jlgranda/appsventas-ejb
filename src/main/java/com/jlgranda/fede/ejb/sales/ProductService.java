@@ -38,7 +38,7 @@ import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 
 /**
- *
+ * Objeto de servicio de productos.
  * @author jlgranda
  */
 @Stateless

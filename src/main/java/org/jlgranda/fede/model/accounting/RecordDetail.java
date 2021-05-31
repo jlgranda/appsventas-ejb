@@ -57,6 +57,9 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     @Column(nullable = false)    
     private RecordDetail.RecordTDetailType record_detail_type;
     
+    /**
+     * Id de la entidad de negocio involucrada en el detalle de registro
+     */
     Long bussineEntityId;
     
     BigDecimal amount;

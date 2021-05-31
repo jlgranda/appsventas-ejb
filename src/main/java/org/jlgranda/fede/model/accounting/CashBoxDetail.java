@@ -19,7 +19,6 @@ package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,8 +29,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -112,12 +111,12 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         this.amount = amount;
     }
 
-//    @Override
-//    public int hashCode(){
-//        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-//        hcb.append(getCashBoxPartial()).append(getDenomination());
-//        return hcb.toHashCode();
-//    }
+    @Override
+    public int hashCode(){
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+        hcb.append(getCashBoxPartial()).append(getDenomination());
+        return hcb.toHashCode();
+    }
     
 
     @Override
