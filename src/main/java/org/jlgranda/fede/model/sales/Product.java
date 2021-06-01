@@ -44,7 +44,7 @@ import org.jpapi.model.TaxType;
 @PrimaryKeyJoinColumn(name = "productId")
 @NamedQueries({
     @NamedQuery(name = "Product.findById", query = "select p FROM Product p WHERE p.id = ?1"),
-    @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p ORDER BY p.name DESC"),
+    @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p WHERE p.deleted = false ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findByProductType", query = "select p FROM Product p WHERE p.productType = ?1 ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findLastProduct", query = "select p FROM Product p ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProductOrg", query = "select p FROM Product p WHERE p.organization=?1 ORDER BY p.id DESC"),
@@ -66,6 +66,7 @@ import org.jpapi.model.TaxType;
     @NamedQuery(name = "Product.countSoldProductByOwner", query = "SELECT p,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.owner = ?1 AND d.createdOn BETWEEN ?2 AND ?3 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
     @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
+    @NamedQuery(name = "Product.findNameByOrganization", query = "select p.name FROM Product p WHERE p.organization = ?1 ORDER BY p.name"),
 })
 public class Product extends BussinesEntity {
 

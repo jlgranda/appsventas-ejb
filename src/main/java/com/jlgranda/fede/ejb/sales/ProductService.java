@@ -98,6 +98,13 @@ public class ProductService extends BussinesEntityHome<Product> {
         return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
     }
     
+    public List<Product> findByOrganizationAndName(Organization organization, String name){
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization", organization);
+        params.put("name", name);
+        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+    }
+    
     public List<Product> findWhithoutKardex(Organization organization){
         return super.findByNamedQuery("Product.findWhithoutKardex", organization);
     }
