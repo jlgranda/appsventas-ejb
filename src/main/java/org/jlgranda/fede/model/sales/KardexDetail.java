@@ -74,6 +74,7 @@ public class KardexDetail extends PersistentObject implements Comparable<KardexD
         PRODUCCION,
         COMPRA,
         VENTA,
+        SALIDA_INVENTARIO,
         DEVOLUCION_COMPRA,
         DEVOLUCION_VENTA,
     }
