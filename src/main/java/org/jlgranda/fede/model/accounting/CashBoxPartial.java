@@ -109,14 +109,7 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     }
 
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
-        
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<");
-        System.out.println("getCashBoxDetails().indexOf(cashBoxDetail): " + getCashBoxDetails().indexOf(cashBoxDetail));
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<");
         getCashBoxDetails().set(getCashBoxDetails().indexOf(cashBoxDetail), cashBoxDetail);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<");
-        System.out.println("getCashBoxDetails().indexOf(cashBoxDetail): " + getCashBoxDetails().indexOf(cashBoxDetail));
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<");
         
         return cashBoxDetail;
     }
