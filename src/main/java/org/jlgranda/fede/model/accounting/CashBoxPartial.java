@@ -48,9 +48,10 @@ import org.jpapi.model.PersistentObject;
     @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.priority_order = ?3 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.id <> ?3 ORDER BY 1"),
-})
+    @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority_order = ?2"),})
 public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements Comparable<CashBoxPartial>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
@@ -63,11 +64,11 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     BigDecimal cashPartial; //Todo el dinero en efectivo que se tenía antes de hacer un depósito (si hubiese, sería diferente al saldoPartial).
 
     BigDecimal saldoPartial; //Dinero que queda luego de hacer un depósito y el que se va a desglosar.
-    
+
     BigDecimal totalcashBills; //Subtotal de billetes.
-    
+
     BigDecimal totalcashMoneys; //Subtotal de monedas.
-    
+
     BigDecimal totalCashBreakdown; //Total de dinero desglosado (Suma de billetes y monedas).
 
     BigDecimal missCashPartial; //Dinero faltante.
@@ -78,9 +79,18 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     @Column(nullable = true)
     private CashBoxPartial.Status statusCashBoxPartial;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private CashBoxPartial.Priority priority_order;
+
     public enum Status {
         OPEN,
         CLOSED;
+    }
+
+    public enum Priority {
+        MAIN,
+        SECONDARY;
     }
 
     public CashBoxGeneral getCashBoxGeneral() {
@@ -110,7 +120,7 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
 
     public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
         getCashBoxDetails().set(getCashBoxDetails().indexOf(cashBoxDetail), cashBoxDetail);
-        
+
         return cashBoxDetail;
     }
 
@@ -178,30 +188,38 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         this.statusCashBoxPartial = statusCashBoxPartial;
     }
 
+    public Priority getPriority_order() {
+        return priority_order;
+    }
+
+    public void setPriority_order(Priority priority_order) {
+        this.priority_order = priority_order;
+    }
+
     @Override
-    public int hashCode(){
+    public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
         hcb.append(getId());
         return hcb.toHashCode();
     }
-    
+
     @Override
-    public boolean equals(final Object obj){
-        if(this==obj){
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if(obj == null){
+        if (obj == null) {
             return false;
         }
-        if(getClass()!=obj.getClass()){
+        if (getClass() != obj.getClass()) {
             return false;
         }
-        
+
         CashBoxPartial other = (CashBoxPartial) obj;
         EqualsBuilder eb = new EqualsBuilder();
-        
+
         eb.append(getId(), other.getId());
-        
+
         return eb.isEquals();
     }
 

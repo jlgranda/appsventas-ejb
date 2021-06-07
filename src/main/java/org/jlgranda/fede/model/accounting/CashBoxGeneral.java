@@ -49,6 +49,7 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery (name="CashBoxGeneral.findByNameAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
 @NamedQuery (name="CashBoxGeneral.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
 @NamedQuery (name="CashBoxGeneral.findSaldoByCreatedOnAndOrg", query = "SELECT s.saldoFinal FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByCreatedOnAndOrg", query = "SELECT s.totalBreakdownFinal FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
 })
 public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable <CashBoxGeneral>, Serializable {
     
@@ -70,6 +71,8 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     BigDecimal missCashFinal;
     
     BigDecimal excessCashFinal;
+    
+    BigDecimal totalBreakdownFinal;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)    
@@ -151,6 +154,14 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
         this.excessCashFinal = excessCashFinal;
     }
 
+    public BigDecimal getTotalBreakdownFinal() {
+        return totalBreakdownFinal;
+    }
+
+    public void setTotalBreakdownFinal(BigDecimal totalBreakdownFinal) {
+        this.totalBreakdownFinal = totalBreakdownFinal;
+    }
+    
     public Status getStatusCashBoxGeneral() {
         return statusCashBoxGeneral;
     }
