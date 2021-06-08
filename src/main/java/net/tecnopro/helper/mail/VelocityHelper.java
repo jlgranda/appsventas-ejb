@@ -7,7 +7,7 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.Template;
