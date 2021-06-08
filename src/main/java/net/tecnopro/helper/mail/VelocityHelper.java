@@ -24,7 +24,7 @@ public class VelocityHelper {
         VelocityEngine ve = new VelocityEngine();
         ve.init(p);
         /*  next, get the Template  */
-        String templateFileName = createTemporaryFileTemplate(StringEscapeUtils.escapeHtml4(message));
+        String templateFileName = createTemporaryFileTemplate(message);
         Template t = ve.getTemplate(templateFileName);
         /*  create a context and add data */
         VelocityContext context = new VelocityContext(values);
@@ -68,7 +68,7 @@ public class VelocityHelper {
         File tmp = File.createTempFile("email_", ".vm", f);
         if (tmp.canWrite()) {
             FileOutputStream stream = new FileOutputStream(tmp);
-            stream.write(StringEscapeUtils.escapeHtml4(message).getBytes(Charset.defaultCharset()));
+            stream.write(message.getBytes(Charset.defaultCharset()));
             stream.close();
             //System.out.println("VelocityHelper: se creo el archivo plantilla temporal: " + tmp.getAbsolutePath());
         } else {
