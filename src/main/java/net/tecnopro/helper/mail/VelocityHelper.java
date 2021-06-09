@@ -7,7 +7,6 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
-import org.apache.commons.text.StringEscapeUtils;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.Template;
@@ -25,7 +24,7 @@ public class VelocityHelper {
         ve.init(p);
         /*  next, get the Template  */
         String templateFileName = createTemporaryFileTemplate(message);
-        Template t = ve.getTemplate(templateFileName);
+        Template t = ve.getTemplate(templateFileName, "UTF-8");
         /*  create a context and add data */
         VelocityContext context = new VelocityContext(values);
         /* now render the template into a StringWriter */
