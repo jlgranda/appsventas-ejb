@@ -30,7 +30,8 @@ public enum EstadoTipo {
     CERRADO,
     
     ACCION_RESPONDER,
-    ACCION_REDIRECCIONAR;
+    ACCION_REDIRECCIONAR,
+    ACCION_FINALIZAR;
     
     
 

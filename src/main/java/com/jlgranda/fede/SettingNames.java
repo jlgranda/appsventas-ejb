@@ -78,5 +78,6 @@ public class SettingNames {
     
     public static String DOCUMENTS_REPLY = "app.documents.task.reply";
     public static String DOCUMENTS_FORWARD = "app.documents.task.forward";
+    public static String DOCUMENTS_END = "app.documents.task.finalize";
 
 }
