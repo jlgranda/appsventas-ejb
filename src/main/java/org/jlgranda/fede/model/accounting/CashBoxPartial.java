@@ -48,10 +48,14 @@ import org.jpapi.model.PersistentObject;
     @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY 1"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.priority_order = ?3 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.priority_order = ?3 ORDER BY s.createdOn DESC"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndStatusPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.status_priority = ?3 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.id <> ?3 ORDER BY 1"),
-    @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority_order = ?2"),})
+    @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority_order = ?2"),
+    @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxGeneral", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1"),
+    @NamedQuery(name = "CashBoxPartial.findByPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.priority = ?1"),
+})
 public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements Comparable<CashBoxPartial>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
@@ -83,6 +87,14 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     @Column(nullable = true)
     private CashBoxPartial.Priority priority_order;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private CashBoxPartial.StatusPriority status_priority;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private CashBoxPartial.Verification verification_TotalBreakdown;
+    
     public enum Status {
         OPEN,
         CLOSED;
@@ -92,7 +104,17 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         MAIN,
         SECONDARY;
     }
-
+    
+    public enum StatusPriority{
+        INTERMEDIATE,
+        FINAL;
+    }
+    
+    public enum Verification{
+        CORRECT,
+        INCORRECT;
+    }
+            
     public CashBoxGeneral getCashBoxGeneral() {
         return cashBoxGeneral;
     }
@@ -194,6 +216,22 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
 
     public void setPriority_order(Priority priority_order) {
         this.priority_order = priority_order;
+    }
+
+    public StatusPriority getStatus_priority() {
+        return status_priority;
+    }
+
+    public void setStatus_priority(StatusPriority status_priority) {
+        this.status_priority = status_priority;
+    }
+
+    public Verification getVerification_TotalBreakdown() {
+        return verification_TotalBreakdown;
+    }
+
+    public void setVerification_TotalBreakdown(Verification verification_TotalBreakdown) {
+        this.verification_TotalBreakdown = verification_TotalBreakdown;
     }
 
     @Override

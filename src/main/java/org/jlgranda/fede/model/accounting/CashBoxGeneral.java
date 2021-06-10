@@ -50,6 +50,8 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery (name="CashBoxGeneral.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
 @NamedQuery (name="CashBoxGeneral.findSaldoByCreatedOnAndOrg", query = "SELECT s.saldoFinal FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
 @NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByCreatedOnAndOrg", query = "SELECT s.totalBreakdownFinal FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByLastCreatedOnAndOrg", query = "SELECT s.totalBreakdownFinal FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
+@NamedQuery (name="CashBoxGeneral.findCashBoxGeneralByLastCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
 })
 public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable <CashBoxGeneral>, Serializable {
     
@@ -169,7 +171,7 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     public void setStatusCashBoxGeneral(Status statusCashBoxGeneral) {
         this.statusCashBoxGeneral = statusCashBoxGeneral;
     }
-    
+
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
