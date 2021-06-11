@@ -23,6 +23,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,6 +37,9 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "PAYMENT")
+@NamedQueries({
+@NamedQuery(name = "Payment.findByInvoice", query = "SELECT p FROM Payment p WHERE p.invoice=?1 ORDER BY p.invoice.id DESC"),
+})
 public class Payment extends PersistentObject implements Comparable<Payment>, Serializable {
 
     private static final long serialVersionUID = -6685382197357879651L;
