@@ -48,9 +48,9 @@ import org.jpapi.model.PersistentObject;
     @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY s.id DESC"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.priority_order = ?3 ORDER BY s.createdOn DESC"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.priority_order = ?3 ORDER BY s.id DESC"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 ORDER BY s.id DESC"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndStatusPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.status_priority = ?3 ORDER BY 1"),
+    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndStatusPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.status_priority = ?3 ORDER BY s.id DESC"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.id <> ?3 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority_order = ?2"),
     @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxGeneral", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1"),
@@ -101,6 +101,7 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     }
 
     public enum Priority {
+        BASIC,
         MAIN,
         SECONDARY;
     }
@@ -112,7 +113,8 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     
     public enum Verification{
         CORRECT,
-        INCORRECT;
+        INCORRECT,
+        NOT_VERIFIED;
     }
             
     public CashBoxGeneral getCashBoxGeneral() {
