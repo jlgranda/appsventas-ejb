@@ -51,7 +51,7 @@ public class GeneralJournal extends PersistentObject<GeneralJournal> implements 
     private Organization organization;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "journal", fetch = FetchType.LAZY)
-    List<Record> records = new ArrayList<>();
+    private List<Record> records = new ArrayList<>();
 
     public Organization getOrganization() {
         return organization;

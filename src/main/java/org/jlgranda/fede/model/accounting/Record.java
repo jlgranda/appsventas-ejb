@@ -56,7 +56,7 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
 
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
-    GeneralJournal journal;
+    private GeneralJournal journal;
     
     @OneToOne
     @JoinColumn (name = "facturaElectronica_id")
@@ -76,7 +76,7 @@ public class Record extends PersistentObject<Record> implements Comparable<Recor
     public void setJournal(GeneralJournal journal) {
         this.journal = journal;
     }
-
+    
     public List<RecordDetail> getRecordDetails() {
         return recordDetails;
     }

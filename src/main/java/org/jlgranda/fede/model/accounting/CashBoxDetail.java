@@ -42,6 +42,7 @@ import org.jpapi.model.PersistentObject;
 @NamedQueries({ @NamedQuery (name="CashBoxDetail.findByName", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery (name="CashBoxDetail.findByNameAndOwner", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
 @NamedQuery (name="CashBoxDetail.findByCashBoxPartial", query = "SELECT s FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 ORDER BY 1"),
+@NamedQuery (name="CashBoxDetail.findPropertiesByCashBoxPartialAndQuantity", query = "SELECT s.denomination, s.quantity, s.amount FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 and s.quantity>0"),
 })
 public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Comparable<CashBoxDetail>, Serializable {
     
