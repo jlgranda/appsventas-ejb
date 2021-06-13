@@ -24,9 +24,12 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.jpapi.model.DeletableObject;
+import org.jpapi.model.Organization;
 
 /**
  *
@@ -35,9 +38,21 @@ import org.jpapi.model.DeletableObject;
 @Entity
 @Table(name = "record_template")
 public class RecordTemplate extends DeletableObject<RecordTemplate> implements Comparable<RecordTemplate>, Serializable {
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordTemplate", fetch = FetchType.LAZY)
     private List<RecordDetailTemplate> recordDetailTemplates = new ArrayList<>();
+
+    public RecordTemplate() {
+    }
+    
+    public RecordTemplate(String code, String name) {
+        setCode(code);
+        setName(name);
+    }
 
     public List<RecordDetailTemplate> getRecordDetailTemplates() {
         return recordDetailTemplates;
@@ -46,6 +61,16 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
     public void setRecordDetailTemplates(List<RecordDetailTemplate> recordDetailTemplates) {
         this.recordDetailTemplates = recordDetailTemplates;
     }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
+    
 
     @Override
     public int hashCode() {
