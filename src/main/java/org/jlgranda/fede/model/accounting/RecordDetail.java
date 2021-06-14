@@ -37,10 +37,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.DeletableObject;
-import org.jpapi.model.PersistentObject;
 
 @Entity
 @Table(name = "Record_Detail")
