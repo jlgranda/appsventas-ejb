@@ -17,7 +17,8 @@
         <version.wildfly.maven.plugin>1.0.1.Final</version.wildfly.maven.plugin>
 
         <!-- PicketLink dependency versions -->
-        <james.version>0.8.3</james.version>
+        <james.version>0.8.4</james.version>
+        <drools-version>7.41.0.Final</drools-version>
     </properties>
 
     <repositories>
@@ -30,8 +31,32 @@
             <url>https://repository.jboss.org/nexus/content/groups/public-jboss/org/hibernate/</url>
         </repository>
     </repositories>
+    <dependencyManagement>
+        <!--dependencies>
+            <dependency>
+                <groupId>org.apache.deltaspike.distribution</groupId>
+                <artifactId>distributions-bom</artifactId>
+                <version>${deltaspike.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies-->
+        <dependencies>
+          <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-bom</artifactId>
+            <type>pom</type>
+            <version>${drools-version}</version>
+            <scope>import</scope>
+          </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-cdi</artifactId>
+          </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

@@ -120,6 +120,9 @@ public class ProductCache {
     
     public List<Product> filterByOrganization(Organization organization){
         List<Product> matches = new ArrayList<>();
+        if (organization == null){
+            return matches; //vacio
+        }
         products.values().stream().filter(product -> ( organization.equals(product.getOrganization()) )).forEachOrdered(product -> {
                     matches.add(product);
         }); 

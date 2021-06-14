@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -43,8 +44,14 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordTemplate", fetch = FetchType.LAZY)
-    private List<RecordDetailTemplate> recordDetailTemplates = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordTemplate", fetch = FetchType.LAZY)
+//    private List<RecordDetailTemplate> recordDetailTemplates = new ArrayList<>();
+    
+    @Column (name = "type")
+    private String type = "test";
+    
+    @Column (name = "rule", length = 10240)
+    private String rule;
 
     public RecordTemplate() {
     }
@@ -54,13 +61,21 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
         setName(name);
     }
 
-    public List<RecordDetailTemplate> getRecordDetailTemplates() {
-        return recordDetailTemplates;
+    public String getRule() {
+        return rule;
     }
 
-    public void setRecordDetailTemplates(List<RecordDetailTemplate> recordDetailTemplates) {
-        this.recordDetailTemplates = recordDetailTemplates;
+    public void setRule(String rule) {
+        this.rule = rule;
     }
+    
+//    public List<RecordDetailTemplate> getRecordDetailTemplates() {
+//        return recordDetailTemplates;
+//    }
+//
+//    public void setRecordDetailTemplates(List<RecordDetailTemplate> recordDetailTemplates) {
+//        this.recordDetailTemplates = recordDetailTemplates;
+//    }
 
     public Organization getOrganization() {
         return organization;
@@ -69,13 +84,13 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-    
-    
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.recordDetailTemplates);
+        hash = 37 * hash + Objects.hashCode(this.organization);
+        hash = 37 * hash + Objects.hashCode(this.type);
+        hash = 37 * hash + Objects.hashCode(this.rule);
         return hash;
     }
 
@@ -91,12 +106,19 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
             return false;
         }
         final RecordTemplate other = (RecordTemplate) obj;
-        
-        return Objects.equals(this.recordDetailTemplates, other.recordDetailTemplates);
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.rule, other.rule)) {
+            return false;
+        }
+        if (!Objects.equals(this.organization, other.organization)) {
+            return false;
+        }
+        return true;
     }
     
     
-
     @Override
     public int compareTo(RecordTemplate other){
         return this.createdOn.compareTo(other.getCreatedOn());

@@ -45,8 +45,8 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2 ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s WHERE s.account = ?1 and s.createdOn <=?2 and s.record.journal.organization =?3 ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.createdOn, s.record.description, s.amount, s.record_detail_type, s.id FROM RecordDetail s WHERE s.account = ?1 and s.createdOn >=?2 and s.createdOn <=?3 and s.record.journal.organization =?4 ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s WHERE s.account = ?1 and s.record_detail_type= ?2 and s.createdOn >=?3 and s.createdOn <=?4 and s.record.journal.organization =?5 ORDER BY 1"),
+@NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.createdOn, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s WHERE s.account = ?1 and s.createdOn >=?2 and s.createdOn <=?3 and s.record.journal.organization =?4 ORDER BY 1"),
+@NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s WHERE s.account = ?1 and s.recordDetailType= ?2 and s.createdOn >=?3 and s.createdOn <=?4 and s.record.journal.organization =?5 ORDER BY 1"),
 })
 public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
@@ -55,7 +55,7 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)    
-    private RecordDetail.RecordTDetailType record_detail_type;
+    private RecordDetail.RecordTDetailType recordDetailType;
     
     /**
      * Id de la entidad de negocio involucrada en el detalle de registro
@@ -86,11 +86,15 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     }
     
     public RecordTDetailType getRecordDetailType() {
-        return record_detail_type;
+        return recordDetailType;
     }
 
     public void setRecordDetailType(RecordTDetailType recordDetailType) {
-        this.record_detail_type = recordDetailType;
+        this.recordDetailType = recordDetailType;
+    }
+    
+    public void setRecordDetailTypeFromName(String recordDetailTypeName) {
+        this.recordDetailType = RecordTDetailType.valueOf(recordDetailTypeName);
     }
 
     public Long getBussineEntityId() {
