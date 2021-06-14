@@ -46,7 +46,7 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     private static final long serialVersionUID = -6428094275651428620L;
     
     @Column(nullable = true, length = 1024)
-    protected Long parentAccount_id;
+    protected Long parent_account_id;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
@@ -61,12 +61,12 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
         setName(name);        
     }
 
-    public Long getCuentaPadreId() {
-        return parentAccount_id;
+    public Long getParentAccountId() {
+        return parent_account_id;
     }
 
-    public void setCuentaPadreId(Long parentAccount_id) {
-        this.parentAccount_id = parentAccount_id;
+    public void setParentAccountId(Long parent_account_id) {
+        this.parent_account_id = parent_account_id;
     }
     
     public Organization getOrganization() {
