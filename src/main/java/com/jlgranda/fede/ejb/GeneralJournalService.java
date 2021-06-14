@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -28,6 +29,7 @@ import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.GeneralJournal;
 import org.jlgranda.fede.model.accounting.GeneralJournal_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 import org.slf4j.Logger;
@@ -80,6 +82,18 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         Root<GeneralJournal> from = query.from(GeneralJournal.class);
         query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
         return getResultList(query, maxresults, firstresult);
+    }
+    
+    public GeneralJournal find(Date date, Organization organization){
+        GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", date, organization);
+        
+        if (generalJournal == null){
+            generalJournal = this.createInstance();
+            generalJournal = this.save(generalJournal);
+            generalJournal =  this.find(generalJournal.getId()); //Volver a cargar
+        }
+        
+        return generalJournal;
     }
 
 }
