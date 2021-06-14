@@ -43,6 +43,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.document.FacturaElectronica;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.PersistentObject;
 
 @Entity
@@ -52,7 +53,7 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery(name = "Record.findByJournalAndFact", query = "select s FROM Record s WHERE s.journal = ?1 and s.facturaElectronica = ?2 ORDER BY 1"),
 @NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronica = ?1 ORDER BY 1"),
 })
-public class Record extends PersistentObject<Record> implements Comparable<Record>, Serializable {
+public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)

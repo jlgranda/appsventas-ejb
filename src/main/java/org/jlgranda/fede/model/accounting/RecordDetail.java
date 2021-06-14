@@ -25,6 +25,7 @@ package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,9 +37,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jpapi.model.PersistentObject;
+import org.jpapi.model.DeletableObject;
 
 @Entity
 @Table(name = "Record_Detail")
@@ -49,7 +48,7 @@ import org.jpapi.model.PersistentObject;
 @NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.createdOn, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s WHERE s.account = ?1 and s.createdOn >=?2 and s.createdOn <=?3 and s.record.journal.organization =?4 ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s WHERE s.account = ?1 and s.recordDetailType= ?2 and s.createdOn >=?3 and s.createdOn <=?4 and s.record.journal.organization =?5 ORDER BY 1"),
 })
-public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
+public class RecordDetail extends DeletableObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
     /*
     Tipo de recordDetail
@@ -159,16 +158,17 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
         this.accountCode = accountCode;
     }
 
-    @Override
+     @Override
     public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
-        // if deriving: appendSuper(super.hashCode()).
-        hcb.append(getId());
-
-        return hcb.toHashCode();
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.recordDetailType);
+        hash = 53 * hash + Objects.hashCode(this.account);
+        hash = 53 * hash + Objects.hashCode(this.getId());
+        return hash;
     }
+
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -178,13 +178,21 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
         if (getClass() != obj.getClass()) {
             return false;
         }
-        RecordDetail other = (RecordDetail) obj;
-        EqualsBuilder eb = new EqualsBuilder();
+        final RecordDetail other = (RecordDetail) obj;
+        if (this.recordDetailType != other.recordDetailType) {
+            return false;
+        }
+        if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
         
-//        eb.append(getId(), other.getId());
-        eb.append(getId(), other.getId()).append(getAccount(), other.getAccount());
-        return eb.isEquals();
+        if (!Objects.equals(this.getId(), other.getId())) {
+            return false;
+        }
+        return true;
     }
+
+    
     
     @Override
     public int compareTo(RecordDetail other) {

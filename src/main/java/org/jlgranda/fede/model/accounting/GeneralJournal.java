@@ -31,8 +31,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Organization;
-import org.jpapi.model.PersistentObject;
 
 /**
  * Basado en documentación: https://youtu.be/eyZ-p9UCKOY?t=841
@@ -40,11 +40,12 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "General_Journal")
-@NamedQueries({ @NamedQuery(name = "Journal.findByName", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "Journal.findByNameAndOwner", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "Journal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQueries({ @NamedQuery(name = "GeneralJournal.findByName", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+@NamedQuery(name = "GeneralJournal.findByNameAndOwner", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+@NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrganization", query = "SELECT s FROM GeneralJournal s WHERE s.createdOn >= ?1 AND s.createdOn <= ?1 AND s.organization = ?2 AND s.deleted = false ORDER BY 1"),
 })
-public class GeneralJournal extends PersistentObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
+public class GeneralJournal extends DeletableObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)

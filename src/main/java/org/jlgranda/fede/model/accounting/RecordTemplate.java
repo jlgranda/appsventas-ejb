@@ -47,9 +47,7 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordTemplate", fetch = FetchType.LAZY)
 //    private List<RecordDetailTemplate> recordDetailTemplates = new ArrayList<>();
     
-    @Column (name = "type")
-    private String type = "test";
-    
+   
     @Column (name = "rule", length = 10240)
     private String rule;
 
@@ -89,8 +87,7 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.organization);
-        hash = 37 * hash + Objects.hashCode(this.type);
-        hash = 37 * hash + Objects.hashCode(this.rule);
+        hash = 37 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -106,13 +103,14 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
             return false;
         }
         final RecordTemplate other = (RecordTemplate) obj;
-        if (!Objects.equals(this.type, other.type)) {
-            return false;
-        }
-        if (!Objects.equals(this.rule, other.rule)) {
+
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         if (!Objects.equals(this.organization, other.organization)) {
+            return false;
+        }
+        if (!Objects.equals(this.getId(), other.getId())) {
             return false;
         }
         return true;
