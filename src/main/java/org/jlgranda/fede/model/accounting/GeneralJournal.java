@@ -42,7 +42,7 @@ import org.jpapi.model.Organization;
 @Table(name = "General_Journal")
 @NamedQueries({ @NamedQuery(name = "GeneralJournal.findByName", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "GeneralJournal.findByNameAndOwner", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<= ?2 and s.organization = ?3 ORDER BY s.id DESC"),
 @NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrganization", query = "SELECT s FROM GeneralJournal s WHERE s.createdOn >= ?1 AND s.createdOn <= ?1 AND s.organization = ?2 AND s.deleted = false ORDER BY 1"),
 })
 public class GeneralJournal extends DeletableObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
