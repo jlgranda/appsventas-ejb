@@ -35,6 +35,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.PersistentObject;
@@ -71,6 +72,16 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     @ManyToOne (optional = false, cascade = {CascadeType.ALL})
     @JoinColumn (name = "record_id", insertable = true, updatable = true, nullable = true)
     Record record;
+    
+    //Campos para instanciación desde Rules
+    @Transient
+    private String accountId;
+    
+    @Transient
+    private String accountCode;
+    
+    @Transient
+    private String accountName;
     
     public enum RecordTDetailType {
         DEBE,
@@ -119,6 +130,33 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
 
     public void setRecord(Record record) {
         this.record = record;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getAccountCode() {
+        if (this.account != null){
+            accountCode = this.account.getCode();
+        }
+        return accountCode;
+    }
+
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
     }
 
     @Override
