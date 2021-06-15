@@ -18,6 +18,7 @@
 package com.jlgranda.fede.ejb;
 
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -28,8 +29,10 @@ import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.RecordDetail;
 import org.jlgranda.fede.model.accounting.RecordDetail_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.CodeType;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
+import org.jpapi.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +62,21 @@ public class RecordDetailService extends BussinesEntityHome<RecordDetail> {
     public RecordDetail createInstance() {
 
         RecordDetail _instance = new RecordDetail();
+        _instance.setCode(UUID.randomUUID().toString());
+        _instance.setCodeType(CodeType.SYSTEM);
+        _instance.setCreatedOn(Dates.now());
+        _instance.setLastUpdate(Dates.now());
+        _instance.setStatus(StatusType.ACTIVE.toString());
+        _instance.setActivationTime(Dates.now());
+        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+//        _instance.setAuthor(null); //Establecer al usuario actual
+        return _instance;
+    }
+    
+    public RecordDetail completeDefaults(RecordDetail _instance) {
+
+        _instance.setCode(Strings.isNullOrEmpty(_instance.getCode()) ? UUID.randomUUID().toString() : _instance.getCode());
+        _instance.setCodeType(CodeType.SYSTEM);
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
