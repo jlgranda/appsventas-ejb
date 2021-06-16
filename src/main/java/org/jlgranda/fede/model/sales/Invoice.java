@@ -74,6 +74,8 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountBetweenOrg", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesMethodBetweenOrg", query = "select sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.method = ?6"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceSalesMethodPaymentDateBetweenOrg", query = "select sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and p.datePaymentCancel >= ?4 and p.datePaymentCancel <= ?5 and p.method = ?6"),
+    @NamedQuery(name = "Invoice.findTotalInvoiceSalesSourceMethodPaymentDateBetweenOrg", query = "select sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentTypeSource=?2 and i.status=?3 and p.datePaymentCancel >= ?4 and p.datePaymentCancel <= ?5 and p.method = ?6"),
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetween", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.findTotalInvoiceBussinesSalesDiscountBetweenOrg", query = "select i.code, i.boardNumber, i.emissionOn, p.amount, p.discount, i.id from Payment p LEFT JOIN p.invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5 and p.discount> ?6"),
     @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
@@ -107,6 +109,8 @@ public class Invoice extends BussinesEntity {
     private Organization organization;
     
     private DocumentType documentType;
+    
+    private DocumentType documentTypeSource;
     
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "establishment_id", insertable=false, updatable=false, nullable=true)
@@ -171,6 +175,14 @@ public class Invoice extends BussinesEntity {
 
     public void setDocumentType(DocumentType documentCode) {
         this.documentType = documentCode;
+    }
+
+    public DocumentType getDocumentTypeSource() {
+        return documentTypeSource;
+    }
+
+    public void setDocumentTypeSource(DocumentType documentTypeSource) {
+        this.documentTypeSource = documentTypeSource;
     }
 
     public Establishment getEstablishment() {
