@@ -86,5 +86,4 @@ public class RecordService extends BussinesEntityHome<Record> {
         query.select(from).orderBy(builder.desc(from.get(Record_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
 }
