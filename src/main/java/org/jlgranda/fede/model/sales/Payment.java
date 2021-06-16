@@ -19,13 +19,19 @@ package org.jlgranda.fede.model.sales;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.document.FacturaElectronica;
@@ -73,6 +79,10 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
      */
     private BigDecimal change;
 
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    protected Date datePaymentCancel;
+    
     public Invoice getInvoice() {
         return invoice;
     }
@@ -129,8 +139,14 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
         this.change = change;
     }
 
-    
-           
+    public Date getDatePaymentCancel() {
+        return datePaymentCancel;
+    }
+
+    public void setDatePaymentCancel(Date datePaymentCancel) {
+        this.datePaymentCancel = datePaymentCancel;
+    }
+
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
