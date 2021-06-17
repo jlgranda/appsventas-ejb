@@ -33,9 +33,9 @@ import org.kie.api.command.KieCommands;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.ExecutionResults;
 import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 
@@ -58,7 +58,7 @@ public class RuleRunner {
     private static KieServices kieServices = KieServices.Factory.get();
     private static StatelessKieSession ksession;
     
-    public Record run(RecordTemplate recordTemplate, Invoice invoice, Record record) {
+    public KnowledgeBuilderErrors run(RecordTemplate recordTemplate, Invoice invoice, Record record) {
         
         // read second rule from String
         String myRule = recordTemplate.getRule();
@@ -67,8 +67,8 @@ public class RuleRunner {
  
         // Check the builder for errors
         if ( kbuilder.hasErrors() ) {
-            System.out.println( kbuilder.getErrors().toString() );
-            throw new RuntimeException( "Unable to compile drl\"." );
+            ksession.getKieBase().removeRule(recordTemplate.getName(), recordTemplate.getRule());
+            return kbuilder.getErrors();
         }
  
         // get the compiled packages (which are serializable)
@@ -85,10 +85,11 @@ public class RuleRunner {
         cmds.add( kieCommands.newSetGlobal( "record", record, true ) );
         cmds.add( kieCommands.newInsert( invoice, "invoice" ) );
         //cmds.add( kieCommands.newQuery( "Get People" "getPeople" );
-        ExecutionResults results = ksession.execute( kieCommands.newBatchExecution( cmds ));
+        ksession.execute( kieCommands.newBatchExecution( cmds ));
+        //ExecutionResults results = ksession.execute( kieCommands.newBatchExecution( cmds ));
         //results.getValue( "list1" ); // returns the ArrayList
-        record = (Record) results.getValue( "record" ); // returns the inserted fact Person
+        //record = (Record) results.getValue( "record" ); // returns the inserted fact Person
         //results.getValue( "Get People" );// returns the query as a QueryResults instance.
-        return record; //Ver que retornar
+        return null; //No hay errores de compilación
     }
 }

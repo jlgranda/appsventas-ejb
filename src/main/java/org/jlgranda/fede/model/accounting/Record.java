@@ -31,38 +31,49 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jpapi.model.DeletableObject;
-import org.jpapi.model.PersistentObject;
 
 @Entity
 @Table(name = "Record")
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "Record.findByJournalAndFact", query = "select s FROM Record s WHERE s.journal = ?1 and s.facturaElectronica = ?2 ORDER BY 1"),
-@NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronica = ?1 ORDER BY 1"),
+@NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 and s.deleted=false ORDER BY 1"),
+@NamedQuery(name = "Record.findByJournalAndFact", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.facturaElectronicaId = ?2 and s.deleted=false ORDER BY 1"),
+@NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronicaId = ?1 and s.deleted=false ORDER BY 1"),
 })
 public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
-    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
-    @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
-    private GeneralJournal journal;
+//    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
+//    @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
+//    private GeneralJournal journal;
+
+//    
+//    @OneToOne
+//    @JoinColumn (name = "facturaElectronica_id")
+//    private FacturaElectronica facturaElectronica;
     
-    @OneToOne
-    @JoinColumn (name = "facturaElectronica_id")
-    private FacturaElectronica facturaElectronica;
+    @Column(name = "journal_id", nullable = false)
+    private Long generalJournalId;
     
+    /**
+     * Referencia a la factura electronica de origen, para compras
+     */
+    @Column(name = "facturaelectronica_id", nullable = true)
+    private Long facturaElectronicaId;
+    
+    /**
+     * Referencia al invoice de origin, para ventas
+     */
+    @Column(name = "invoice_id", nullable = true)
+    private Long invoiceId;
+            
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     private List<RecordDetail> recordDetails = new ArrayList<>();
 
@@ -70,13 +81,13 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
     @Column(name = "emissionDate")
     private Date emissionDate;
 
-    public GeneralJournal getJournal() {
-        return journal;
-    }
-
-    public void setJournal(GeneralJournal journal) {
-        this.journal = journal;
-    }
+//    public GeneralJournal getJournal() {
+//        return journal;
+//    }
+//
+//    public void setJournal(GeneralJournal journal) {
+//        this.journal = journal;
+//    }
     
     public List<RecordDetail> getRecordDetails() {
         return recordDetails;
@@ -108,14 +119,38 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
         return recordDetail;
     }
 
-    public FacturaElectronica getFacturaElectronica() {
-        return facturaElectronica;
+//    public FacturaElectronica getFacturaElectronica() {
+//        return facturaElectronica;
+//    }
+//
+//    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
+//        this.facturaElectronica = facturaElectronica;
+//    }
+
+    public Long getGeneralJournalId() {
+        return generalJournalId;
     }
 
-    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
-        this.facturaElectronica = facturaElectronica;
+    public void setGeneralJournalId(Long generalJournalId) {
+        this.generalJournalId = generalJournalId;
     }
 
+    public Long getFacturaElectronicaId() {
+        return facturaElectronicaId;
+    }
+
+    public void setFacturaElectronicaId(Long facturaElectronicaId) {
+        this.facturaElectronicaId = facturaElectronicaId;
+    }
+
+    public Long getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(Long invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+    
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers

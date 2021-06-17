@@ -90,7 +90,6 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         if (generalJournal == null){
             generalJournal = this.createInstance();
             generalJournal = this.save(generalJournal);
-            generalJournal =  this.find(generalJournal.getId()); //Volver a cargar
         }
         
         return generalJournal;

@@ -18,16 +18,13 @@
 package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Organization;
@@ -38,16 +35,15 @@ import org.jpapi.model.Organization;
  */
 @Entity
 @Table(name = "record_template")
+@NamedQueries({ @NamedQuery(name = "RecordTemplate.findByCode", query = "select s FROM RecordTemplate s WHERE s.code = ?1 and s.organization = ?2 and s.deleted = false"),
+})
 public class RecordTemplate extends DeletableObject<RecordTemplate> implements Comparable<RecordTemplate>, Serializable {
+    
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
 
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recordTemplate", fetch = FetchType.LAZY)
-//    private List<RecordDetailTemplate> recordDetailTemplates = new ArrayList<>();
-    
-   
     @Column (name = "rule", length = 10240)
     private String rule;
 
@@ -66,14 +62,6 @@ public class RecordTemplate extends DeletableObject<RecordTemplate> implements C
     public void setRule(String rule) {
         this.rule = rule;
     }
-    
-//    public List<RecordDetailTemplate> getRecordDetailTemplates() {
-//        return recordDetailTemplates;
-//    }
-//
-//    public void setRecordDetailTemplates(List<RecordDetailTemplate> recordDetailTemplates) {
-//        this.recordDetailTemplates = recordDetailTemplates;
-//    }
 
     public Organization getOrganization() {
         return organization;
