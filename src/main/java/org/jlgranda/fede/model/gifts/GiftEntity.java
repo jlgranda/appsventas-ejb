@@ -176,7 +176,7 @@ public class GiftEntity extends BussinesEntity implements Serializable {
 
     @Transient
     public String getSummary(){
-        String message = I18nUtil.getMessages("app.gift.alert.message",
+        String message = I18nUtil.getMessages("app.gift.message.alert",
                 (EmissionType.CASH_DISCOUNT.toString().equals(getDiscountType()) ? "USD" : ""),
                  getDiscountValue() + "",
                 (EmissionType.CASH_DISCOUNT.toString().equals(getDiscountType()) ? "dolár" : "% en descuento"),
