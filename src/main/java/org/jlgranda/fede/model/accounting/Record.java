@@ -45,8 +45,9 @@ import org.jpapi.model.DeletableObject;
 @Table(name = "Record")
 @NamedQueries({ @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 and s.deleted=false ORDER BY 1"),
-@NamedQuery(name = "Record.findByJournalAndFact", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.facturaElectronicaId = ?2 and s.deleted=false ORDER BY 1"),
-@NamedQuery(name = "Record.findByFact", query = "select s FROM Record s WHERE s.facturaElectronicaId = ?1 and s.deleted=false ORDER BY 1"),
+@NamedQuery(name = "Record.findByJournalId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.deleted=false ORDER BY 1"),
+@NamedQuery(name = "Record.findByJournalAndBussinesEntityId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityId = ?2 and s.deleted=false ORDER BY 1"),
+@NamedQuery(name = "Record.findByBussinesEntityTypeAndId", query = "select s FROM Record s WHERE s.bussinesEntityType = ?1 and s.bussinesEntityId = ?2 and s.deleted=false ORDER BY 1"),
 })
 public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
@@ -65,14 +66,15 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
     /**
      * Referencia a la factura electronica de origen, para compras
      */
-    @Column(name = "facturaelectronica_id", nullable = true)
-    private Long facturaElectronicaId;
+    @Column(name = "bussines_entity_type", nullable = true)
+    private String bussinesEntityType;
     
     /**
-     * Referencia al invoice de origin, para ventas
+     * Referencia a la factura electronica de origen, para compras
      */
-    @Column(name = "invoice_id", nullable = true)
-    private Long invoiceId;
+    @Column(name = "bussines_entity_id", nullable = true)
+    private Long bussinesEntityId;
+    
             
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     private List<RecordDetail> recordDetails = new ArrayList<>();
@@ -135,20 +137,20 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
         this.generalJournalId = generalJournalId;
     }
 
-    public Long getFacturaElectronicaId() {
-        return facturaElectronicaId;
+    public String getBussinesEntityType() {
+        return bussinesEntityType;
     }
 
-    public void setFacturaElectronicaId(Long facturaElectronicaId) {
-        this.facturaElectronicaId = facturaElectronicaId;
+    public void setBussinesEntityType(String bussinesEntityType) {
+        this.bussinesEntityType = bussinesEntityType;
     }
 
-    public Long getInvoiceId() {
-        return invoiceId;
+    public Long getBussinesEntityId() {
+        return bussinesEntityId;
     }
 
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setBussinesEntityId(Long bussinesEntityId) {
+        this.bussinesEntityId = bussinesEntityId;
     }
     
     @Override
