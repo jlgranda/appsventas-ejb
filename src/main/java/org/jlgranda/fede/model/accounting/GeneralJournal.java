@@ -110,6 +110,7 @@ public class GeneralJournal extends DeletableObject<GeneralJournal> implements C
         eb.append(getId(), other.getId());
         return eb.isEquals();
     }
+    
     @Override
     public int compareTo(GeneralJournal other) {
         return this.createdOn.compareTo(other.getCreatedOn());
