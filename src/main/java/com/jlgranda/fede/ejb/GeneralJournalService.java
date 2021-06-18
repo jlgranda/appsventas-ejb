@@ -19,6 +19,7 @@ package com.jlgranda.fede.ejb;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,6 +32,7 @@ import org.jlgranda.fede.model.accounting.GeneralJournal_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,12 +86,20 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         return getResultList(query, maxresults, firstresult);
     }
     
-    public GeneralJournal find(Date date, Organization organization){
-        GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", date, organization);
+    public GeneralJournal find(Date date, Organization organization, Subject owner){
+        //Buscar el registro hasta antes del fin del dia
+        GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", Dates.minimumDate(date), Dates.maximumDate(date), organization);
         
         if (generalJournal == null){
             generalJournal = this.createInstance();
+            generalJournal.setCode(UUID.randomUUID().toString());
+            generalJournal.setName(organization + ", " + Dates.toString(date, "E, dd MMM yyyy HH:mm:ss z"));
+            generalJournal.setDescription(organization + ", " + date);
+            generalJournal.setOrganization(organization);
+            generalJournal.setOwner(owner);
+            generalJournal.setAuthor(owner);
             generalJournal = this.save(generalJournal);
+            
         }
         
         return generalJournal;
