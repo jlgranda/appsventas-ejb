@@ -86,6 +86,13 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         return getResultList(query, maxresults, firstresult);
     }
     
+    /**
+     * Servicio para encontrar o construir la instancia de <tt>GeneralJournal</tt> para la fecha indicada
+     * @param date
+     * @param organization
+     * @param owner
+     * @return 
+     */
     public GeneralJournal find(Date date, Organization organization, Subject owner){
         //Buscar el registro hasta antes del fin del dia
         GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", Dates.minimumDate(date), Dates.maximumDate(date), organization);
@@ -99,7 +106,6 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
             generalJournal.setOwner(owner);
             generalJournal.setAuthor(owner);
             generalJournal = this.save(generalJournal);
-            
         }
         
         return generalJournal;
