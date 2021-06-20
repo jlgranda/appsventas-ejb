@@ -41,6 +41,7 @@ import org.jpapi.model.Organization;
 @NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+@NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code"),
 })
 public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
     
@@ -113,7 +114,8 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     
     @Override
     public int compareTo(Account t) {
-       return getId().compareTo(t.getId());
+       //return getId().compareTo(t.getId());
+       return getCode().compareTo(t.getCode());
     }
         
 }

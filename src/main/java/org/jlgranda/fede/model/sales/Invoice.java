@@ -63,6 +63,8 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthor", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2  AND i.active=?3 AND i.emissionOn BETWEEN ?4 AND ?5 ORDER BY i.lastUpdate DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndOrg", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.organization = ?2  AND i.active=?3 AND i.emissionOn BETWEEN ?4 AND ?5 ORDER BY i.lastUpdate DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndStatusAndOrg", query = "select i from Invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 ORDER BY i.lastUpdate DESC"),
+    @NamedQuery(name = "Invoice.findByOrganizationAndDocumentTypeAndEmission", query = "select i from Invoice i WHERE i.organization=?1 and i.emissionOn BETWEEN ?2 AND ?3  and i.documentType=?4 ORDER BY i.emissionOn DESC"),
+    @NamedQuery(name = "Invoice.findByOrganizationAndAuthorAndDocumentTypeAndEmission", query = "select i from Invoice i WHERE i.organization=?1 and i.author = ?2 and i.emissionOn BETWEEN ?3 AND ?4 and i.documentType=?5 ORDER BY i.emissionOn DESC"),
     @NamedQuery(name = "Invoice.findSequencialByDocumentTypeAndStatusAndOrg", query = "select i.sequencial from Invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 ORDER BY i.lastUpdate DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndAuthorOrderByCode", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 and i.author = ?2  AND i.active=?3 AND i.emissionOn BETWEEN ?4 AND ?5 ORDER BY i.code DESC"),
     @NamedQuery(name = "Invoice.findByDocumentTypeAndOwner", query = "SELECT i FROM Invoice i WHERE i.documentType = ?1 AND i.owner = ?2 AND i.active=?3 AND i.emissionOn BETWEEN ?4 AND ?5 ORDER BY i.id DESC"),
@@ -283,7 +285,7 @@ public class Invoice extends BussinesEntity {
         List<Detail> list = getDetails();
         Collections.sort(list);
         Collections.reverse(list);
-        return Lists.toString(list);
+        return Lists.toString(list, ", ");
     }
     
     
