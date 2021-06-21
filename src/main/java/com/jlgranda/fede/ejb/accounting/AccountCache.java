@@ -119,6 +119,17 @@ public class AccountCache {
         return matches; //devolver por defecto la clave buscada
     }
     
+    public Account lookupByName(String name, Organization organization){
+        List<Account> matches = new ArrayList<>();
+        if (Strings.isNullOrEmpty(name)){
+            return null; //vacio
+        }
+        accounts.values().stream().filter(account -> ( name.equalsIgnoreCase(account.getName()) && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+                    matches.add(account);
+        }); 
+        return matches.get(0); //devolver el 1er elemento
+    }
+    
     
     public String genereNextCode(Long parentAccountId){
         
