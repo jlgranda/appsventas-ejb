@@ -19,6 +19,7 @@ package org.jlgranda.fede.model.document;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -37,11 +38,13 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.jpapi.model.Organization;
 import org.jlgranda.fede.model.sales.Payment;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.SourceType;
+import org.jpapi.util.Lists;
 
 /**
  * Modelo de persistencia de factura electrónica fede, almacena datos básicos de
@@ -330,5 +333,12 @@ public class FacturaElectronica extends BussinesEntity {
 
     public void setDocument_type(DocumentType document_type) {
         this.document_type = document_type;
+    }
+    
+    public String getSummary(){
+        List<FacturaElectronicaDetail> list = getFacturaElectronicaDetails();
+        Collections.sort(list);
+        Collections.reverse(list);
+        return Lists.toString(list, ", ");
     }
 }

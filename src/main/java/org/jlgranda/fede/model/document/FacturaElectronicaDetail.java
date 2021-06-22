@@ -20,12 +20,14 @@ package org.jlgranda.fede.model.document;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.sales.Product;
@@ -54,6 +56,9 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
 
     private BigDecimal tax_value;
     
+    public FacturaElectronicaDetail(){
+        this.showAmountInSummary = true;
+    }
     public FacturaElectronica getFacturaElectronica() {
         return facturaElectronica;
     }
@@ -128,6 +133,33 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
         eb.append(getProduct(), other.getProduct());
 
         return eb.isEquals();
+    }
+
+        @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        
+        if (isShowAmountInSummary()){
+            str.append("(")
+            .append(getQuantity())
+            .append(")")
+            .append(" ")
+            .append(getProduct()== null ? "" : getProduct().getName());
+        } else {
+            str.append(getProduct() == null ? "" : getProduct().getName());
+        }
+        return str.toString();
+    }
+    
+    @Transient
+    private boolean showAmountInSummary;
+
+    public boolean isShowAmountInSummary() {
+        return showAmountInSummary;
+    }
+
+    public void setShowAmountInSummary(boolean showAmountInSummary) {
+        this.showAmountInSummary = showAmountInSummary;
     }
 
     @Override
