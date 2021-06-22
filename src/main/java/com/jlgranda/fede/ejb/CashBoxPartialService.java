@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 kellypaulinc
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ import org.jpapi.util.Dates;
 
 /**
  *
- * @author kellypaulinc
+ * @author author
  */
 @Stateless
 public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {

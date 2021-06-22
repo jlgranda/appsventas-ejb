@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 kellypaulinc
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,7 +39,7 @@ import org.jpapi.model.PersistentObject;
 
 /**
  *
- * @author kellypaulinc
+ * @author author
  */
 @Entity
 @Table(name = "CashBox_Partial")
@@ -78,6 +78,10 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     BigDecimal missCashPartial; //Dinero faltante.
 
     BigDecimal excessCashPartial; //Dinero sobrante.
+    
+    BigDecimal amountDeposit; //Dinero de depósito.
+    
+    Account accountDeposit; //Cuenta de depósito.
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -202,6 +206,22 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
 
     public void setExcessCashPartial(BigDecimal excessCashPartial) {
         this.excessCashPartial = excessCashPartial;
+    }
+
+    public BigDecimal getAmountDeposit() {
+        return amountDeposit;
+    }
+
+    public void setAmountDeposit(BigDecimal amountDeposit) {
+        this.amountDeposit = amountDeposit;
+    }
+
+    public Account getAccountDeposit() {
+        return accountDeposit;
+    }
+
+    public void setAccountDeposit(Account accountDeposit) {
+        this.accountDeposit = accountDeposit;
     }
 
     public Status getStatusCashBoxPartial() {

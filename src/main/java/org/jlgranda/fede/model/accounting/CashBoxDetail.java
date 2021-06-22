@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 kellypaulinc
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ import org.jpapi.model.PersistentObject;
 
 /**
  *
- * @author kellypaulinc
+ * @author author
  */
 @Entity
 @Table (name = "CashBox_detail")

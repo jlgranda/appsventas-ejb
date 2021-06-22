@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import org.drools.core.impl.InternalKnowledgeBase;
 import org.drools.core.impl.KnowledgeBaseFactory;
+import org.jlgranda.fede.model.accounting.CashBoxPartial;
 import org.jlgranda.fede.model.accounting.Record;
 import org.jlgranda.fede.model.accounting.RecordTemplate;
 import org.jlgranda.fede.model.sales.Invoice;
@@ -84,6 +85,41 @@ public class RuleRunner {
         List<Command> cmds = new ArrayList<>();
         cmds.add( kieCommands.newSetGlobal( "record", record, true ) );
         cmds.add( kieCommands.newInsert( invoice, "invoice" ) );
+        //cmds.add( kieCommands.newQuery( "Get People" "getPeople" );
+        ksession.execute( kieCommands.newBatchExecution( cmds ));
+        //ExecutionResults results = ksession.execute( kieCommands.newBatchExecution( cmds ));
+        //results.getValue( "list1" ); // returns the ArrayList
+        //record = (Record) results.getValue( "record" ); // returns the inserted fact Person
+        //results.getValue( "Get People" );// returns the query as a QueryResults instance.
+        return null; //No hay errores de compilación
+    }
+    
+    public KnowledgeBuilderErrors run(RecordTemplate recordTemplate, CashBoxPartial cashBoxPartial, Record record) {
+        
+        // read second rule from String
+        String myRule = recordTemplate.getRule();
+        Resource myResource = ResourceFactory.newReaderResource((Reader) new StringReader(myRule));
+        kbuilder.add(myResource, ResourceType.DRL);
+ 
+        // Check the builder for errors
+        if ( kbuilder.hasErrors() ) {
+            ksession.getKieBase().removeRule(recordTemplate.getName(), recordTemplate.getRule());
+            return kbuilder.getErrors();
+        }
+ 
+        // get the compiled packages (which are serializable)
+        pkgs = kbuilder.getKnowledgePackages();
+ 
+        // add the packages to a knowledgebase (deploy the knowledge packages).
+        kbase.addPackages( pkgs );
+ 
+        ksession = kbase.newStatelessKieSession();
+        
+        KieCommands kieCommands = kieServices.getCommands();
+                
+        List<Command> cmds = new ArrayList<>();
+        cmds.add( kieCommands.newSetGlobal( "record", record, true ) );
+        cmds.add( kieCommands.newInsert( cashBoxPartial, "cashBoxPartial" ) );
         //cmds.add( kieCommands.newQuery( "Get People" "getPeople" );
         ksession.execute( kieCommands.newBatchExecution( cmds ));
         //ExecutionResults results = ksession.execute( kieCommands.newBatchExecution( cmds ));
