@@ -144,9 +144,9 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
             .append(getQuantity())
             .append(")")
             .append(" ")
-            .append(getProduct()== null ? "" : getProduct().getName());
+            .append(getProduct().getName());
         } else {
-            str.append(getProduct() == null ? "" : getProduct().getName());
+            str.append(getProduct().getName());
         }
         return str.toString();
     }
