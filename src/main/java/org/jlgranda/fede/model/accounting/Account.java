@@ -48,7 +48,7 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     
     private static final long serialVersionUID = -6428094275651428620L;
     
-    @Column(nullable = true, length = 1024)
+    @Column(name="parent_account_id", nullable = true, length = 1024)
     protected Long parentAccountId;
     
     @ManyToOne(optional = true)
