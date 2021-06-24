@@ -17,10 +17,14 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +33,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.Account;
 import org.jlgranda.fede.model.accounting.Account_;
+import org.jlgranda.fede.model.accounting.RecordDetail;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
@@ -51,6 +56,9 @@ public class AccountService extends BussinesEntityHome<Account> {
 
     @PersistenceContext
     EntityManager em;
+    
+    @EJB
+    RecordDetailService recordDetailService;
 
     @PostConstruct
     private void init() {
@@ -91,5 +99,49 @@ public class AccountService extends BussinesEntityHome<Account> {
         params.put("organization", organization);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-
+    
+    /**
+     * Calcula el valor de la cuenta entre las fechas
+     * @param account
+     * @param organization
+     * @param desde fecha de inicio
+     * @param hasta fecha de final
+     * @return El valor de la mayorización de la cuenta
+     */
+    public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta){
+        
+        BigDecimal balance = new BigDecimal(BigInteger.ZERO);
+        List<Account> childs =  this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
+        
+        if (childs.isEmpty()){
+            //Obtener balance la cuenta
+            BigDecimal debe = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.DEBE, desde, hasta, organization);
+            
+            BigDecimal haber = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.HABER, desde, hasta, organization);
+            
+            balance = debe.subtract(haber);
+            
+        } else {
+            for (Account child :  childs ) {
+                balance =  balance.add(mayorizar(child, organization, desde, hasta));
+            }
+        }   
+        
+        return balance;
+    }
+    
+    /**
+     * Calcula el valor de la cuenta entre las fechas
+     * @param accountName Nombre de la cuenta
+     * @param organization
+     * @param desde fecha de inicio
+     * @param hasta fecha de final
+     * @return El valor de la mayorización de la cuenta
+     */
+    public BigDecimal mayorizar(String accountName, Organization organization, Date desde, Date hasta){
+        
+        Account account = this.findUniqueByNamedQuery("Account.findByNameAndOrganization", accountName, organization);
+        
+        return mayorizar(account, organization, desde, hasta);
+    }
 }

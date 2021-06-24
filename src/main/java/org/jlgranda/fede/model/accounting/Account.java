@@ -41,6 +41,7 @@ import org.jpapi.model.Organization;
 @NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+@NamedQuery(name = "Account.findByParentId", query = "select s FROM Account s WHERE s.parentAccountId = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code"),
 })
 public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
@@ -48,7 +49,7 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     private static final long serialVersionUID = -6428094275651428620L;
     
     @Column(nullable = true, length = 1024)
-    protected Long parent_account_id;
+    protected Long parentAccountId;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
@@ -64,11 +65,11 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     }
 
     public Long getParentAccountId() {
-        return parent_account_id;
+        return parentAccountId;
     }
 
     public void setParentAccountId(Long parent_account_id) {
-        this.parent_account_id = parent_account_id;
+        this.parentAccountId = parent_account_id;
     }
     
     public Organization getOrganization() {
