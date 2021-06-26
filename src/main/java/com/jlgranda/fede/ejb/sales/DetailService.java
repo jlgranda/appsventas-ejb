@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -53,7 +54,7 @@ public class DetailService extends BussinesEntityHome<Detail> {
     public Detail createInstance(float amount) {
 
         Detail _instance = new Detail();
-        _instance.setAmount(amount);
+        _instance.setAmount(BigDecimal.valueOf(amount));
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());

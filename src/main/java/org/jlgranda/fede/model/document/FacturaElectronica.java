@@ -144,8 +144,8 @@ public class FacturaElectronica extends BussinesEntity {
     private List<FacturaElectronicaDetail> facturaElectronicaDetails = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private FacturaElectronica.DocumentType document_type;
+    @Column(nullable = true, name = "document_type")
+    private FacturaElectronica.DocumentType documentType;
 
     public enum DocumentType {
         FACTURA,
@@ -327,14 +327,14 @@ public class FacturaElectronica extends BussinesEntity {
         return facturaElectronicaDetail;
     }
 
-    public DocumentType getDocument_type() {
-        return document_type;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
 
-    public void setDocument_type(DocumentType document_type) {
-        this.document_type = document_type;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
-    
+
     public String getSummary(){
         List<FacturaElectronicaDetail> list = getFacturaElectronicaDetails();
         Collections.sort(list);

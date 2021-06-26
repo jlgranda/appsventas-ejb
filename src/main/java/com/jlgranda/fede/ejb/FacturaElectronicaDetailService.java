@@ -61,8 +61,8 @@ public class FacturaElectronicaDetailService extends BussinesEntityHome<FacturaE
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setAuthor(null); //Establecer al usuario actual
-        _instance.setQuantity(0L);
-        _instance.setUnit_value(BigDecimal.ZERO);
+        _instance.setAmount(BigDecimal.ZERO);
+        _instance.setUnitValue(BigDecimal.ZERO);
         return _instance;
     }
     

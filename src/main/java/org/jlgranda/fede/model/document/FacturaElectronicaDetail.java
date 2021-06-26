@@ -25,13 +25,13 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jlgranda.fede.model.Detailable;
 import org.jlgranda.fede.model.sales.Product;
-import org.jpapi.model.PersistentObject;
+import org.jpapi.model.DeletableObject;
 
 /**
  *
@@ -40,21 +40,24 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "Factura_Electronica_Detail")
 @NamedQueries({})
-public class FacturaElectronicaDetail extends PersistentObject implements Comparable<FacturaElectronicaDetail>, Serializable {
+public class FacturaElectronicaDetail extends DeletableObject<FacturaElectronicaDetail> implements Comparable<FacturaElectronicaDetail>, Serializable, Detailable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
-    @JoinColumn(name = "facturaElectronica_id", insertable = true, updatable = true, nullable = true)
+    @JoinColumn(name = "facturaelectronica_id", insertable = true, updatable = true, nullable = true)
     private FacturaElectronica facturaElectronica;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", insertable = true, updatable = true, nullable = true)
     private Product product;
-
-    private Long quantity;
-    private BigDecimal unit_value;
-    private BigDecimal total_value;
-
-    private BigDecimal tax_value;
+    
+    private BigDecimal amount;
+    
+    @Column(name = "unit_value")
+    private BigDecimal unitValue;
+    @Column(name = "total_value")
+    private BigDecimal totalValue;
+    @Column(name = "tax_value")
+    private BigDecimal taxValue;
     
     public FacturaElectronicaDetail(){
         this.showAmountInSummary = true;
@@ -67,6 +70,7 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
         this.facturaElectronica = facturaElectronica;
     }
 
+    @Override
     public Product getProduct() {
         return product;
     }
@@ -75,36 +79,28 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
         this.product = product;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public BigDecimal getUnitValue() {
+        return unitValue;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setUnitValue(BigDecimal unitValue) {
+        this.unitValue = unitValue;
     }
 
-    public BigDecimal getUnit_value() {
-        return unit_value;
+    public BigDecimal getTotalValue() {
+        return totalValue;
     }
 
-    public void setUnit_value(BigDecimal unit_value) {
-        this.unit_value = unit_value;
+    public void setTotalValue(BigDecimal totalValue) {
+        this.totalValue = totalValue;
     }
 
-    public BigDecimal getTotal_value() {
-        return total_value;
+    public BigDecimal getTaxValue() {
+        return taxValue;
     }
 
-    public void setTotal_value(BigDecimal total_value) {
-        this.total_value = total_value;
-    }
-
-    public BigDecimal getTax_value() {
-        return tax_value;
-    }
-
-    public void setTax_value(BigDecimal tax_value) {
-        this.tax_value = tax_value;
+    public void setTaxValue(BigDecimal taxValue) {
+        this.taxValue = taxValue;
     }
 
     @Override
@@ -135,13 +131,13 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
         return eb.isEquals();
     }
 
-        @Override
+    @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
         
         if (isShowAmountInSummary()){
             str.append("(")
-            .append(getQuantity())
+            .append(getAmount())
             .append(")")
             .append(" ")
             .append(getProduct().getName());
@@ -162,9 +158,48 @@ public class FacturaElectronicaDetail extends PersistentObject implements Compar
         this.showAmountInSummary = showAmountInSummary;
     }
 
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    
     @Override
     public int compareTo(FacturaElectronicaDetail other) {
         return this.createdOn.compareTo(other.getCreatedOn());
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Long getBussinesEntityId() {
+        return getFacturaElectronica().getId();
+    }
+
+    @Override
+    public String getBussinesEntityType() {
+        return FacturaElectronica.class.getSimpleName();
+    }
+
+    @Override
+    public BigDecimal getAmount() {
+        return this.amount;
+    }
+
+    @Override
+    public BigDecimal getPrice() {
+        return this.getUnitValue();
+    }
+
+    @Override
+    public String getUnit() {
+        return "u"; //unidades
+    }
+    
+    @Override
+    public String getBussinesEntityCode() {
+        return getFacturaElectronica().getCode();
     }
 
 }

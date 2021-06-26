@@ -297,7 +297,7 @@ public class Invoice extends BussinesEntity {
     public BigDecimal getTotalSinImpuesto(){
         BigDecimal total = new BigDecimal(0);
         for (Detail d : getDetails()){
-            total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())));
+            total = total.add(d.getPrice().multiply(d.getAmount()));
         }
         
         return total;
@@ -321,7 +321,7 @@ public class Invoice extends BussinesEntity {
         for (Detail d : getDetails()){
             if (taxType.equals(d.getProduct().getTaxType())){
                 //TODO identificar el porcentaje en función del tipo de impuesto
-                total = total.add(d.getPrice().multiply(BigDecimal.valueOf(d.getAmount())).multiply(BigDecimal.valueOf(IVA)));
+                total = total.add(d.getPrice().multiply(d.getAmount()).multiply(BigDecimal.valueOf(IVA)));
             }
         }
         

@@ -32,7 +32,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.document.FacturaElectronica;
-import org.jpapi.model.PersistentObject;
+import org.jpapi.model.DeletableObject;
 
 /**
  *
@@ -41,33 +41,50 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "Kardex_detail")
 @NamedQueries({
-    @NamedQuery(name = "KardexDetail.findTotalQuantityByKardexAndCode", query = "SELECT kd.operation_type, sum(kd.quantity) FROM KardexDetail kd WHERE kd.kardex=?1 and kd.code=?2 GROUP BY kd.operation_type ORDER BY kd.operation_type"),
-    @NamedQuery(name = "KardexDetail.findByKardexAndInvoiceAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.invoice = ?2 and kd.operation_type = ?3"),
-    @NamedQuery(name = "KardexDetail.findByKardexAndFacturaAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.facturaElectronica = ?2 and kd.operation_type = ?3"),
+    @NamedQuery(name = "KardexDetail.findTotalQuantityByKardexAndCode", query = "SELECT kd.operationType, sum(kd.quantity) FROM KardexDetail kd WHERE kd.kardex=?1 and kd.code=?2 and kd.deleted = false GROUP BY kd.operationType ORDER BY kd.operationType"),
+    @NamedQuery(name = "KardexDetail.findByKardexAndBussinesEntityTypeAndBussinesEntityIdAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.bussinesEntityType = ?2 and kd.bussinesEntityId = ?3 and kd.operationType = ?4 and kd.deleted = false"),
+    //@NamedQuery(name = "KardexDetail.findByKardexAndFacturaAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.facturaElectronica = ?2 and kd.operationType = ?3 and kd.deleted = false"),
+    //@NamedQuery(name = "KardexDetail.findByKardexAndFacturaAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.facturaElectronica = ?2 and kd.operationType = ?3 and kd.deleted = false"),
 })
-public class KardexDetail extends PersistentObject implements Comparable<KardexDetail>, Serializable {
+public class KardexDetail extends DeletableObject<KardexDetail> implements Comparable<KardexDetail>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
     @JoinColumn(name = "kardex_id", insertable = true, updatable = true, nullable = true)
     private Kardex kardex;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private KardexDetail.OperationType operation_type;
+    @Column(name = "operation_type", nullable = false)
+    private KardexDetail.OperationType operationType;
     
-    private BigDecimal unit_value;
-    private Long quantity;
-    private BigDecimal total_value;
-    private Long cummulative_quantity;
-    private BigDecimal cummulative_total_value;
+    @Column(name = "unit_value")
+    private BigDecimal unitValue;
+    private BigDecimal quantity;
+    @Column(name = "total_value")
+    private BigDecimal totalValue;
+    @Column(name = "cummulative_quantity")
+    private BigDecimal cummulativeQuantity;
+    @Column(name = "cummulative_total_value")
+    private BigDecimal cummulativeTotalValue;
     
-    @ManyToOne
-    @JoinColumn (name = "facturaElectronica_id", insertable = true, updatable = true, nullable = true)
-    private FacturaElectronica facturaElectronica; //Detalle de compra
     
-    @ManyToOne
-    @JoinColumn (name = "invoice_id", insertable = true, updatable = true, nullable = true)
-    private Invoice invoice; //Detalle de venta
+    /**
+     * Referencia a la factura electronica de origen, para compras
+     */
+    @Column(name = "bussines_entity_type", nullable = true)
+    private String bussinesEntityType;
+    
+    /**
+     * Referencia a la factura electronica de origen, para compras
+     */
+    @Column(name = "bussines_entity_id", nullable = true)
+    private Long bussinesEntityId;
+//    @ManyToOne
+//    @JoinColumn (name = "facturaElectronica_id", insertable = true, updatable = true, nullable = true)
+//    private FacturaElectronica facturaElectronica; //Detalle de compra
+//    
+//    @ManyToOne
+//    @JoinColumn (name = "invoice_id", insertable = true, updatable = true, nullable = true)
+//    private Invoice invoice; //Detalle de venta
     
     public enum OperationType{
         EXISTENCIA_INICIAL,
@@ -87,69 +104,86 @@ public class KardexDetail extends PersistentObject implements Comparable<KardexD
         this.kardex = kardex;
     }
 
-    public OperationType getOperation_type() {
-        return operation_type;
+    public OperationType getOperationType() {
+        return operationType;
     }
 
-    public void setOperation_type(OperationType operation_type) {
-        this.operation_type = operation_type;
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
     }
+
+    public BigDecimal getUnitValue() {
+        return unitValue;
+    }
+
+    public void setUnitValue(BigDecimal unitValue) {
+        this.unitValue = unitValue;
+    }
+
     
-    public BigDecimal getUnit_value() {
-        return unit_value;
-    }
-
-    public void setUnit_value(BigDecimal unit_value) {
-        this.unit_value = unit_value;
-    }
-
-    public Long getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
-    public BigDecimal getTotal_value() {
-        return total_value;
+    public BigDecimal getTotalValue() {
+        return totalValue;
     }
 
-    public void setTotal_value(BigDecimal total_value) {
-        this.total_value = total_value;
+    public void setTotalValue(BigDecimal totalValue) {
+        this.totalValue = totalValue;
     }
 
-    public Long getCummulative_quantity() {
-        return cummulative_quantity;
+    public BigDecimal getCummulativeQuantity() {
+        return cummulativeQuantity;
     }
 
-    public void setCummulative_quantity(Long cummulative_quantity) {
-        this.cummulative_quantity = cummulative_quantity;
+    public void setCummulativeQuantity(BigDecimal cummulativeQuantity) {
+        this.cummulativeQuantity = cummulativeQuantity;
     }
 
-    public BigDecimal getCummulative_total_value() {
-        return cummulative_total_value;
+    public BigDecimal getCummulativeTotalValue() {
+        return cummulativeTotalValue;
     }
 
-    public void setCummulative_total_value(BigDecimal cummulative_total_value) {
-        this.cummulative_total_value = cummulative_total_value;
+    public void setCummulativeTotalValue(BigDecimal cummulativeTotalValue) {
+        this.cummulativeTotalValue = cummulativeTotalValue;
+    }
+
+    public String getBussinesEntityType() {
+        return bussinesEntityType;
+    }
+
+    public void setBussinesEntityType(String bussinesEntityType) {
+        this.bussinesEntityType = bussinesEntityType;
+    }
+
+    public Long getBussinesEntityId() {
+        return bussinesEntityId;
+    }
+
+    public void setBussinesEntityId(Long bussinesEntityId) {
+        this.bussinesEntityId = bussinesEntityId;
     }
     
-    public FacturaElectronica getFacturaElectronica() {
-        return facturaElectronica;
-    }
-
-    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
-        this.facturaElectronica = facturaElectronica;
-    }
-
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
+//    public FacturaElectronica getFacturaElectronica() {
+//        return facturaElectronica;
+//    }
+//
+//    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
+//        this.facturaElectronica = facturaElectronica;
+//    }
+//
+//    public Invoice getInvoice() {
+//        return invoice;
+//    }
+//
+//    public void setInvoice(Invoice invoice) {
+//        this.invoice = invoice;
+//    }
     
     @Override
     public int hashCode(){
@@ -174,7 +208,7 @@ public class KardexDetail extends PersistentObject implements Comparable<KardexD
         EqualsBuilder eb = new EqualsBuilder();
         
 //        eb.append(getId(), other.getId());
-        eb.append(getId(), other.getId()).append(getOperation_type(), other.getOperation_type());
+        eb.append(getId(), other.getId()).append(getOperationType(), other.getOperationType());
         
         return eb.isEquals();
     }

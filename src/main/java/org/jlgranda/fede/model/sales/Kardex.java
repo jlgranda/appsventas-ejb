@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -33,6 +34,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Organization;
 
@@ -43,7 +45,7 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Kardex")
 @NamedQueries({
-    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2"),
+    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false"),
 })
 public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex>, Serializable {
 
@@ -58,11 +60,14 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kardex", fetch = FetchType.LAZY)
     private List<KardexDetail> kardexDetails = new ArrayList<>();
     
-    private Long quantity;
+    private BigDecimal quantity;
     private BigDecimal fund;
-    private String unit_measure;
-    private Long unit_minimum;
-    private Long unit_maximum;
+    @Column( name = "unit_measure")
+    private String unitMeasure;
+    @Column( name = "unit_minimum")
+    private BigDecimal unitMinimum;
+    @Column( name = "unit_maximum")
+    private BigDecimal unitMaximum;
     
     public Organization getOrganization() {
         return organization;
@@ -87,12 +92,12 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     public void setKardexDetails(List<KardexDetail> kardexDetails) {
         this.kardexDetails = kardexDetails;
     }
-    
-    public Long getQuantity() {
+
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
@@ -104,30 +109,30 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
         this.fund = fund;
     }
 
-    public String getUnit_measure() {
-        return unit_measure;
+    public String getUnitMeasure() {
+        return unitMeasure;
     }
 
-    public void setUnit_measure(String unit_measure) {
-        this.unit_measure = unit_measure;
+    public void setUnitMeasure(String unitMeasure) {
+        this.unitMeasure = unitMeasure;
     }
 
-    public Long getUnit_minimum() {
-        return unit_minimum;
+    public BigDecimal getUnitMinimum() {
+        return unitMinimum;
     }
 
-    public void setUnit_minimum(Long unit_minimum) {
-        this.unit_minimum = unit_minimum;
+    public void setUnitMinimum(BigDecimal unitMinimum) {
+        this.unitMinimum = unitMinimum;
     }
 
-    public Long getUnit_maximum() {
-        return unit_maximum;
+    public BigDecimal getUnitMaximum() {
+        return unitMaximum;
     }
 
-    public void setUnit_maximum(Long unit_maximum) {
-        this.unit_maximum = unit_maximum;
+    public void setUnitMaximum(BigDecimal unitMaximum) {
+        this.unitMaximum = unitMaximum;
     }
-    
+
     public void addKardexDetail(KardexDetail kardexDetail){
         kardexDetail.setKardex(this);
         if(this.kardexDetails.contains(kardexDetail)){
@@ -172,5 +177,22 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     @Override
     public int compareTo(Kardex other) {
         return this.createdOn.compareTo(other.getCreatedOn());
+    }
+
+    /**
+     * Encuentra la instancia <tt>KardexDetail</tt> para la bussinesEntityId y bussinesEntityType y el operationType
+     * @param bussinesEntityType
+     * @param bussinesEntityId
+     * @param operationType
+     * @return El <tt>KardexDetail</tt> que coinicide con los criterios datos o null en caso contrario
+     */
+    public KardexDetail findKardexDetail(String bussinesEntityType, Long bussinesEntityId, KardexDetail.OperationType operationType) {
+
+        return getKardexDetails().stream()
+                .filter(detail -> bussinesEntityId.equals(detail.getBussinesEntityId())
+                && bussinesEntityType.equals(detail.getBussinesEntityType())
+                && operationType.equals(detail.getOperationType()))
+                .findAny()
+                .orElse(null);
     }
 }
