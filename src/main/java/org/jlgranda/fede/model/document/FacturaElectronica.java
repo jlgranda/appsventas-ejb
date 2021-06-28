@@ -335,6 +335,7 @@ public class FacturaElectronica extends BussinesEntity {
         this.documentType = documentType;
     }
 
+    @Transient
     public String getSummary(){
         List<FacturaElectronicaDetail> list = getFacturaElectronicaDetails();
         Collections.sort(list);
