@@ -45,7 +45,7 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Kardex")
 @NamedQueries({
-    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false"),
+    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false ORDER BY kd.id DESC limit 1"),
 })
 public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex>, Serializable {
 
