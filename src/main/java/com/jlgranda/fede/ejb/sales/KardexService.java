@@ -180,7 +180,8 @@ public class KardexService extends BussinesEntityHome<Kardex>{
      * @return 
      */
     public Kardex findByProductAndOrganization(String prefix, Product product, Subject subject, Organization organization) {
-        Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
+        //Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
+        Kardex kardex = (Kardex) this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization).get(0);
         
         if (kardex == null) {
             kardex = this.createInstance();
