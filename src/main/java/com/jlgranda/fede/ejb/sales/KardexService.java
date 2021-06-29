@@ -49,24 +49,24 @@ import org.slf4j.LoggerFactory;
  * @author author
  */
 @Stateless
-public class KardexService extends BussinesEntityHome<Kardex>{
-    
+public class KardexService extends BussinesEntityHome<Kardex> {
+
     Logger logger = LoggerFactory.getLogger(KardexService.class);
-    
+
     @PersistenceContext
     EntityManager em;
-    
+
     @EJB
     KardexDetailService kardexDetailService;
-    
+
     @PostConstruct
-    private void init(){
+    private void init() {
         setEntityManager(em);
         setEntityClass(Kardex.class);
     }
-    
+
     @Override
-    public Kardex createInstance(){
+    public Kardex createInstance() {
         Kardex _instance = new Kardex();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
@@ -76,28 +76,27 @@ public class KardexService extends BussinesEntityHome<Kardex>{
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
-    
+
     //Soporte para lazy data model
-    public long count(){
+    public long count() {
         return super.count(Kardex.class);
     }
-    
-    public List<Kardex> find(int maxresults, int firstresult){
+
+    public List<Kardex> find(int maxresults, int firstresult) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Kardex> query = builder.createQuery(Kardex.class);
-        
+
         Root<Kardex> from = query.from(Kardex.class);
         query.select(from).orderBy(builder.desc(from.get(Kardex_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
-    public List<Kardex> findByOrganization(Organization organization){
+
+    public List<Kardex> findByOrganization(Organization organization) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
-        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-    
-    
+
     /**
      *
      * @param details
@@ -107,14 +106,14 @@ public class KardexService extends BussinesEntityHome<Kardex>{
      * @param operationType
      * @return
      */
-    public List<Kardex> save(List<Detailable> details, String prefix, Subject subject, Organization organization, KardexDetail.OperationType operationType){
+    public List<Kardex> save(List<Detailable> details, String prefix, Subject subject, Organization organization, KardexDetail.OperationType operationType) {
         List<Kardex> kardexs = new ArrayList<>();
         Kardex kardex = null;
         KardexDetail kardexDetail = null;
         int factor = KardexDetail.OperationType.COMPRA.equals(operationType) ? 1 : -1; //sumar o restar
-        for ( Detailable detail : details ) {
-            
-            if (!isValid(detail)){
+        for (Detailable detail : details) {
+
+            if (!isValid(detail)) {
                 logger.error("El detalle no es válido {1}", detail);
             } else {
                 kardex = this.findByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
@@ -131,8 +130,8 @@ public class KardexService extends BussinesEntityHome<Kardex>{
                 } else {
                     //Disminuir los valores acumulados de cantidad y total para al momento de modificar no se duplique el valor a aumentar por la venta
                     if (kardexDetail.getQuantity() != null && kardexDetail.getTotalValue() != null) {
-                        kardex.setQuantity( kardex.getQuantity().add( kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor)) ) );
-                        kardex.setFund( kardex.getFund().add(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor))) );
+                        kardex.setQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
+                        kardex.setFund(kardex.getFund().add(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor))));
                         kardexDetail.setCummulativeQuantity(kardex.getQuantity());
                         kardexDetail.setCummulativeTotalValue(kardex.getFund());
                     }
@@ -167,23 +166,25 @@ public class KardexService extends BussinesEntityHome<Kardex>{
                 kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
             }
         }
-        
+
         return kardexs;
     }
-    
+
     /**
-     * Retorna el kardex activo para el producto en la organización.Si el Kardex no existe lo crea.
-     * @param prefix 
+     * Retorna el kardex activo para el producto en la organización.Si el Kardex
+     * no existe lo crea.
+     *
+     * @param prefix
      * @param product
      * @param subject
      * @param organization
-     * @return 
+     * @return
      */
     public Kardex findByProductAndOrganization(String prefix, Product product, Subject subject, Organization organization) {
         //Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
-        Kardex kardex = (Kardex) this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization).get(0);
-        
-        if (kardex == null) {
+        List<Kardex> listKardex = this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization);
+        Kardex kardex;
+        if (listKardex.isEmpty()) {
             kardex = this.createInstance();
             kardex.setCode(prefix + product.getId());
             kardex.setOwner(subject);
@@ -193,20 +194,21 @@ public class KardexService extends BussinesEntityHome<Kardex>{
             kardex.setName(product.getName());
             kardex.setUnitMinimum(BigDecimal.ONE);
             kardex.setUnitMaximum(BigDecimal.ONE);
-            
             kardex = save(kardex); //persistir y recuperar instancia
-        } 
-        
+        } else {
+            kardex = listKardex.get(0);
+        }
+
         return kardex;
     }
 
     private boolean isValid(Detailable detail) {
-        return detail.getProduct() != null 
+        return detail.getProduct() != null
                 && detail.getAmount() != null
                 && detail.getPrice() != null
                 && detail.getBussinesEntityType() != null
                 && detail.getBussinesEntityId() != null
                 && detail.getBussinesEntityCode() != null;
     }
-    
+
 }
