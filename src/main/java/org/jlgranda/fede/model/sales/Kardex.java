@@ -53,7 +53,7 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     private Organization organization;
 
     @OneToOne
-    @JoinColumn(name = "product_id", insertable = true, updatable = true)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kardex", fetch = FetchType.LAZY)
