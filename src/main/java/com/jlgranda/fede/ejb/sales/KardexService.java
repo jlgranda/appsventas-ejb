@@ -112,12 +112,14 @@ public class KardexService extends BussinesEntityHome<Kardex> {
         KardexDetail kardexDetail = null;
         int factor = KardexDetail.OperationType.COMPRA.equals(operationType) ? 1 : -1; //sumar o restar
         for (Detailable detail : details) {
-
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<");
+            System.out.println("Producto id: " + detail.getProduct().getId());
+            System.out.println("Producto name: " + detail.getProduct().getName());
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<");
             if (!isValid(detail)) {
                 logger.error("El detalle no es válido {1}", detail);
             } else {
                 kardex = this.findByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
-
                 kardexDetail = kardex.findKardexDetail(detail.getBussinesEntityType(), detail.getBussinesEntityId(), operationType); //Encuentra el Detalle correspondiente a la factura
                 if (kardexDetail == null) {
                     kardexDetail = kardexDetailService.createInstance();
@@ -163,7 +165,9 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 kardex.setQuantity(kardexDetail.getCummulativeQuantity());
                 kardex.setFund(kardexDetail.getCummulativeTotalValue());
 
-                kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
+                if (kardex.isPersistent()){ //Sólo actualizar si el kardex ya existe.
+                    kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
+                }
             }
         }
 
@@ -194,7 +198,8 @@ public class KardexService extends BussinesEntityHome<Kardex> {
             kardex.setName(product.getName());
             kardex.setUnitMinimum(BigDecimal.ONE);
             kardex.setUnitMaximum(BigDecimal.ONE);
-            kardex = save(kardex); //persistir y recuperar instancia
+            save(kardex); //persistir y recuperar instancia
+            kardex = this.find(kardex.getId());
         } else {
             kardex = listKardex.get(0);
         }
