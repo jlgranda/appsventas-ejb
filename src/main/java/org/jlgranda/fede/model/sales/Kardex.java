@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,6 +47,8 @@ import org.jpapi.model.Organization;
 @NamedQueries({
     @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false ORDER BY kd.id DESC"),
 })
+@AttributeOverride(name = "code", column = @Column(name = "code", unique=true, nullable = false))
+@AttributeOverride(name = "name", column = @Column(name = "name", unique=true, nullable = false))
 public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex>, Serializable {
 
     @ManyToOne(optional = true)

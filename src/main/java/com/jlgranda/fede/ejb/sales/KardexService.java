@@ -171,8 +171,8 @@ public class KardexService extends BussinesEntityHome<Kardex> {
     }
 
     /**
-     * Retorna el kardex activo para el producto en la organización.Si el Kardex
-     * no existe lo crea.
+     * Retorna el kardex activo para el producto en la organización. 
+     * Si el Kardex no existe lo crea.
      *
      * @param prefix
      * @param product
