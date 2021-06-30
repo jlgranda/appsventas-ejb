@@ -112,14 +112,10 @@ public class KardexService extends BussinesEntityHome<Kardex> {
         KardexDetail kardexDetail = null;
         int factor = KardexDetail.OperationType.COMPRA.equals(operationType) ? 1 : -1; //sumar o restar
         for (Detailable detail : details) {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<");
-            System.out.println("Producto id: " + detail.getProduct().getId());
-            System.out.println("Producto name: " + detail.getProduct().getName());
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<");
             if (!isValid(detail)) {
                 logger.error("El detalle no es válido {1}", detail);
             } else {
-                kardex = this.findByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
+                kardex = this.findOrCreateByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
                 kardexDetail = kardex.findKardexDetail(detail.getBussinesEntityType(), detail.getBussinesEntityId(), operationType); //Encuentra el Detalle correspondiente a la factura
                 if (kardexDetail == null) {
                     kardexDetail = kardexDetailService.createInstance();
@@ -176,6 +172,22 @@ public class KardexService extends BussinesEntityHome<Kardex> {
 
     /**
      * Retorna el kardex activo para el producto en la organización. 
+     *
+     * @param product
+     * @param subject
+     * @param organization
+     * @return
+     */
+    public Kardex findByProductAndOrganization(Product product, Subject subject, Organization organization) {
+        //Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
+        List<Kardex> listKardex = this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization);
+        if (!listKardex.isEmpty()) {
+            return listKardex.get(0);
+        }
+        return null;
+    }
+    /**
+     * Retorna el kardex activo para el producto en la organización. 
      * Si el Kardex no existe lo crea.
      *
      * @param prefix
@@ -184,7 +196,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
      * @param organization
      * @return
      */
-    public Kardex findByProductAndOrganization(String prefix, Product product, Subject subject, Organization organization) {
+    public Kardex findOrCreateByProductAndOrganization(String prefix, Product product, Subject subject, Organization organization) {
         //Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
         List<Kardex> listKardex = this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization);
         Kardex kardex;

@@ -124,10 +124,23 @@ public class AccountCache {
         if (Strings.isNullOrEmpty(name)){
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> ( name.equalsIgnoreCase(account.getName()) && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+        accounts.values().stream().filter(account -> ( name.trim().equalsIgnoreCase(account.getName().trim()) && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
                     matches.add(account);
         }); 
-        return matches.get(0); //devolver el 1er elemento
+        return matches.isEmpty() ? null : matches.get(0); //devolver el 1er elemento
+    }
+    
+    public List<Account> filterByNameOrCode(String name, Organization organization){
+        List<Account> matches = new ArrayList<>();
+        if (Strings.isNullOrEmpty(name)){
+            return null; //vacio
+        }
+        accounts.values().stream().filter(account -> ( account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase())) 
+                ||  account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase())) 
+                && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+                    matches.add(account);
+        }); 
+        return matches;
     }
     
     
