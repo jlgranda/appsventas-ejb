@@ -5,6 +5,7 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -42,7 +43,12 @@ public class SettingService extends BussinesEntityHome<Setting> {
     }
 
     public Setting findByName(String name, Subject owner) {
-        List<Setting> settings = this.findByNamedQuery("Setting.findByNameAndOwner", name, owner);
+        List<Setting> settings = new ArrayList<>();
+        if (owner == null){
+            settings = this.findByNamedQuery("Setting.findByNameAndOwnerIsNull", name);
+        } else {
+            settings = this.findByNamedQuery("Setting.findByNameAndOwner", name, owner);
+        }
         return settings.isEmpty() ? null : settings.get(0);
     }
 
