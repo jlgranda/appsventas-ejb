@@ -211,7 +211,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
             kardex.setUnitMinimum(BigDecimal.ONE);
             kardex.setUnitMaximum(BigDecimal.ONE);
             save(kardex); //persistir y recuperar instancia
-            kardex = this.find(kardex.getId());
+            kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
         } else {
             kardex = listKardex.get(0);
         }
