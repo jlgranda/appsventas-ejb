@@ -35,6 +35,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.document.FacturaElectronica;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -44,9 +45,10 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "PAYMENT")
 @NamedQueries({
-@NamedQuery(name = "Payment.findByInvoice", query = "SELECT p FROM Payment p WHERE p.invoice=?1 ORDER BY p.invoice.id DESC"),
+@NamedQuery(name = "Payment.findByInvoice", query = "SELECT p FROM Payment p WHERE p.invoice=?1 and p.deleted=false ORDER BY p.invoice.id DESC"),
+@NamedQuery(name = "Payment.findByFacturaElectronica", query = "SELECT p FROM Payment p WHERE p.facturaElectronica=?1 and p.deleted=false ORDER BY p.facturaElectronica.id DESC"),
 })
-public class Payment extends PersistentObject implements Comparable<Payment>, Serializable {
+public class Payment extends DeletableObject<Payment> implements Comparable<Payment>, Serializable {
 
     private static final long serialVersionUID = -6685382197357879651L;
 
