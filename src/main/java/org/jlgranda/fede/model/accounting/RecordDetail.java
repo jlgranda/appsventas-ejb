@@ -46,6 +46,7 @@ import org.jpapi.model.DeletableObject;
 @NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2  and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.createdOn <=?2 and s.record.generalJournalId = j.id and  j.organization = ?3  and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.createdOn, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s, GeneralJournal j  WHERE s.account = ?1 and s.createdOn >=?2 and s.createdOn <=?3 and s.record.generalJournalId = j.id and  j.organization = ?4  and s.deleted = false ORDER BY 1"),
+@NamedQuery(name = "RecordDetail.findByAccountAndOrganization", query = "select s FROM RecordDetail s, GeneralJournal j  WHERE s.account = ?1 and s.createdOn >=?2 and s.createdOn <=?3 and s.record.generalJournalId = j.id and j.organization = ?4  and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.createdOn >=?3 and s.createdOn <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and s.deleted = false ORDER BY 1"),
 })
 public class RecordDetail extends DeletableObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
@@ -187,6 +188,10 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         }
         
         if (!Objects.equals(this.getId(), other.getId())) {
+            return false;
+        }
+        
+        if (!Objects.equals(this.account, other.account)) {
             return false;
         }
         return true;

@@ -43,6 +43,7 @@ public class SettingNames {
     public static String POPUP_FORMULARIO_RECORD = "popup_record";
     //Popup Libro Mayor
     public static String POPUP_FORMULARIO_GENERALLEDGER = "popup_general_ledger";
+    public static String POPUP_FORMULARIO_GENERALLEDGER_RECORD = "popup_general_ledger_record";
     public static String POPUP_FORMULARIO_RECORDTEMPLATE_EDICION = "popup_recordtemplate";
     
 
