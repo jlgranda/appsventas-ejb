@@ -190,6 +190,10 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         if (!Objects.equals(this.getId(), other.getId())) {
             return false;
         }
+        
+        if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
         return true;
     }
 
