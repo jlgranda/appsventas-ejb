@@ -34,11 +34,13 @@ import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Where;
 import org.jpapi.model.DeletableObject;
 
 @Entity
@@ -77,6 +79,8 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
     
             
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
+    @Where(clause = "deleted = false") //sólo no eliminados
+    @OrderBy(value = "orden")
     private List<RecordDetail> recordDetails = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)

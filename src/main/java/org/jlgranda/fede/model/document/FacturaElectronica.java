@@ -34,12 +34,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.Where;
 import org.jpapi.model.Organization;
 import org.jlgranda.fede.model.sales.Payment;
 import org.jpapi.model.BussinesEntity;
@@ -134,6 +136,8 @@ public class FacturaElectronica extends BussinesEntity {
      * Para el seguimiento de pagos en facturas a crédito
      */
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
+    @Where(clause = "deleted = false") //sólo no eliminados
+    @OrderBy(value = "orden")
     private List<Payment> payments = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
