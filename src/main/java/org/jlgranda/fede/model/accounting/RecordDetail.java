@@ -84,6 +84,9 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
     @Transient
     private String accountName;
     
+    @Transient
+    private BigDecimal accumulatedBalance;
+    
     public enum RecordTDetailType {
         DEBE,
         HABER;
@@ -149,6 +152,14 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         this.accountName = accountName;
     }
 
+    public BigDecimal getAccumulatedBalance() {
+        return accumulatedBalance;
+    }
+
+    public void setAccumulatedBalance(BigDecimal accumulatedBalance) {
+        this.accumulatedBalance = accumulatedBalance;
+    }
+    
     public String getAccountCode() {
         if (this.account != null){
             accountCode = this.account.getCode();
