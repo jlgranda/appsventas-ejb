@@ -165,6 +165,8 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         int hash = 7;
         hash = 53 * hash + Objects.hashCode(this.recordDetailType);
         hash = 53 * hash + Objects.hashCode(this.account);
+        hash = 53 * hash + Objects.hashCode(this.accountName);
+        hash = 53 * hash + Objects.hashCode(this.accountCode);
         hash = 53 * hash + Objects.hashCode(this.getId());
         return hash;
     }
@@ -193,6 +195,12 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         }
         
         if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
+        if (!Objects.equals(this.accountName, other.accountName)) {
+            return false;
+        }
+        if (!Objects.equals(this.accountCode, other.accountCode)) {
             return false;
         }
         return true;
