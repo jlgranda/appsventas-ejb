@@ -49,7 +49,7 @@ import org.jpapi.model.DeletableObject;
 @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 and s.deleted=false ORDER BY 1"),
 @NamedQuery(name = "Record.findByJournalId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.deleted=false ORDER BY 1"),
 @NamedQuery(name = "Record.findByJournalAndBussinesEntityId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityId = ?2 and s.deleted=false ORDER BY 1"),
-@NamedQuery(name = "Record.findByBussinesEntityTypeAndId", query = "select s FROM Record s WHERE s.bussinesEntityType = ?1 and s.bussinesEntityId = ?2 and s.deleted=false ORDER BY 1"),
+@NamedQuery(name = "Record.findByBussinesEntityTypeAndId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.deleted=false ORDER BY 1"),
 })
 public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
