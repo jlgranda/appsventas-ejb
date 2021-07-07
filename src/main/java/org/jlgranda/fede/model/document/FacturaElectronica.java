@@ -89,7 +89,7 @@ public class FacturaElectronica extends BussinesEntity {
 
     private BigDecimal totalIVA12;
 
-    private BigDecimal totalDescuento;
+    private BigDecimal totalDescuento = BigDecimal.ZERO;
 
     private BigDecimal importeTotal;
 
@@ -151,6 +151,12 @@ public class FacturaElectronica extends BussinesEntity {
     @Column(nullable = true, name = "document_type")
     private FacturaElectronica.DocumentType documentType;
 
+    @Transient
+    private BigDecimal subtotalIVA0 = BigDecimal.ZERO;
+
+    @Transient
+    private BigDecimal subtotalIVA12 = BigDecimal.ZERO;
+    
     public enum DocumentType {
         FACTURA,
         NOTA_COMPRA,
@@ -339,6 +345,22 @@ public class FacturaElectronica extends BussinesEntity {
         this.documentType = documentType;
     }
 
+    public BigDecimal getSubtotalIVA0() {
+        return subtotalIVA0;
+    }
+
+    public void setSubtotalIVA0(BigDecimal subtotalIVA0) {
+        this.subtotalIVA0 = subtotalIVA0;
+    }
+
+    public BigDecimal getSubtotalIVA12() {
+        return subtotalIVA12;
+    }
+
+    public void setSubtotalIVA12(BigDecimal subtotalIVA12) {
+        this.subtotalIVA12 = subtotalIVA12;
+    }
+    
     @Transient
     public String getSummary(){
         List<FacturaElectronicaDetail> list = getFacturaElectronicaDetails();

@@ -57,7 +57,7 @@ public class FacturaElectronicaDetail extends DeletableObject<FacturaElectronica
     @Column(name = "total_value")
     private BigDecimal totalValue;
     @Column(name = "tax_value")
-    private BigDecimal taxValue;
+    private BigDecimal taxValue = BigDecimal.ZERO;
     
     public FacturaElectronicaDetail(){
         this.showAmountInSummary = true;
