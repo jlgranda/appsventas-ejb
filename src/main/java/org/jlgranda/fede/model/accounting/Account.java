@@ -38,9 +38,9 @@ import org.jpapi.model.Organization;
 @Table(name = "Account")
 @NamedQueries({ @NamedQuery(name = "Account.findByName", query = "select s FROM Account s WHERE s.name = ?1 and s.owner is null and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+@NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE s.name = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+@NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findByParentId", query = "select s FROM Account s WHERE s.parentAccountId = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
 @NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code"),
 })
