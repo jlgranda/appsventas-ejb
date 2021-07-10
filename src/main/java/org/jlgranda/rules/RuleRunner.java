@@ -139,7 +139,7 @@ public class RuleRunner {
  
         // Check the builder for errors
         if ( kbuilder.hasErrors() ) {
-            ksession.getKieBase().removeRule(recordTemplate.getName(), recordTemplate.getRule());
+            //ksession.getKieBase().removeRule(recordTemplate.getName(), recordTemplate.getRule());
             return kbuilder.getErrors();
         }
  
