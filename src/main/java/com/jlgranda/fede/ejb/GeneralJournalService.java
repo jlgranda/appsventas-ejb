@@ -41,12 +41,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author author
  */
-
 @Stateless
 public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
 
     private static final long serialVersionUID = -6428094275651428620L;
-    
+
     Logger logger = LoggerFactory.getLogger(GeneralJournalService.class);
 
     @PersistenceContext
@@ -58,7 +57,7 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         setEntityClass(GeneralJournal.class);
     }
 
-    @Override                                     
+    @Override
     public GeneralJournal createInstance() {
 
         GeneralJournal _instance = new GeneralJournal();
@@ -70,14 +69,14 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
 //        _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
-    
+
     //soporte para Lazy Data Model
     public long count() {
         return super.count(GeneralJournal.class);
     }
 
     public List<GeneralJournal> find(int maxresults, int firstresult) {
-        
+
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<GeneralJournal> query = builder.createQuery(GeneralJournal.class);
 
@@ -85,31 +84,34 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
+
     /**
-     * Servicio para encontrar o construir la instancia de <tt>GeneralJournal</tt> de la organización para la fecha indicada
+     * Servicio para encontrar o construir la instancia de
+     * <tt>GeneralJournal</tt> de la organización para la fecha indicada
+     *
      * @param date
      * @param organization
      * @param owner
      * @param generalJournalPrefix
      * @param timestampPattern
-     * @return 
+     * @return
      */
-    public GeneralJournal find(Date date, Organization organization, Subject owner, String generalJournalPrefix, String timestampPattern ){
+    public GeneralJournal find(Date date, Organization organization, Subject owner, String generalJournalPrefix, String timestampPattern) {
         //Buscar el registro hasta antes del fin del dia
         GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", Dates.minimumDate(date), Dates.maximumDate(date), organization);
-        
-        if (generalJournal == null){//Crear el libro diario para la fecha
+
+        if (generalJournal == null) {//Crear el libro diario para la fecha
             generalJournal = this.createInstance();
             generalJournal.setCode(UUID.randomUUID().toString());
             generalJournal.setName(generalJournalPrefix + ": " + Dates.toString(date, timestampPattern));
-            generalJournal.setDescription(generalJournal.getName() + "\n" + organization + "\n" + owner);
+            generalJournal.setDescription(generalJournal.getName() + "\n" + organization.getInitials() + "\n" + owner.getFullName());
             generalJournal.setOrganization(organization);
             generalJournal.setOwner(owner);
             generalJournal.setAuthor(owner);
-            generalJournal = this.save(generalJournal);
+            this.save(generalJournal);
+            generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", Dates.minimumDate(date), Dates.maximumDate(date), organization);
         }
-        
+
         return generalJournal;
     }
 
