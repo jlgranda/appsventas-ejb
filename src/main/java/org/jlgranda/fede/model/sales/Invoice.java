@@ -377,8 +377,10 @@ public class Invoice extends BussinesEntity {
     public int hashCode() {
         int hash = 5;
         hash = 59 * hash + Objects.hashCode(this.documentType);
+        hash = 59 * hash + Objects.hashCode(this.documentTypeSource);
         hash = 59 * hash + Objects.hashCode(this.emissionPoint);
         hash = 59 * hash + Objects.hashCode(this.sequencial);
+        hash = 59 * hash + Objects.hashCode(this.getId());
         return hash;
     }
 

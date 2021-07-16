@@ -112,4 +112,31 @@ public class RecordService extends BussinesEntityHome<Record> {
         
         return records;
     }
+    /**
+     * Marcar como eliminado el registro actual para la entidad identificada por 
+     * Nombre e Id en el diario dado
+     * @param generalJournalId
+     * @param bussinesEntityName
+     * @param bussinesEntityId
+     * @param bussinesEntityHashCode
+     * @return 
+     */
+    public List<Record> deleteLastRecords(Long generalJournalId, String bussinesEntityName, Long bussinesEntityId, int bussinesEntityHashCode) {
+        List<Record> records = findByNamedQuery("Record.findByBussinesEntityTypeAndIdAndHashCode", generalJournalId, bussinesEntityName, bussinesEntityId, bussinesEntityHashCode);
+        if (!records.isEmpty()){
+            records.stream().map(record -> {
+                record.getRecordDetails().forEach(rd -> {
+                    rd.setDeleted(true);
+                });
+                return record;
+            }).map(record -> {
+                record.setDeleted(true);
+                return record;
+            }).forEachOrdered(record -> {
+                this.save(record); //Guardar el registro y sus detalles
+            });
+        }
+        
+        return records;
+    }
 }

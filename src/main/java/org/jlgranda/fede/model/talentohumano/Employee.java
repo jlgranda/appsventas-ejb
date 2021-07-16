@@ -41,6 +41,7 @@ import org.jpapi.model.DeletableObject;
 @Table(name = "EMPLOYEE")
 @NamedQueries({
     @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.deleted = false"),
+    @NamedQuery(name = "Employee.findByOwnerAndOrganization", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.organization = ?2 and e.deleted = false"),
     @NamedQuery(name = "Employee.findByOwnerCodeAndName", query = "SELECT e FROM Employee e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
 })
 public class Employee extends DeletableObject implements Comparable<Employee>, Serializable {
