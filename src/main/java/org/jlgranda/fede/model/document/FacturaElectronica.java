@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -143,6 +144,11 @@ public class FacturaElectronica extends BussinesEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fechaVencimiento")
     private Date fechaVencimiento;
+    
+    @Transient
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ultima_fecha_pago")
+    private Date ultimaFechaPago;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
     private List<FacturaElectronicaDetail> facturaElectronicaDetails = new ArrayList<>();
@@ -314,6 +320,14 @@ public class FacturaElectronica extends BussinesEntity {
         this.fechaVencimiento = fechaVencimiento;
     }
 
+    public Date getUltimaFechaPago() {
+        return ultimaFechaPago;
+    }
+
+    public void setUltimaFechaPago(Date ultimaFechaPago) {
+        this.ultimaFechaPago = ultimaFechaPago;
+    }
+
     public List<FacturaElectronicaDetail> getFacturaElectronicaDetails() {
         return facturaElectronicaDetails;
     }
@@ -359,6 +373,16 @@ public class FacturaElectronica extends BussinesEntity {
 
     public void setSubtotalIVA12(BigDecimal subtotalIVA12) {
         this.subtotalIVA12 = subtotalIVA12;
+    }
+    
+    @Override
+    public int hashCode(){
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.documentType);
+        hash = 59 * hash + Objects.hashCode(this.emissionType);
+        hash = 59 * hash + Objects.hashCode(this.payments);
+        hash = 59 * hash + Objects.hashCode(this.getId());
+        return hash;
     }
     
     @Transient
