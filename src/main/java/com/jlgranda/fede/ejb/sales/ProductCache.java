@@ -105,14 +105,22 @@ public class ProductCache {
         return matches; //devolver por defecto la clave buscada
     }
     
-    public List<Product> lookup(String key, ProductType productType) {
-        return lookup(key, productType, 0);
+    public List<Product> lookup(String key, ProductType productType, Organization organization) {
+        return lookup(key, productType, organization, 0);
     }
     
-    public List<Product> lookup(String key, ProductType productType, int attempt) {
+    /**
+     * 
+     * @param key
+     * @param productType
+     * @param organization
+     * @param attempt
+     * @return 
+     */
+    public List<Product> lookup(String key, ProductType productType, Organization organization, int attempt) {
         List<Product> matches = new ArrayList<>();
-        products.values().stream().filter(product -> (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
-                && productType.equals(product.getProductType()))).forEachOrdered(product -> {
+        products.values().stream().filter(product -> ( product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
+                && productType.equals(product.getProductType()) && organization.equals(product.getOrganization()) )).forEachOrdered(product -> {
                     matches.add(product);
         }); 
         return matches; //devolver por defecto la clave buscada
