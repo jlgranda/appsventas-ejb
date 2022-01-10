@@ -55,6 +55,7 @@ public class OrganizationService extends BussinesEntityHome<Organization>{
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setOrganizationType(Organization.Type.PRIVATE);
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
