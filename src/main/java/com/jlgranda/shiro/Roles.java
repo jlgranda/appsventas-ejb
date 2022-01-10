@@ -35,9 +35,10 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "roles")
 @NamedQueries({
-    @NamedQuery(name = "Roles.findAll", query = "SELECT r FROM Roles r")
-    , @NamedQuery(name = "Roles.findByName", query = "SELECT r FROM Roles r WHERE r.name = :name")
-    , @NamedQuery(name = "Roles.findByDescription", query = "SELECT r FROM Roles r WHERE r.description = :description")})
+    @NamedQuery(name = "Roles.findAll", query = "SELECT r FROM Roles r"),
+    @NamedQuery(name = "Roles.findByName", query = "SELECT r FROM Roles r WHERE r.name = :name"),
+    @NamedQuery(name = "Roles.findByDescription", query = "SELECT r FROM Roles r WHERE r.description = :description"),
+    @NamedQuery(name = "Roles.findByUsername", query = "SELECT r FROM Roles r, UsersRoles u WHERE u.usersRolesPK.roleName = r.name and u.usersRolesPK.username = ?1 order by r.name ASC")})
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -98,5 +99,5 @@ public class Roles implements Serializable {
     public String toString() {
         return "com.jlgranda.shiro.Roles[ name=" + name + " ]";
     }
-    
+
 }
