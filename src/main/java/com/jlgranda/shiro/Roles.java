@@ -39,7 +39,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Roles.findByName", query = "SELECT r FROM Roles r WHERE r.name = :name"),
     @NamedQuery(name = "Roles.findByDescription", query = "SELECT r FROM Roles r WHERE r.description = :description"),
     @NamedQuery(name = "Roles.findByUsername", query = "SELECT r FROM Roles r, UsersRoles u WHERE u.usersRolesPK.roleName = r.name and u.usersRolesPK.username = ?1 order by r.name ASC"),
-    @NamedQuery(name = "Roles.findNotByUsername", query = "SELECT r FROM Roles r WHERE r.name not in (?1) order by r.name ASC")})
+    @NamedQuery(name = "Roles.findNotByUsername", query = "SELECT r FROM Roles r WHERE r.name not in ?1 order by r.name ASC")})
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;
