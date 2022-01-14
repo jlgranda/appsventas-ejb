@@ -98,7 +98,7 @@ public class Roles implements Serializable {
 
     @Override
     public String toString() {
-        return "com.jlgranda.shiro.Roles[ name=" + name + " ]";
+        return String.format("%s[name=%s]", getClass().getSimpleName(), getName());
     }
 
 }
