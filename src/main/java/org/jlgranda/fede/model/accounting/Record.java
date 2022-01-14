@@ -88,7 +88,7 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "emissionDate")
     private Date emissionDate;
-
+    
 //    public GeneralJournal getJournal() {
 //        return journal;
 //    }

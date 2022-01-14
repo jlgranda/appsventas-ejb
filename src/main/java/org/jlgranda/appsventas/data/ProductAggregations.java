@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 2022 usuario
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+package org.jlgranda.appsventas.data;
+
+import java.math.BigDecimal;
+import java.util.List;
+import org.jlgranda.fede.model.production.Aggregation;
+import org.jlgranda.fede.model.sales.Product;
+
+/**
+ *
+ * @author usuario
+ */
+public class ProductAggregations {
+
+    public Product producto;
+    public List<Aggregation> agregaciones;
+    public BigDecimal costoTotal;
+
+    public Product getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Product producto) {
+        this.producto = producto;
+    }
+
+    public List<Aggregation> getAgregaciones() {
+        return agregaciones;
+    }
+
+    public void setAgregaciones(List<Aggregation> agregaciones) {
+        this.agregaciones = agregaciones;
+    }
+
+    public BigDecimal getCostoTotal() {
+        return costoTotal;
+    }
+
+    public void setCostoTotal(BigDecimal costoTotal) {
+        this.costoTotal = costoTotal;
+    }
+}
