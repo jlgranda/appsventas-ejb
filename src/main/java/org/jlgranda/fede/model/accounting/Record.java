@@ -49,7 +49,8 @@ import org.jpapi.model.DeletableObject;
     @NamedQuery(name = "Record.findByJournalId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.deleted=false ORDER BY 1"),
     @NamedQuery(name = "Record.findByJournalAndBussinesEntityId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityId = ?2 and s.deleted=false ORDER BY 1"),
     @NamedQuery(name = "Record.findByBussinesEntityTypeAndId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.deleted=false ORDER BY 1"),
-    @NamedQuery(name = "Record.findByBussinesEntityTypeAndIdAndHashCode", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.bussinesEntityHashCode = ?4 and s.deleted=false ORDER BY 1"),})
+    @NamedQuery(name = "Record.findByBussinesEntityTypeAndIdAndHashCode", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.bussinesEntityHashCode = ?4 and s.deleted=false ORDER BY 1"),
+    @NamedQuery(name = "Record.findByCreatedOnAndOrganization", query = "select r from Record r, GeneralJournal jn where r.generalJournalId = jn.id and jn.organization = ?1 and r.createdOn >= ?2 and r.createdOn <= ?3 order by r.createdOn DESC")})
 public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
 //    @ManyToOne (optional = false, cascade = {CascadeType.ALL})

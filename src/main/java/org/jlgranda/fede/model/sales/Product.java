@@ -18,6 +18,7 @@
 package org.jlgranda.fede.model.sales;
 
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -27,8 +28,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import org.jlgranda.fede.model.production.Aggregation;
 import org.jpapi.model.Organization;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.Group;
@@ -104,6 +107,8 @@ public class Product extends BussinesEntity {
     @ManyToOne
     @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
     private Group category;
+    @OneToMany(mappedBy = "element")
+    private List<Aggregation> aggregations;
 
     public Product() {
         icon = "fa fa-question-circle "; //icon by default
