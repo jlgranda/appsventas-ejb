@@ -55,7 +55,7 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     @JoinColumn(name = "organization_id", insertable = true, updatable = true)
     private Organization organization;
 
-    @OneToOne
+    @OneToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
 
