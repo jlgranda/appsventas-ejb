@@ -35,17 +35,15 @@ import org.jpapi.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  *
  * @author author
  */
-
 @Stateless
 public class RecordService extends BussinesEntityHome<Record> {
 
     private static final long serialVersionUID = -6428094275651428620L;
-    
+
     Logger logger = LoggerFactory.getLogger(RecordService.class);
 
     @PersistenceContext
@@ -70,14 +68,14 @@ public class RecordService extends BussinesEntityHome<Record> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         return _instance;
     }
-    
+
     //soporte para Lazy Data Model
     public long count() {
         return super.count(Record.class);
     }
 
     public List<Record> find(int maxresults, int firstresult) {
-        
+
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Record> query = builder.createQuery(Record.class);
 
@@ -87,16 +85,17 @@ public class RecordService extends BussinesEntityHome<Record> {
     }
 
     /**
-     * Marcar como eliminado el registro actual para la entidad identificada por 
+     * Marcar como eliminado el registro actual para la entidad identificada por
      * Nombre e Id en el diario dado
+     *
      * @param generalJournalId
      * @param bussinesEntityName
      * @param bussinesEntityId
-     * @return 
+     * @return
      */
     public List<Record> deleteLastRecords(Long generalJournalId, String bussinesEntityName, Long bussinesEntityId) {
         List<Record> records = findByNamedQuery("Record.findByBussinesEntityTypeAndId", generalJournalId, bussinesEntityName, bussinesEntityId);
-        if (!records.isEmpty()){
+        if (!records.isEmpty()) {
             records.stream().map(record -> {
                 record.getRecordDetails().forEach(rd -> {
                     rd.setDeleted(true);
@@ -109,21 +108,23 @@ public class RecordService extends BussinesEntityHome<Record> {
                 this.save(record); //Guardar el registro y sus detalles
             });
         }
-        
+
         return records;
     }
+
     /**
-     * Marcar como eliminado el registro actual para la entidad identificada por 
+     * Marcar como eliminado el registro actual para la entidad identificada por
      * Nombre e Id en el diario dado
+     *
      * @param generalJournalId
      * @param bussinesEntityName
      * @param bussinesEntityId
      * @param bussinesEntityHashCode
-     * @return 
+     * @return
      */
     public List<Record> deleteLastRecords(Long generalJournalId, String bussinesEntityName, Long bussinesEntityId, int bussinesEntityHashCode) {
         List<Record> records = findByNamedQuery("Record.findByBussinesEntityTypeAndIdAndHashCode", generalJournalId, bussinesEntityName, bussinesEntityId, bussinesEntityHashCode);
-        if (!records.isEmpty()){
+        if (!records.isEmpty()) {
             records.stream().map(record -> {
                 record.getRecordDetails().forEach(rd -> {
                     rd.setDeleted(true);
@@ -136,7 +137,18 @@ public class RecordService extends BussinesEntityHome<Record> {
                 this.save(record); //Guardar el registro y sus detalles
             });
         }
-        
+
         return records;
+    }
+
+    public Record deleteRecord(Record record) {
+        record.getRecordDetails().forEach(rd -> {
+            rd.setDeleted(true);
+            rd.setDeletedOn(Dates.now());
+        });
+        record.setDeleted(true);
+        record.setDeletedOn(Dates.now());
+        this.save(record.getId(), record);
+        return record;
     }
 }
