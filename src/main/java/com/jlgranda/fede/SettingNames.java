@@ -45,6 +45,7 @@ public class SettingNames {
     public static String POPUP_FORMULARIO_GENERALLEDGER = "popup_general_ledger";
     public static String POPUP_FORMULARIO_GENERALLEDGER_RECORD = "popup_general_ledger_record";
     public static String POPUP_FORMULARIO_RECORDTEMPLATE_EDICION = "popup_recordtemplate";
+    public static String POPUP_FORMULARIO_GENERALJOURNAL= "popup_general_journal";
     
 
     //XML
