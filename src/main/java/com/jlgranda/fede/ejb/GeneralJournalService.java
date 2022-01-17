@@ -89,27 +89,32 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
      * Servicio para encontrar o construir la instancia de
      * <tt>GeneralJournal</tt> de la organización para la fecha indicada
      *
-     * @param date
+     * @param emissionDate
      * @param organization
      * @param owner
      * @param generalJournalPrefix
      * @param timestampPattern
      * @return
      */
-    public GeneralJournal find(Date date, Organization organization, Subject owner, String generalJournalPrefix, String timestampPattern) {
-        //Buscar el registro hasta antes del fin del dia
-        GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", Dates.minimumDate(date), Dates.maximumDate(date), organization);
+    public GeneralJournal find(Date emissionDate, Organization organization, Subject owner, String generalJournalPrefix, String timestampPattern) {
+        //Buscar el registro hasta antes del fin del emissionDate
+        System.out.println("Dates.minimumDate(emissionDate): " + Dates.minimumDate(emissionDate));
+        System.out.println("Dates.maximumDate(emissionDate): " + Dates.maximumDate(emissionDate));
+        System.out.println("this.organizationData.getOrganization(): " + organization);
+        System.out.println("this.subject: " + owner);
+        GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByEmissionDateAndOrganization", Dates.minimumDate(emissionDate), Dates.maximumDate(emissionDate), organization);
 
         if (generalJournal == null) {//Crear el libro diario para la fecha
             generalJournal = this.createInstance();
+            generalJournal.setEmissionDate(emissionDate);
             generalJournal.setCode(UUID.randomUUID().toString());
-            generalJournal.setName(generalJournalPrefix + ": " + Dates.toString(date, timestampPattern));
+            generalJournal.setName(generalJournalPrefix + ": " + Dates.toString(emissionDate, timestampPattern));
             generalJournal.setDescription(generalJournal.getName() + "\n" + organization.getInitials() + "\n" + owner.getFullName());
             generalJournal.setOrganization(organization);
             generalJournal.setOwner(owner);
             generalJournal.setAuthor(owner);
             this.save(generalJournal);
-            generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByCreatedOnAndOrganization", Dates.minimumDate(date), Dates.maximumDate(date), organization);
+            generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByEmissionDateAndOrganization", Dates.minimumDate(emissionDate), Dates.maximumDate(emissionDate), organization);
         }
 
         return generalJournal;
