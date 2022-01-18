@@ -17,11 +17,11 @@
  */
 package org.jlgranda.fede.model.sales;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -29,13 +29,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.jlgranda.fede.model.production.Aggregation;
 import org.jpapi.model.Organization;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Group;
 import org.jpapi.model.TaxType;
+import org.jpapi.model.profile.Subject;
+import org.jpapi.model.statistics.Statistics;
 
 /**
  *
@@ -43,8 +45,6 @@ import org.jpapi.model.TaxType;
  */
 @Entity
 @Table(name = "Product")
-@DiscriminatorValue(value = "PROD")
-@PrimaryKeyJoinColumn(name = "productId")
 @NamedQueries({
     @NamedQuery(name = "Product.findById", query = "select p FROM Product p WHERE p.id = ?1"),
     @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p WHERE p.deleted = false ORDER BY p.name DESC"),
@@ -71,7 +71,7 @@ import org.jpapi.model.TaxType;
     @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
     @NamedQuery(name = "Product.findNameByOrganization", query = "select p.name FROM Product p WHERE p.organization = ?1 ORDER BY p.name"),
 })
-public class Product extends BussinesEntity {
+public class Product  extends DeletableObject<Subject> implements Serializable {
 
     private static final long serialVersionUID = -1320148041663418996L;
     
@@ -104,11 +104,23 @@ public class Product extends BussinesEntity {
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
     private Group category;
+    
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id", insertable=true, updatable=true, nullable=true)
+    private Group warehouse;
+    
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "trademark_id", insertable=true, updatable=true, nullable=true)
+    private Group trademark;
+    
     @OneToMany(mappedBy = "element")
     private List<Aggregation> aggregations;
+    
+    @Transient
+    private Statistics statistics = new Statistics();
 
     public Product() {
         icon = "fa fa-question-circle "; //icon by default
@@ -192,6 +204,14 @@ public class Product extends BussinesEntity {
 
     public void setCategory(Group category) {
         this.category = category;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
     }
     
     @Override
