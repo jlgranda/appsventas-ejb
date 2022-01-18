@@ -61,6 +61,7 @@ public class RecordService extends BussinesEntityHome<Record> {
         Record _instance = new Record();
         _instance.setCode(UUID.randomUUID().toString());
         _instance.setCodeType(CodeType.SYSTEM);
+        _instance.setEmissionDate(Dates.now());
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());

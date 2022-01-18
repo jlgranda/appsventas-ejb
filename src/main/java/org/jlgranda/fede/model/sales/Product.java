@@ -108,14 +108,6 @@ public class Product  extends DeletableObject<Subject> implements Serializable {
     @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
     private Group category;
     
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "warehouse_id", insertable=true, updatable=true, nullable=true)
-    private Group warehouse;
-    
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "trademark_id", insertable=true, updatable=true, nullable=true)
-    private Group trademark;
-    
     @OneToMany(mappedBy = "element")
     private List<Aggregation> aggregations;
     
