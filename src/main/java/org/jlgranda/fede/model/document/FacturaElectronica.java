@@ -111,9 +111,19 @@ public class FacturaElectronica extends BussinesEntity {
     @Column(nullable = true)
     protected SourceType sourceType;
 
+    /**
+     * Naturaleza de la factura
+     */
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected EmissionType emissionType;
+    
+    /**
+     * Clasificación de la factura
+     */
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = true)
+    protected FacturaType facturaType;
 
     /**
      * Nombre de archivo de donde se importó la factura
@@ -257,6 +267,14 @@ public class FacturaElectronica extends BussinesEntity {
         this.emissionType = emissionType;
     }
 
+    public FacturaType getFacturaType() {
+        return facturaType;
+    }
+
+    public void setFacturaType(FacturaType facturaType) {
+        this.facturaType = facturaType;
+    }
+
     public String getContenido() {
         return contenido;
     }
@@ -383,6 +401,84 @@ public class FacturaElectronica extends BussinesEntity {
         hash = 59 * hash + Objects.hashCode(this.payments);
         hash = 59 * hash + Objects.hashCode(this.getId());
         return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FacturaElectronica other = (FacturaElectronica) obj;
+        if (!Objects.equals(this.moneda, other.moneda)) {
+            return false;
+        }
+        if (!Objects.equals(this.filename, other.filename)) {
+            return false;
+        }
+        if (!Objects.equals(this.contenido, other.contenido)) {
+            return false;
+        }
+        if (!Objects.equals(this.claveAcceso, other.claveAcceso)) {
+            return false;
+        }
+        if (!Objects.equals(this.numeroAutorizacion, other.numeroAutorizacion)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalSinImpuestos, other.totalSinImpuestos)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalIVA0, other.totalIVA0)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalIVA12, other.totalIVA12)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalDescuento, other.totalDescuento)) {
+            return false;
+        }
+        if (!Objects.equals(this.importeTotal, other.importeTotal)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaEmision, other.fechaEmision)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaAutorizacion, other.fechaAutorizacion)) {
+            return false;
+        }
+        if (this.sourceType != other.sourceType) {
+            return false;
+        }
+        if (this.emissionType != other.emissionType) {
+            return false;
+        }
+        if (!Objects.equals(this.organization, other.organization)) {
+            return false;
+        }
+        if (!Objects.equals(this.payments, other.payments)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaVencimiento, other.fechaVencimiento)) {
+            return false;
+        }
+        if (!Objects.equals(this.ultimaFechaPago, other.ultimaFechaPago)) {
+            return false;
+        }
+        if (!Objects.equals(this.facturaElectronicaDetails, other.facturaElectronicaDetails)) {
+            return false;
+        }
+        if (this.documentType != other.documentType) {
+            return false;
+        }
+        if (!Objects.equals(this.subtotalIVA0, other.subtotalIVA0)) {
+            return false;
+        }
+        return Objects.equals(this.subtotalIVA12, other.subtotalIVA12);
     }
     
     @Transient
