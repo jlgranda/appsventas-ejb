@@ -42,7 +42,6 @@ import org.jpapi.util.QuerySortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  *
  * @author author
@@ -51,12 +50,12 @@ import org.slf4j.LoggerFactory;
 public class AccountService extends BussinesEntityHome<Account> {
 
     private static final long serialVersionUID = -6428094275651428620L;
-    
+
     Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     @PersistenceContext
     EntityManager em;
-    
+
     @EJB
     RecordDetailService recordDetailService;
 
@@ -66,7 +65,7 @@ public class AccountService extends BussinesEntityHome<Account> {
         setEntityClass(Account.class);
     }
 
-    @Override                                     
+    @Override
     public Account createInstance() {
 
         Account _instance = new Account();
@@ -85,7 +84,7 @@ public class AccountService extends BussinesEntityHome<Account> {
     }
 
     public List<Account> find(int maxresults, int firstresult) {
-        
+
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Account> query = builder.createQuery(Account.class);
 
@@ -93,55 +92,84 @@ public class AccountService extends BussinesEntityHome<Account> {
         query.select(from).orderBy(builder.desc(from.get(Account_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
+
     public List<Account> findByOrganization(Organization organization) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-    
+
+//    /**
+//     * Calcula el valor de la cuenta entre las fechas
+//     * @param account
+//     * @param organization
+//     * @param desde fecha de inicio
+//     * @param hasta fecha de final
+//     * @return El valor de la mayorización de la cuenta
+//     */
+//    public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta){
+//
+//        BigDecimal balance = new BigDecimal(BigInteger.ZERO);
+//        List<Account> childs =  this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
+//
+//        if (childs.isEmpty()){
+//            //Obtener balance la cuenta
+//            BigDecimal debe = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.DEBE, desde, hasta, organization);
+//            
+//            BigDecimal haber = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.HABER, desde, hasta, organization);
+//
+//            balance = debe.subtract(haber);
+//            
+//        } else {
+//            for (Account child :  childs ) {
+//                balance =  balance.add(mayorizar(child, organization, desde, hasta));
+//            }
+//        }
+//
+//        return balance;
+//    }
     /**
      * Calcula el valor de la cuenta entre las fechas
-     * @param account
-     * @param organization
-     * @param desde fecha de inicio
-     * @param hasta fecha de final
-     * @return El valor de la mayorización de la cuenta
-     */
-    public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta){
-        
-        BigDecimal balance = new BigDecimal(BigInteger.ZERO);
-        List<Account> childs =  this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
-        
-        if (childs.isEmpty()){
-            //Obtener balance la cuenta
-            BigDecimal debe = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.DEBE, desde, hasta, organization);
-            
-            BigDecimal haber = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.HABER, desde, hasta, organization);
-            
-            balance = debe.subtract(haber);
-            
-        } else {
-            for (Account child :  childs ) {
-                balance =  balance.add(mayorizar(child, organization, desde, hasta));
-            }
-        }   
-        
-        return balance;
-    }
-    
-    /**
-     * Calcula el valor de la cuenta entre las fechas
+     *
      * @param accountName Nombre de la cuenta
      * @param organization
      * @param desde fecha de inicio
      * @param hasta fecha de final
      * @return El valor de la mayorización de la cuenta
      */
-    public BigDecimal mayorizar(String accountName, Organization organization, Date desde, Date hasta){
-        
+    public BigDecimal mayorizar(String accountName, Organization organization, Date desde, Date hasta) {
+
         Account account = this.findUniqueByNamedQuery("Account.findByNameAndOrganization", accountName, organization);
-        
+
         return mayorizar(account, organization, desde, hasta);
+    }
+
+    /**
+     * Calcula el valor de la cuenta entre las fechas
+     *
+     * @param account
+     * @param organization
+     * @param desde fecha de inicio
+     * @param hasta fecha de final
+     * @return El valor de la mayorización de la cuenta
+     */
+    public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta) {
+
+        BigDecimal balance = new BigDecimal(BigInteger.ZERO);
+        List<Account> childs = this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
+
+        //Obtener balance la cuenta
+        BigDecimal debe = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.DEBE, desde, hasta, organization);
+
+        BigDecimal haber = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, RecordDetail.RecordTDetailType.HABER, desde, hasta, organization);
+        if (debe != null && haber != null) {
+            balance = balance.add(debe.subtract(haber));
+        }
+        if (!childs.isEmpty()) {
+            for (Account child : childs) {
+                balance = balance.add(mayorizar(child, organization, desde, hasta));
+            }
+        }
+        return balance;
     }
 }
