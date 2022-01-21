@@ -69,6 +69,14 @@ public class RecordService extends BussinesEntityHome<Record> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         return _instance;
     }
+    
+    @Override
+    public Record save(Record record){
+        super.save(record);
+        Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(record);
+        this.setId(id);
+        return this.find(); //Recarga el objeto
+    }
 
     //soporte para Lazy Data Model
     public long count() {
