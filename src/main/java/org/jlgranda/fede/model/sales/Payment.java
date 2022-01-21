@@ -82,6 +82,12 @@ public class Payment extends DeletableObject<Payment> implements Comparable<Paym
     @Column(nullable = true)
     protected Date datePaymentCancel;
     
+    /**
+     * Referencia al record registrado
+     */
+    @Column(name = "record_id", nullable = true)
+    private Long recordId;
+    
     public Invoice getInvoice() {
         return invoice;
     }
@@ -146,6 +152,14 @@ public class Payment extends DeletableObject<Payment> implements Comparable<Paym
         this.datePaymentCancel = datePaymentCancel;
     }
 
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
+    }
+    
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
