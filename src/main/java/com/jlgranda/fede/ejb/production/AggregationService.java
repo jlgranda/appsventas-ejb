@@ -115,12 +115,4 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
         return productosAgregaciones;
     }
 
-//    public class ProductAggregations {
-//
-//        public Product producto;
-//        public List<Aggregation> agregaciones;
-//        public BigDecimal costoTotal;
-//    }
-//    
-    
 }

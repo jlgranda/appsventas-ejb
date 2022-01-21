@@ -41,23 +41,23 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class RecordService extends BussinesEntityHome<Record> {
-    
+
     private static final long serialVersionUID = -6428094275651428620L;
-    
+
     Logger logger = LoggerFactory.getLogger(RecordService.class);
-    
+
     @PersistenceContext
     EntityManager em;
-    
+
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(Record.class);
     }
-    
+
     @Override
     public Record createInstance() {
-        
+
         Record _instance = new Record();
         _instance.setCode(UUID.randomUUID().toString());
         _instance.setCodeType(CodeType.SYSTEM);
@@ -69,25 +69,32 @@ public class RecordService extends BussinesEntityHome<Record> {
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         return _instance;
     }
-    
+
     @Override
-    public Record save(Record record){
+    public Record save(Record record) {
         super.save(record);
         Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(record);
-        this.setId(id);
-        return this.find(); //Recarga el objeto
+        if (id != null) {
+            System.out.println(">>>>>>>>>>>>>");
+            System.out.println(">>>>>>>>>>>>>");
+            System.out.println("idRecord: " + id);
+            System.out.println(">>>>>>>>>>>>>");
+            this.setId(id);
+            return this.find(); //Recarga el objeto
+        }
+        return record;
     }
 
     //soporte para Lazy Data Model
     public long count() {
         return super.count(Record.class);
     }
-    
+
     public List<Record> find(int maxresults, int firstresult) {
-        
+
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Record> query = builder.createQuery(Record.class);
-        
+
         Root<Record> from = query.from(Record.class);
         query.select(from).orderBy(builder.desc(from.get(Record_.name)));
         return getResultList(query, maxresults, firstresult);
@@ -117,7 +124,7 @@ public class RecordService extends BussinesEntityHome<Record> {
                 this.save(record); //Guardar el registro y sus detalles
             });
         }
-        
+
         return records;
     }
 
@@ -146,10 +153,10 @@ public class RecordService extends BussinesEntityHome<Record> {
                 this.save(record); //Guardar el registro y sus detalles
             });
         }
-        
+
         return records;
     }
-    
+
     public Record deleteRecord(Record record) {
         record.getRecordDetails().forEach(rd -> {
             rd.setDeleted(true);
@@ -160,7 +167,7 @@ public class RecordService extends BussinesEntityHome<Record> {
         this.save(record.getId(), record);
         return record;
     }
-    
+
     public Record deleteRecord(Long recordId) {
         return deleteRecord(this.find(recordId));
     }
