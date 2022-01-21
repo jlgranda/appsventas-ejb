@@ -26,6 +26,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.jlgranda.fede.model.accounting.Record;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jlgranda.fede.model.document.FacturaElectronica;
@@ -77,6 +78,14 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         _instance.setImporteTotal(BigDecimal.ZERO);
         _instance.setDocumentType(FacturaElectronica.DocumentType.FACTURA);
         return _instance;
+    }
+    
+    @Override
+    public FacturaElectronica save(FacturaElectronica facturaElectronica){
+        super.save(facturaElectronica);
+        Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(facturaElectronica);
+        this.setId(id);
+        return this.find(); //Recarga el objeto
     }
     
     public FacturaElectronica find(final long id, boolean lazily) {
