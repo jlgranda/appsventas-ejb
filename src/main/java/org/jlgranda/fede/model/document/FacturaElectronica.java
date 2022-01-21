@@ -117,7 +117,7 @@ public class FacturaElectronica extends BussinesEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected EmissionType emissionType;
-    
+
     /**
      * Clasificación de la factura
      */
@@ -154,7 +154,7 @@ public class FacturaElectronica extends BussinesEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fechaVencimiento")
     private Date fechaVencimiento;
-    
+
     @Transient
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "ultima_fecha_pago")
@@ -172,7 +172,13 @@ public class FacturaElectronica extends BussinesEntity {
 
     @Transient
     private BigDecimal subtotalIVA12 = BigDecimal.ZERO;
-    
+
+    /**
+     * Referencia al record registrado
+     */
+    @Column(name = "record_id", nullable = true)
+    private Long recordId;
+
     public enum DocumentType {
         FACTURA,
         NOTA_COMPRA,
@@ -392,9 +398,17 @@ public class FacturaElectronica extends BussinesEntity {
     public void setSubtotalIVA12(BigDecimal subtotalIVA12) {
         this.subtotalIVA12 = subtotalIVA12;
     }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
+    }
     
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int hash = 5;
         hash = 59 * hash + Objects.hashCode(this.documentType);
         hash = 59 * hash + Objects.hashCode(this.emissionType);
@@ -480,9 +494,9 @@ public class FacturaElectronica extends BussinesEntity {
         }
         return Objects.equals(this.subtotalIVA12, other.subtotalIVA12);
     }
-    
+
     @Transient
-    public String getSummary(){
+    public String getSummary() {
         List<FacturaElectronicaDetail> list = getFacturaElectronicaDetails();
         Collections.sort(list);
         Collections.reverse(list);

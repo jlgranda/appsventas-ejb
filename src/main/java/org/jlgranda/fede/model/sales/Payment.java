@@ -150,8 +150,9 @@ public class Payment extends DeletableObject<Payment> implements Comparable<Paym
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
         // if deriving: appendSuper(super.hashCode()).
-        hcb.append(getInvoice()).
-                    append(getId());
+//        hcb.append(getInvoice()).
+//                    append(getId());
+        hcb.append(getId());
 
         return hcb.toHashCode();
     }
@@ -170,8 +171,9 @@ public class Payment extends DeletableObject<Payment> implements Comparable<Paym
         Payment other = (Payment) obj;
         EqualsBuilder eb = new EqualsBuilder();
         
-        eb.append(getId(), other.getId()).
-                    append(getInvoice(), other.getInvoice());
+        eb.append(getId(), other.getId());
+//        eb.append(getId(), other.getId()).
+//                    append(getInvoice(), other.getInvoice());
         return eb.isEquals();
     }
 
