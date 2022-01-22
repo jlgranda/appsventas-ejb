@@ -80,20 +80,13 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         return _instance;
     }
     
-    @Override
-    public FacturaElectronica save(FacturaElectronica facturaElectronica){
-        super.save(facturaElectronica);
-        Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(facturaElectronica);
-        if (id != null) {
-            System.out.println(">>>>>>>>>>>>>");
-            System.out.println(">>>>>>>>>>>>>");
-            System.out.println("idFactura: " + id);
-            System.out.println(">>>>>>>>>>>>>");
-            this.setId(id);
-            return this.find(); //Recarga el objeto
-        }
-        return facturaElectronica;
-    }
+//    @Override
+//    public FacturaElectronica save(FacturaElectronica facturaElectronica){
+//        super.save(facturaElectronica);
+//        Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(facturaElectronica);
+//        this.setId(id);
+//        return this.find(); //Recarga el objeto
+//    }
     
     public FacturaElectronica find(final long id, boolean lazily) {
         FacturaElectronica f = null;

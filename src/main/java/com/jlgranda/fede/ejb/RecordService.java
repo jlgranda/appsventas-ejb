@@ -17,7 +17,9 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -73,14 +75,12 @@ public class RecordService extends BussinesEntityHome<Record> {
     @Override
     public Record save(Record record) {
         super.save(record);
-        Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(record);
-        if (id != null) {
-            System.out.println(">>>>>>>>>>>>>");
-            System.out.println(">>>>>>>>>>>>>");
-            System.out.println("idRecord: " + id);
-            System.out.println(">>>>>>>>>>>>>");
-            this.setId(id);
-            return this.find(); //Recarga el objeto
+        if (record.getId() != null) {
+            this.setId(record.getId());
+        } else {
+            Map<String, Object> filters = new HashMap<>();
+            filters.put("code", record.getCode()); //Recuperar por código
+            record = this.find(filters).getResult().get(0); //debe ser único
         }
         return record;
     }
