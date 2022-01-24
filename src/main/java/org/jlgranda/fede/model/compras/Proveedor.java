@@ -32,7 +32,9 @@ import org.jpapi.model.Organization;
 import org.jpapi.model.DeletableObject;
 
 /**
- * Especialización por organización de la entidad Subject, el campo owner indica a que Subject pertenece.
+ * Especialización por organización de la entidad Subject, el campo owner indica
+ * a que Subject pertenece.
+ *
  * @author jlgranda
  */
 @Entity
@@ -40,27 +42,27 @@ import org.jpapi.model.DeletableObject;
 @NamedQueries({
     @NamedQuery(name = "Proveedor.findByOwner", query = "SELECT e FROM Proveedor e WHERE e.owner = ?1 and e.deleted = false"),
     @NamedQuery(name = "Proveedor.findByOrganization", query = "SELECT e FROM Proveedor e WHERE e.organization = ?2 and e.deleted = false"),
-    @NamedQuery(name = "Proveedor.findByOrganizationCodeOrName", query = "SELECT e FROM Proveedor e WHERE e.organization = :organization  and e.deleted = false and lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
+    @NamedQuery(name = "Proveedor.findByOrganizationCodeOrName", query = "SELECT e FROM Proveedor e WHERE e.organization = :organization  and e.deleted = false and lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)"),
+    @NamedQuery(name = "Proveedor.findByOwnerCodeAndName", query = "SELECT e FROM Proveedor e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)"),
 })
 public class Proveedor extends DeletableObject implements Comparable<Proveedor>, Serializable {
 
     private static final long serialVersionUID = -1016927888119107404L;
-    
-    
+
     @Column(name = "credito_maximo_monto")
     private Long creditoMaximoMonto;
-    
+
     @Column(name = "credito_maximo_dias")
     private Long creditoMaximoDias;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_preferida_pago")
     private Date fechaPreferidaPago;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
+
     public Organization getOrganization() {
         return organization;
     }
@@ -92,19 +94,21 @@ public class Proveedor extends DeletableObject implements Comparable<Proveedor>,
     public void setCreditoMaximoDias(Long creditoMaximoDias) {
         this.creditoMaximoDias = creditoMaximoDias;
     }
-    
+
     @Override
     public int compareTo(Proveedor t) {
-        if (getId() == null  && t != null && t.getId() != null)
+        if (getId() == null && t != null && t.getId() != null) {
             return -1;
-        if (getId() != null  && t == null)
+        }
+        if (getId() != null && t == null) {
             return 1;
+        }
         return getId().compareTo(t.getId());
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
-    
+
 }
