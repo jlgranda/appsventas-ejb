@@ -105,6 +105,7 @@
     <class>org.jlgranda.fede.model.document.FacturaElectronicaDetail</class>
     <class>org.jlgranda.fede.model.production.Aggregation</class>
     <class>org.jlgranda.fede.model.reportes.Reporte</class>
+    <class>org.jlgranda.fede.model.compras.Proveedor</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 jlgranda
+ * Copyright (C) 2022 jlgranda
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,21 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jlgranda.fede.model.talentohumano;
+package org.jlgranda.fede.model.compras;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
+import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.jpapi.model.Organization;
 import org.jpapi.model.DeletableObject;
 
@@ -38,28 +36,31 @@ import org.jpapi.model.DeletableObject;
  * @author jlgranda
  */
 @Entity
-@Table(name = "EMPLOYEE")
+@Table(name = "Proveedor")
 @NamedQueries({
-    @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.deleted = false"),
-    @NamedQuery(name = "Employee.findByOwnerAndOrganization", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.organization = ?2 and e.deleted = false"),
-    @NamedQuery(name = "Employee.findByOwnerCodeAndName", query = "SELECT e FROM Employee e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
+    @NamedQuery(name = "Proveedor.findByOwner", query = "SELECT e FROM Proveedor e WHERE e.owner = ?1 and e.deleted = false"),
+    @NamedQuery(name = "Proveedor.findByOrganization", query = "SELECT e FROM Proveedor e WHERE e.organization = ?2 and e.deleted = false"),
+    @NamedQuery(name = "Proveedor.findByOrganizationCodeOrName", query = "SELECT e FROM Proveedor e WHERE e.organization = :organization  and e.deleted = false and lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
 })
-public class Employee extends DeletableObject implements Comparable<Employee>, Serializable {
+public class Proveedor extends DeletableObject implements Comparable<Proveedor>, Serializable {
 
     private static final long serialVersionUID = -1016927888119107404L;
+    
+    
+    @Column(name = "credito_maximo_monto")
+    private Long creditoMaximoMonto;
+    
+    @Column(name = "credito_maximo_dias")
+    private Long creditoMaximoDias;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_preferida_pago")
+    private Date fechaPreferidaPago;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
     private Organization organization;
-
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "role", nullable = true)
-    private JobRole role;
     
-    @OneToMany(cascade = {CascadeType.MERGE}, mappedBy = "employee", fetch = FetchType.LAZY)
-    @OrderBy("beginTime DESC")
-    private List<Journal> journals = new ArrayList<>();
-
     public Organization getOrganization() {
         return organization;
     }
@@ -67,26 +68,33 @@ public class Employee extends DeletableObject implements Comparable<Employee>, S
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-    
-    public JobRole getRole() {
-        return role;
+
+    public Date getFechaPreferidaPago() {
+        return fechaPreferidaPago;
     }
 
-    public void setRole(JobRole role) {
-        this.role = role;
+    public void setFechaPreferidaPago(Date fechaPreferidaPago) {
+        this.fechaPreferidaPago = fechaPreferidaPago;
     }
 
-    public List<Journal> getJournals() {
-        return journals;
+    public Long getCreditoMaximoMonto() {
+        return creditoMaximoMonto;
     }
 
-    public void setJournals(List<Journal> journals) {
-        this.journals = journals;
+    public void setCreditoMaximoMonto(Long creditoMaximoMonto) {
+        this.creditoMaximoMonto = creditoMaximoMonto;
     }
-    
+
+    public Long getCreditoMaximoDias() {
+        return creditoMaximoDias;
+    }
+
+    public void setCreditoMaximoDias(Long creditoMaximoDias) {
+        this.creditoMaximoDias = creditoMaximoDias;
+    }
     
     @Override
-    public int compareTo(Employee t) {
+    public int compareTo(Proveedor t) {
         if (getId() == null  && t != null && t.getId() != null)
             return -1;
         if (getId() != null  && t == null)
