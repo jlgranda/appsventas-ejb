@@ -35,7 +35,7 @@ import org.jpapi.model.Organization;
  */
 @Entity
 @Table(name = "record_template")
-@NamedQueries({ @NamedQuery(name = "RecordTemplate.findByCode", query = "select s FROM RecordTemplate s WHERE s.code = ?1 and s.organization = ?2 and s.deleted = false"),
+@NamedQueries({ @NamedQuery(name = "RecordTemplate.findByCode", query = "select s FROM RecordTemplate s WHERE lower(s.code) = lower(?1) and s.organization = ?2 and s.deleted = false"),
 })
 public class RecordTemplate extends DeletableObject<RecordTemplate> implements Comparable<RecordTemplate>, Serializable {
     

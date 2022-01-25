@@ -37,41 +37,42 @@ import org.jpapi.util.Strings;
 
 /**
  * Cache de productos de venta al público
+ *
  * @author jlgranda
  */
 @Singleton
 public class AccountCache {
-    
+
     private static final Integer REFRESH_PRODUCT_AFTER_5_SECONDS = 5;
     private static final Integer EXPIRE_PRODUCT_AFTER_1_DAY = 1;
     private final LoadingCache<String, Optional<Account>> cache;
 
     @EJB
     AccountService accountService;
-    
+
     private final Map<Long, Account> accounts = new HashMap<>();
-    
+
     @PostConstruct
     public void init() {
         load();
     }
-    
+
     /**
      * Cargar productos en el cache.
      */
-    public void load(){
-        
+    public void load() {
+
         List<Account> accountList = accountService.findByNamedQuery("Account.findAll");
         accountList.forEach(p -> {
             accounts.put(p.getId(), p);
         });
     }
-    
+
     public Account lookup(Long key) {
         Account account = null;
         if (accounts.containsKey(key)) {
             account = accounts.get(key);
-        } 
+        }
         return account; //devolver por defecto la clave buscada
     }
 
@@ -96,64 +97,89 @@ public class AccountCache {
         Account item = lookup(productId);
         return Optional.fromNullable(item);
     }
-    
-    public List<Account> filterByOrganization(Organization organization){
+
+    public List<Account> filterByOrganization(Organization organization) {
         List<Account> matches = new ArrayList<>();
-        if (organization == null){
+        if (organization == null) {
             return matches; //vacio
         }
-        accounts.values().stream().filter(account -> ( organization.equals(account.getOrganization()) )).forEachOrdered(account -> {
-                    matches.add(account);
-        }); 
+        accounts.values().stream().filter(account -> (organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+            matches.add(account);
+        });
         return matches; //devolver por defecto la clave buscada
     }
-    
-    public List<Account> filterByParentId(Long parentAccountId){
+
+    public List<Account> filterByParentId(Long parentAccountId) {
         List<Account> matches = new ArrayList<>();
-        if (parentAccountId == null){
+        if (parentAccountId == null) {
             return matches; //vacio
         }
-        accounts.values().stream().filter(account -> ( parentAccountId.equals(account.getParentAccountId()) )).forEachOrdered(account -> {
-                    matches.add(account);
-        }); 
+        accounts.values().stream().filter(account -> (parentAccountId.equals(account.getParentAccountId()))).forEachOrdered(account -> {
+            matches.add(account);
+        });
         return matches; //devolver por defecto la clave buscada
     }
-    
-    public Account lookupByName(String name, Organization organization){
+
+    public List<Account> filterByParentIdOrganization(Long parentAccountId, Organization organization) {
         List<Account> matches = new ArrayList<>();
-        if (Strings.isNullOrEmpty(name)){
+        if (parentAccountId == null) {
+            return matches; //vacio
+        }
+        accounts.values().stream().filter(account -> (parentAccountId.equals(account.getParentAccountId()))).forEachOrdered(account -> {
+            if (organization.equals(account.getOrganization())) {
+                matches.add(account);
+            }
+        });
+        return matches; //devolver por defecto la clave buscada
+    }
+
+    public Account lookupByName(String name, Organization organization) {
+        List<Account> matches = new ArrayList<>();
+        if (Strings.isNullOrEmpty(name)) {
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> ( name.trim().equalsIgnoreCase(account.getName().trim()) && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-                    matches.add(account);
-        }); 
+        accounts.values().stream().filter(account -> (name.trim().equalsIgnoreCase(account.getName().trim()) && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+            matches.add(account);
+        });
         return matches.isEmpty() ? null : matches.get(0); //devolver el 1er elemento
     }
-    
-    public List<Account> filterByNameOrCode(String name, Organization organization){
+
+    public List<Account> filterByNameOrCode(String name, Organization organization) {
         List<Account> matches = new ArrayList<>();
-        if (Strings.isNullOrEmpty(name)){
+        if (Strings.isNullOrEmpty(name)) {
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> ( account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase())) 
-                ||  account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase())) 
+        accounts.values().stream().filter(account -> (account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+                || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-                    matches.add(account);
-        }); 
+            matches.add(account);
+        });
         return matches;
     }
-    
-    
-    public String genereNextCode(Long parentAccountId){
-        
+
+    public List<Account> filterByNameOrCodeChildrens(String name, Organization organization) {
+        List<Account> matches = new ArrayList<>();
+        if (Strings.isNullOrEmpty(name)) {
+            return null; //vacio
+        }
+        accounts.values().stream().filter(account -> (account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+                || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+                && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+            matches.addAll(filterByParentIdOrganization(account.getId(), organization));
+        });
+        return matches;
+    }
+
+    public String genereNextCode(Long parentAccountId) {
+
         String nextCode = "";
         if (parentAccountId == null) {
             return nextCode; //TODO generar algo más útil
         }
-        
-        List<Account> result =  this.filterByParentId(parentAccountId);
-        
-        if (result.isEmpty()){
+
+        List<Account> result = this.filterByParentId(parentAccountId);
+
+        if (result.isEmpty()) {
             //No hay hijos, generar el 1ero
             Account current = this.lookup(parentAccountId);
             nextCode = Strings.toNextCode(current.getCode() + ".00", ".");
@@ -163,6 +189,6 @@ public class AccountCache {
             nextCode = Strings.toNextCode(current.getCode(), ".");
         }
         return nextCode;
-        
+
     }
 }
