@@ -17,6 +17,7 @@
  */
 package org.jlgranda.fede.model.document;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,9 @@ import org.hibernate.annotations.Where;
 import org.jpapi.model.Organization;
 import org.jlgranda.fede.model.sales.Payment;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.SourceType;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Lists;
 
 /**
@@ -58,8 +61,6 @@ import org.jpapi.util.Lists;
  */
 @Entity
 @Table(name = "FACTURA_ELECTRONICA")
-@DiscriminatorValue(value = "FEDE")
-@PrimaryKeyJoinColumn(name = "facturaElectronicaId")
 @NamedQueries({
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
@@ -79,8 +80,7 @@ import org.jpapi.util.Lists;
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypePayBetweenOrg", query = "select sum(p.amount) from Payment p LEFT JOIN p.facturaElectronica f WHERE f.organization=?1 and p.createdOn >= ?2 and p.createdOn <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetween", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.author=sb.id and f.fechaEmision >= ?1 and f.fechaEmision <= ?2 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
     @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetweenOrg", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),})
-@XmlRootElement
-public class FacturaElectronica extends BussinesEntity {
+public class FacturaElectronica extends DeletableObject<FacturaElectronica> implements Serializable {
 
     private static final long serialVersionUID = -1326570634296607679L;
 
@@ -501,5 +501,10 @@ public class FacturaElectronica extends BussinesEntity {
         Collections.sort(list);
         Collections.reverse(list);
         return Lists.toString(list, ", ");
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
 }
