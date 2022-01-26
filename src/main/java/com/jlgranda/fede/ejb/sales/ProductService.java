@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +40,14 @@ import org.jpapi.util.QuerySortOrder;
 
 /**
  * Objeto de servicio de productos.
+ *
  * @author jlgranda
  */
 @Stateless
 public class ProductService extends BussinesEntityHome<Product> {
 
     private static final long serialVersionUID = -6428094275651428620L;
-    
+
     @PersistenceContext
     EntityManager em;
 
@@ -69,12 +71,12 @@ public class ProductService extends BussinesEntityHome<Product> {
         _instance.setTaxType(TaxType.IVA);
         return _instance;
     }
-    
+
     //soporte para lazy data model
     public long count() {
-        return super.count(Product.class); 
+        return super.count(Product.class);
     }
-    
+
     public List<Product> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
@@ -84,28 +86,32 @@ public class ProductService extends BussinesEntityHome<Product> {
         query.select(from).orderBy(builder.desc(from.get(Product_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
-    public List<Product> findByOrganization(Organization organization){
+
+    public List<Product> findByOrganization(Organization organization) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
-        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-    
-    public List<Product> findByOrganizationAndType(Organization organization, ProductType productType){
+
+    public List<Product> findByOrganizationAndType(Organization organization, ProductType productType) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
         params.put("productType", productType);
-        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-    
-    public List<Product> findByOrganizationAndName(Organization organization, String name){
+
+    public List<Product> findByOrganizationAndTypesEspecifics(Organization organization, List<ProductType> tipos) {
+        return this.findByNamedQuery("Product.findByOrganizationAndProductTypes", organization, tipos);
+    }
+
+    public List<Product> findByOrganizationAndName(Organization organization, String name) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
         params.put("name", name);
-        return this.find(-1,-1, "name", QuerySortOrder.ASC, params).getResult();
+        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
-    
-    public List<Product> findWhithoutKardex(Organization organization){
+
+    public List<Product> findWhithoutKardex(Organization organization) {
         return super.findByNamedQuery("Product.findWhithoutKardex", organization);
     }
 }

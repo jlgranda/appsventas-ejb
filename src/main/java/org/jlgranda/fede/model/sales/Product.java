@@ -49,6 +49,7 @@ import org.jpapi.model.statistics.Statistics;
     @NamedQuery(name = "Product.findById", query = "select p FROM Product p WHERE p.id = ?1"),
     @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p WHERE p.deleted = false ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findByProductType", query = "select p FROM Product p WHERE p.productType = ?1 ORDER BY p.name DESC"),
+    @NamedQuery(name = "Product.findByOrganizationAndProductTypes", query = "select p FROM Product p WHERE p.organization = ?1 and p.productType in ?2 ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findLastProduct", query = "select p FROM Product p ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProductOrg", query = "select p FROM Product p WHERE p.organization=?1 ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProducts", query = "select p FROM Product p ORDER BY p.id DESC"),
