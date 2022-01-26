@@ -17,6 +17,7 @@
  */
 package org.jlgranda.fede.model.sales;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -33,7 +33,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,7 +41,7 @@ import org.jlgranda.fede.model.document.DocumentType;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
 import org.jpapi.model.Organization;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.TaxType;
 import org.jpapi.util.Lists;
 import org.slf4j.Logger;
@@ -54,8 +53,6 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "INVOICE")
-@DiscriminatorValue(value = "INV")
-@PrimaryKeyJoinColumn(name = "invoiceId")
 @NamedQueries({
     @NamedQuery(name = "Invoice.findAll", query = "SELECT i FROM Invoice i ORDER BY i.id DESC"),
     @NamedQuery(name = "Invoice.findByCode", query = "SELECT i FROM Invoice i WHERE i.code = ?1"),
@@ -86,7 +83,7 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountByOwnerBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.owner=?2 and i.documentType=?3 and i.status=?4 and i.emissionOn >= ?5 and i.emissionOn <= ?6"),
 })
 
-public class Invoice extends BussinesEntity {
+public class Invoice extends DeletableObject<Invoice> implements Serializable {
     
     private static Logger log = LoggerFactory.getLogger(Invoice.class);
     

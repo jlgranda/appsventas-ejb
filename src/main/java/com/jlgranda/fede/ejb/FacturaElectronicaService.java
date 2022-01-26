@@ -26,7 +26,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.accounting.Record;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jlgranda.fede.model.document.FacturaElectronica;
@@ -91,10 +90,10 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
     public FacturaElectronica find(final long id, boolean lazily) {
         FacturaElectronica f = null;
         f = super.find(id);
-        if (lazily){
-            f.getMemberships().size(); //Forza la carga de memberships
-            f.getAttributes().size();
-        }
+//        if (lazily){
+//            f.getMemberships().size(); //Forza la carga de memberships
+//            f.getAttributes().size();
+//        }
         
         return f;
     }
