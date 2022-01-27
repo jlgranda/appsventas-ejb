@@ -136,6 +136,12 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     
     @Column(nullable = true, length = 1024)
     protected Long pax;
+    
+    /**
+     * Referencia al record registrado
+     */
+    @Column(name = "record_id", nullable = true)
+    private Long recordId;
 
     public String getBoardNumber() {
         return boardNumber;
@@ -275,6 +281,14 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
 
     public void setPax(Long pax) {
         this.pax = pax;
+    }
+    
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
     
     @Transient

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,19 +36,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.Where;
 import org.jpapi.model.Organization;
 import org.jlgranda.fede.model.sales.Payment;
-import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.SourceType;
-import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Lists;
 
 /**
@@ -62,9 +57,9 @@ import org.jpapi.util.Lists;
 @Entity
 @Table(name = "FACTURA_ELECTRONICA")
 @NamedQueries({
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+//    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+//    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+//    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findByOrg", query = "SELECT f FROM FacturaElectronica f WHERE f.organization=?1 and f.active=?2 ORDER BY f.lastUpdate DESC"),
     @NamedQuery(name = "FacturaElectronica.findCodeByOrg", query = "SELECT f.code FROM FacturaElectronica f WHERE f.organization=?1 and f.active=?2 ORDER BY f.lastUpdate DESC"),
     @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmision", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision  >= ?2 and f.fechaEmision <= ?3 and f.active=?4 ORDER BY f.fechaEmision DESC"),

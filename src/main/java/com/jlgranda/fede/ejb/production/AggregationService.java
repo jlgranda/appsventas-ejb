@@ -108,7 +108,6 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
                     }
                 }
                 productoAgregaciones.costoTotal = totalCost;
-                System.out.println("::productoAgregaciones::::" + productoAgregaciones.producto.getName());
                 productosAgregaciones.add(productoAgregaciones);
             });
         }

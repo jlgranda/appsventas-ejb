@@ -98,10 +98,6 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
      */
     public GeneralJournal find(Date emissionDate, Organization organization, Subject owner, String generalJournalPrefix, String timestampPattern) {
         //Buscar el registro hasta antes del fin del emissionDate
-        System.out.println("Dates.minimumDate(emissionDate): " + Dates.minimumDate(emissionDate));
-        System.out.println("Dates.maximumDate(emissionDate): " + Dates.maximumDate(emissionDate));
-        System.out.println("this.organizationData.getOrganization(): " + organization);
-        System.out.println("this.subject: " + owner);
         GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByEmissionDateAndOrganization", Dates.minimumDate(emissionDate), Dates.maximumDate(emissionDate), organization);
 
         if (generalJournal == null) {//Crear el libro diario para la fecha
