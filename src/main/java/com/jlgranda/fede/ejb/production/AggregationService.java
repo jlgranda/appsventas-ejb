@@ -101,7 +101,7 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
 //                productoAgregaciones.producto = p;
 //                productoAgregaciones.agregaciones = this.findByProductAndOrganization(p, organization);
 //                BigDecimal totalCost = BigDecimal.ZERO;
-//                if (!productoAgregaciones.agregaciones.isEmpty()) {
+//                if (!productoAgregacxiones.agregaciones.isEmpty()) {
 //                    for (Aggregation aggregation : productoAgregaciones.agregaciones) {
 //                        totalCost = totalCost.add(aggregation.getCost());
 //                    }

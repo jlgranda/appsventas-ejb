@@ -109,9 +109,6 @@ public class Product extends DeletableObject<Subject> implements Serializable {
     @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
     private Group category;
     
-    @OneToMany(mappedBy = "element")
-    private List<Aggregation> aggregations;
-    
     @Transient
     private Statistics statistics = new Statistics();
 

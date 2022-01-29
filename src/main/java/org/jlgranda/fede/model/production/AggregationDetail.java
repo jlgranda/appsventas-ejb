@@ -43,24 +43,44 @@ import org.jpapi.model.DeletableObject;
     @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail agg WHERE agg.aggregation = ?1 order by agg.cost"),})
 public class AggregationDetail extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
-    Aggregation aggregation;
+//    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+//    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
+//    private Aggregation aggregation;
+//
+//    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+//    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
+//    private Product product;
 
-    @OneToOne(optional = true)
-    @JoinColumn(name = "element_id", insertable = true, updatable = true)
-    private Product element;
+    @Column(name = "product_id", insertable = true, updatable = true, nullable = false)
+    private Long productId;
+
     @Column(name = "quantity")
     private BigDecimal quantity;
     @Column(name = "cost")
     private BigDecimal cost;
 
-    public Product getElement() {
-        return element;
+//    public Aggregation getAggregation() {
+//        return aggregation;
+//    }
+//
+//    public void setAggregation(Aggregation aggregation) {
+//        this.aggregation = aggregation;
+//    }
+//
+//    public Product getProduct() {
+//        return product;
+//    }
+//
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
+
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setElement(Product element) {
-        this.element = element;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public BigDecimal getQuantity() {
@@ -79,34 +99,38 @@ public class AggregationDetail extends DeletableObject<Aggregation> implements C
         this.cost = cost;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.aggregation);
-        hash = 67 * hash + Objects.hashCode(this.element);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final AggregationDetail other = (AggregationDetail) obj;
-        if (!Objects.equals(this.aggregation, other.aggregation)) {
-            return false;
-        }
-        if (!Objects.equals(this.element, other.element)) {
-            return false;
-        }
-        return true;
-    }
+//    @Override
+//    public int hashCode() {
+//        int hash = 3;
+//        hash = 37 * hash + Objects.hashCode(this.aggregation);
+//        hash = 37 * hash + Objects.hashCode(this.product);
+//        hash = 37 * hash + Objects.hashCode(this.productId);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        final AggregationDetail other = (AggregationDetail) obj;
+//        if (!Objects.equals(this.aggregation, other.aggregation)) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.product, other.product)) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.productId, other.productId)) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     @Override
     public int compareTo(Aggregation t) {

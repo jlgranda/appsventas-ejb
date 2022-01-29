@@ -46,73 +46,75 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Aggregation")
 @NamedQueries({
-    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),})
+//    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),
+})
 public class Aggregation extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
-    private Organization organization;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true)
-    private Product product;
+//    @ManyToOne(optional = true)
+//    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
+//    private Organization organization;
+//    
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "product_id", insertable = true, updatable = true)
+//    private Product product;
+//    
+//    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "aggregation", fetch = FetchType.LAZY)
+//    @Where(clause = "deleted = false") //sólo no eliminados
+//    @OrderBy(value = "cost")
+//    private List<AggregationDetail> aggregationDetails = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aggregation")
-    @Where(clause = "deleted = false") //sólo no eliminados
-    @OrderBy(value = "cost")
-    private List<AggregationDetail> details;
+//    public Organization getOrganization() {
+//        return organization;
+//    }
+//
+//    public void setOrganization(Organization organization) {
+//        this.organization = organization;
+//    }
+//
+//    public Product getProduct() {
+//        return product;
+//    }
+//
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
 
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public List<AggregationDetail> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<AggregationDetail> details) {
-        this.details = details;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.organization);
-        hash = 37 * hash + Objects.hashCode(this.product);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Aggregation other = (Aggregation) obj;
-        if (!Objects.equals(this.organization, other.organization)) {
-            return false;
-        }
-        if (!Objects.equals(this.product, other.product)) {
-            return false;
-        }
-        return true;
-    }
+//    public List<AggregationDetail> getAggregationDetails() {
+//        return aggregationDetails;
+//    }
+//
+//    public void setAggregationDetails(List<AggregationDetail> aggregationDetails) {
+//        this.aggregationDetails = aggregationDetails;
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        int hash = 5;
+//        hash = 59 * hash + Objects.hashCode(this.organization);
+//        hash = 59 * hash + Objects.hashCode(this.product);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        final Aggregation other = (Aggregation) obj;
+//        if (!Objects.equals(this.organization, other.organization)) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.product, other.product)) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     @Override
     public int compareTo(Aggregation t) {
