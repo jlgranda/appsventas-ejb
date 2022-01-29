@@ -19,8 +19,6 @@ package org.jlgranda.fede.model.production;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,66 +28,62 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import org.hibernate.annotations.Where;
 import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.model.DeletableObject;
-import org.jpapi.model.Organization;
 
 /**
  *
  * @author usuario
  */
 @Entity
-@Table(name = "Aggregation")
+@Table(name = "AggregationDetail")
 @NamedQueries({
-    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),})
-public class Aggregation extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
+    @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail agg WHERE agg.aggregation = ?1 order by agg.cost"),})
+public class AggregationDetail extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
-    private Organization organization;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true)
-    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
+    Aggregation aggregation;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aggregation")
-    @Where(clause = "deleted = false") //sólo no eliminados
-    @OrderBy(value = "cost")
-    private List<AggregationDetail> details;
+    @OneToOne(optional = true)
+    @JoinColumn(name = "element_id", insertable = true, updatable = true)
+    private Product element;
+    @Column(name = "quantity")
+    private BigDecimal quantity;
+    @Column(name = "cost")
+    private BigDecimal cost;
 
-    public Organization getOrganization() {
-        return organization;
+    public Product getElement() {
+        return element;
     }
 
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setElement(Product element) {
+        this.element = element;
     }
 
-    public Product getProduct() {
-        return product;
+    public BigDecimal getQuantity() {
+        return quantity;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
-    public List<AggregationDetail> getDetails() {
-        return details;
+    public BigDecimal getCost() {
+        return cost;
     }
 
-    public void setDetails(List<AggregationDetail> details) {
-        this.details = details;
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.organization);
-        hash = 37 * hash + Objects.hashCode(this.product);
+        int hash = 5;
+        hash = 67 * hash + Objects.hashCode(this.aggregation);
+        hash = 67 * hash + Objects.hashCode(this.element);
         return hash;
     }
 
@@ -104,11 +98,11 @@ public class Aggregation extends DeletableObject<Aggregation> implements Compara
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Aggregation other = (Aggregation) obj;
-        if (!Objects.equals(this.organization, other.organization)) {
+        final AggregationDetail other = (AggregationDetail) obj;
+        if (!Objects.equals(this.aggregation, other.aggregation)) {
             return false;
         }
-        if (!Objects.equals(this.product, other.product)) {
+        if (!Objects.equals(this.element, other.element)) {
             return false;
         }
         return true;

@@ -17,7 +17,6 @@
  */
 package com.jlgranda.fede.ejb.production;
 
-import com.jlgranda.fede.ejb.sales.KardexService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +48,7 @@ import org.slf4j.LoggerFactory;
 @Stateless
 public class AggregationService extends BussinesEntityHome<Aggregation> {
 
-    Logger logger = LoggerFactory.getLogger(KardexService.class);
+    Logger logger = LoggerFactory.getLogger(AggregationService.class);
 
     @PersistenceContext
     EntityManager em;
@@ -93,25 +92,25 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
 
-    public List<ProductAggregations> findByGroupProductAndOrganization(Organization organization) {
-        List<ProductAggregations> productosAgregaciones = new ArrayList<>();
-        List<Product> productos = this.findByNamedQuery("Aggregation.findProductsOfAggregationsByOrganization", organization);
-        if (!productos.isEmpty()) {
-            productos.forEach(p -> {
-                ProductAggregations productoAgregaciones = new ProductAggregations();
-                productoAgregaciones.producto = p;
-                productoAgregaciones.agregaciones = this.findByProductAndOrganization(p, organization);
-                BigDecimal totalCost = BigDecimal.ZERO;
-                if (!productoAgregaciones.agregaciones.isEmpty()) {
-                    for (Aggregation aggregation : productoAgregaciones.agregaciones) {
-                        totalCost = totalCost.add(aggregation.getCost());
-                    }
-                }
-                productoAgregaciones.costoTotal = totalCost;
-                productosAgregaciones.add(productoAgregaciones);
-            });
-        }
-        return productosAgregaciones;
-    }
+//    public List<ProductAggregations> findByGroupProductAndOrganization(Organization organization) {
+//        List<ProductAggregations> productosAgregaciones = new ArrayList<>();
+//        List<Product> productos = this.findByNamedQuery("Aggregation.findProductsOfAggregationsByOrganization", organization);
+//        if (!productos.isEmpty()) {
+//            productos.forEach(p -> {
+//                ProductAggregations productoAgregaciones = new ProductAggregations();
+//                productoAgregaciones.producto = p;
+//                productoAgregaciones.agregaciones = this.findByProductAndOrganization(p, organization);
+//                BigDecimal totalCost = BigDecimal.ZERO;
+//                if (!productoAgregaciones.agregaciones.isEmpty()) {
+//                    for (Aggregation aggregation : productoAgregaciones.agregaciones) {
+//                        totalCost = totalCost.add(aggregation.getCost());
+//                    }
+//                }
+//                productoAgregaciones.costoTotal = totalCost;
+//                productosAgregaciones.add(productoAgregaciones);
+//            });
+//        }
+//        return productosAgregaciones;
+//    }
 
 }

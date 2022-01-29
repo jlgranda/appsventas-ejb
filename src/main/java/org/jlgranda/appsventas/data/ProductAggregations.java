@@ -18,6 +18,7 @@
 package org.jlgranda.appsventas.data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import org.jlgranda.fede.model.production.Aggregation;
 import org.jlgranda.fede.model.sales.Product;
@@ -29,7 +30,7 @@ import org.jlgranda.fede.model.sales.Product;
 public class ProductAggregations {
 
     public Product producto;
-    public List<Aggregation> agregaciones;
+    public List<Aggregation> agregaciones = new ArrayList<>();
     public BigDecimal costoTotal;
 
     public Product getProducto() {
