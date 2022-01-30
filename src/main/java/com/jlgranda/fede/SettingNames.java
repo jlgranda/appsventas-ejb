@@ -38,6 +38,8 @@ public class SettingNames {
     
     //Edición de clientes
     public static String POPUP_FORMULARIO_PROFILE = "popup_profile";
+    public static String POPUP_FORMULARIO_PROVEEDOR_COMPRA = "popup_proveedor_compra";
+    public static String POPUP_FORMULARIO_PROVEEDOR_GASTO = "popup_proveedor_compra";
     
     //Edición de records
     public static String POPUP_FORMULARIO_RECORD = "popup_record";
