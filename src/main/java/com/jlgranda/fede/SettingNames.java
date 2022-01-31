@@ -40,6 +40,7 @@ public class SettingNames {
     public static String POPUP_FORMULARIO_PROFILE = "popup_profile";
     public static String POPUP_FORMULARIO_PROVEEDOR_COMPRA = "popup_proveedor_compra";
     public static String POPUP_FORMULARIO_PROVEEDOR_GASTO = "popup_proveedor_compra";
+    public static String POPUP_FORMULARIO_PROVEEDOR = "popup_proveedor";
     
     //Edición de records
     public static String POPUP_FORMULARIO_RECORD = "popup_record";
