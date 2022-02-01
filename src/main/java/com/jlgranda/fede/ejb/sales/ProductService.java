@@ -71,6 +71,19 @@ public class ProductService extends BussinesEntityHome<Product> {
         _instance.setTaxType(TaxType.IVA);
         return _instance;
     }
+    
+    @Override
+    public Product save(Product product) {
+        super.save(product);
+        if (product.getId() != null) {
+            this.setId(product.getId());
+        } else {
+            Map<String, Object> filters = new HashMap<>();
+            filters.put("code", product.getCode()); //Recuperar por código
+            product = this.find(filters).getResult().get(0); //debe ser único
+        }
+        return product;
+    }
 
     //soporte para lazy data model
     public long count() {
