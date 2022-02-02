@@ -18,7 +18,9 @@
 package com.jlgranda.fede.ejb;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -56,6 +58,19 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
     private void init() {
         setEntityManager(em);
         setEntityClass(FacturaElectronica.class);
+    }
+    
+    @Override
+    public FacturaElectronica save(FacturaElectronica facturaElectronica) {
+        super.save(facturaElectronica);
+        if (facturaElectronica.getId() != null) {
+            this.setId(facturaElectronica.getId());
+        } else {
+            Map<String, Object> filters = new HashMap<>();
+            filters.put("code", facturaElectronica.getCode()); //Recuperar por código
+            facturaElectronica = this.find(filters).getResult().get(0); //debe ser único
+        }
+        return facturaElectronica;
     }
 
 
