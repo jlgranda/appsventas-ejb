@@ -65,7 +65,7 @@ public class PaymentService extends BussinesEntityHome<Payment> {
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-        _instance.setUuid(UUID.randomUUID().toString());
+//        _instance.setUuid(UUID.randomUUID().toString());
         return _instance;
     }
 
@@ -88,7 +88,9 @@ public class PaymentService extends BussinesEntityHome<Payment> {
     public Payment findByCode(Payment payment) {
         Map<String, Object> filters = new HashMap<>();
         filters.put("uuid", payment.getUuid()); //Recuperar por código
-        payment = this.find(filters).getResult().get(0); //debe ser único
+        if (!this.find(filters).getResult().isEmpty()) {
+            payment = this.find(filters).getResult().get(0); //debe ser único
+        }
         return payment;
     }
 

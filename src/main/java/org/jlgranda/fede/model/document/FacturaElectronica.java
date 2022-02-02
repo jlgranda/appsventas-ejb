@@ -143,7 +143,7 @@ public class FacturaElectronica extends DeletableObject<FacturaElectronica> impl
      */
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
     @Where(clause = "deleted = false") //sólo no eliminados
-    @OrderBy(value = "orden")
+    @OrderBy(value = "id")
     private List<Payment> payments = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)

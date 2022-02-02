@@ -42,7 +42,7 @@ import org.jpapi.model.DeletableObject;
 @NamedQueries({
     @NamedQuery(name = "Proveedor.findByOwner", query = "SELECT e FROM Proveedor e WHERE e.owner = ?1 and e.deleted = false"),
     @NamedQuery(name = "Proveedor.findByOrganization", query = "SELECT e FROM Proveedor e WHERE e.organization = ?2 and e.deleted = false"),
-    @NamedQuery(name = "Proveedor.findByOrganizationCodeOrName", query = "SELECT e FROM Proveedor e WHERE e.organization = :organization  and e.deleted = false and lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)"),
+    @NamedQuery(name = "Proveedor.findByOrganizationCodeOrName", query = "SELECT e FROM Proveedor e WHERE e.organization = :organization  and e.deleted = false and (lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname))"),
     @NamedQuery(name = "Proveedor.findByOwnerCodeAndName", query = "SELECT e FROM Proveedor e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)"),
 })
 public class Proveedor extends DeletableObject implements Comparable<Proveedor>, Serializable {
