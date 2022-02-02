@@ -35,6 +35,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.Where;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Organization;
 
@@ -60,6 +62,7 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     private Product product;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kardex", fetch = FetchType.LAZY)
+    @Where(clause = "deleted = false")
     private List<KardexDetail> kardexDetails = new ArrayList<>();
     
     private BigDecimal quantity;
