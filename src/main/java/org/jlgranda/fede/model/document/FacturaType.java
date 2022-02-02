@@ -28,5 +28,6 @@ public enum FacturaType {
      */
     NO_DEFINIDO,
     COMPRA,
-    GASTO;
+    GASTO,
+    INGRESO;
 }
