@@ -19,6 +19,7 @@ package org.jlgranda.fede.model.sales;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,9 +30,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.jlgranda.fede.model.document.FacturaElectronica;
 import org.jpapi.model.DeletableObject;
 
 /**
@@ -66,6 +68,10 @@ public class KardexDetail extends DeletableObject<KardexDetail> implements Compa
     @Column(name = "cummulative_total_value")
     private BigDecimal cummulativeTotalValue;
     
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_ingreso_bodega")
+    private Date entryOn;
+    
     
     /**
      * Referencia a la factura electronica de origen, para compras
@@ -78,14 +84,7 @@ public class KardexDetail extends DeletableObject<KardexDetail> implements Compa
      */
     @Column(name = "bussines_entity_id", nullable = true)
     private Long bussinesEntityId;
-//    @ManyToOne
-//    @JoinColumn (name = "facturaElectronica_id", insertable = true, updatable = true, nullable = true)
-//    private FacturaElectronica facturaElectronica; //Detalle de compra
-//    
-//    @ManyToOne
-//    @JoinColumn (name = "invoice_id", insertable = true, updatable = true, nullable = true)
-//    private Invoice invoice; //Detalle de venta
-    
+
     public enum OperationType{
         EXISTENCIA_INICIAL,
         PRODUCCION,
@@ -169,21 +168,14 @@ public class KardexDetail extends DeletableObject<KardexDetail> implements Compa
         this.bussinesEntityId = bussinesEntityId;
     }
     
-//    public FacturaElectronica getFacturaElectronica() {
-//        return facturaElectronica;
-//    }
-//
-//    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
-//        this.facturaElectronica = facturaElectronica;
-//    }
-//
-//    public Invoice getInvoice() {
-//        return invoice;
-//    }
-//
-//    public void setInvoice(Invoice invoice) {
-//        this.invoice = invoice;
-//    }
+    public Date getEntryOn() {
+        return entryOn;
+    }
+
+    public void setEntryOn(Date entryOn) {
+        this.entryOn = entryOn;
+    }
+    
     
     @Override
     public int hashCode(){
@@ -191,7 +183,7 @@ public class KardexDetail extends DeletableObject<KardexDetail> implements Compa
         hcb.append(getId());
         return hcb.toHashCode();
     }
-    
+
     @Override
     public boolean equals(final Object obj){
         if(this==obj){
@@ -215,7 +207,8 @@ public class KardexDetail extends DeletableObject<KardexDetail> implements Compa
     
     @Override
     public int compareTo(KardexDetail other) {
-        return this.createdOn.compareTo(other.getCreatedOn());
+        //return this.createdOn.compareTo(other.getCreatedOn());
+        return this.entryOn.compareTo(other.getCreatedOn());
     }                                                                                                                                           
     
 }
