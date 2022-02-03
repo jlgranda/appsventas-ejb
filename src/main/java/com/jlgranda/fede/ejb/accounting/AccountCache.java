@@ -121,6 +121,7 @@ public class AccountCache {
     }
 
     public List<Account> filterByParentIdOrganization(Long parentAccountId, Organization organization) {
+        
         List<Account> matches = new ArrayList<>();
         if (parentAccountId == null) {
             return matches; //vacio
@@ -128,6 +129,7 @@ public class AccountCache {
         accounts.values().stream().filter(account -> (parentAccountId.equals(account.getParentAccountId()))).forEachOrdered(account -> {
             if (organization.equals(account.getOrganization())) {
                 matches.add(account);
+                matches.addAll(this.filterByParentIdOrganization(account.getId(), organization));
             }
         });
         return matches; //devolver por defecto la clave buscada
