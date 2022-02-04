@@ -121,17 +121,17 @@ public class AccountCache {
     }
 
     public List<Account> filterByParentIdOrganization(Long parentAccountId, Organization organization) {
-        
+
         List<Account> matches = new ArrayList<>();
         if (parentAccountId == null) {
             return matches; //vacio
         }
-        accounts.values().stream().filter(account -> (parentAccountId.equals(account.getParentAccountId()))).forEachOrdered(account -> {
-            if (organization.equals(account.getOrganization())) {
-                matches.add(account);
-                matches.addAll(this.filterByParentIdOrganization(account.getId(), organization));
-            }
+        accounts.values().stream().filter(account -> (parentAccountId.equals(account.getParentAccountId())
+                && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+            matches.add(account);
+            matches.addAll(this.filterByParentIdOrganization(account.getId(), organization));
         });
+
         return matches; //devolver por defecto la clave buscada
     }
 
@@ -140,7 +140,8 @@ public class AccountCache {
         if (Strings.isNullOrEmpty(name)) {
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> (name.trim().equalsIgnoreCase(account.getName().trim()) && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+        accounts.values().stream().filter(account -> (name.trim().equalsIgnoreCase(account.getName().trim())
+                && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
             matches.add(account);
         });
         return matches.isEmpty() ? null : matches.get(0); //devolver el 1er elemento
@@ -151,8 +152,8 @@ public class AccountCache {
         if (Strings.isNullOrEmpty(name)) {
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> (account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
-                || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+        accounts.values().stream().filter(account -> ((account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+                || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase())))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
             matches.add(account);
         });
@@ -164,8 +165,8 @@ public class AccountCache {
         if (Strings.isNullOrEmpty(name)) {
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> (account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
-                || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+        accounts.values().stream().filter(account -> ((account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
+                || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase())))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
             matches.addAll(filterByParentIdOrganization(account.getId(), organization));
         });
