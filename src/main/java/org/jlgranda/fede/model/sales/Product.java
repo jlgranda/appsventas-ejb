@@ -60,9 +60,12 @@ import org.jpapi.model.statistics.Statistics;
     @NamedQuery(name = "Product.findTopProductIds", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetween", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.createdOn >= ?1 and d.createdOn <= ?2 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetweenOrg", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenTypeOrganization", query = "SELECT p.id, sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.invoice.emissionOn >= ?2 and d.invoice.emissionOn <= ?3 and d.invoice.documentType = ?4 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetweenPrice", query = "SELECT p.id,  sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.createdOn >= ?1 and d.createdOn <= ?2 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetweenPriceOrg", query = "SELECT p.id,  sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p ORDER BY 2 DESC"),
-    @NamedQuery(name = "Product.findTopProductIdsBetweenCategoryOrg", query = "SELECT p.category.name,  sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p.category.name ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenPriceTypeOrganization", query = "SELECT p.id, sum(d.price*d.amount), sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.invoice.emissionOn >= ?2 and d.invoice.emissionOn <= ?3 and d.invoice.documentType = ?4 GROUP BY p ORDER BY 3 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenCategoryOrg", query = "SELECT p.category.name, sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p.category.name ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenCategoryTypeOrganization", query = "SELECT p.category.name, sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.invoice.emissionOn >= ?2 and d.invoice.emissionOn <= ?3 and d.invoice.documentType = ?4 GROUP BY p.category.name ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductNames", query = "SELECT p.name,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) AND d.createdOn BETWEEN ?1 AND ?2 GROUP BY p.name ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductNamesOrg", query = "SELECT p.name,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 AND d.createdOn BETWEEN ?1 AND ?2 GROUP BY p.name ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findWhithoutKardex", query = "SELECT p FROM Product p WHERE p NOT IN ( SELECT k.product FROM Kardex k WHERE k.deleted = false) AND p.organization=?1 and p.deleted = false"),
@@ -72,45 +75,44 @@ import org.jpapi.model.statistics.Statistics;
     @NamedQuery(name = "Product.countSoldProductByOwner", query = "SELECT p,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.owner = ?1 AND d.createdOn BETWEEN ?2 AND ?3 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
     @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
-    @NamedQuery(name = "Product.findNameByOrganization", query = "select p.name FROM Product p WHERE p.organization = ?1 ORDER BY p.name"),
-})
+    @NamedQuery(name = "Product.findNameByOrganization", query = "select p.name FROM Product p WHERE p.organization = ?1 ORDER BY p.name"),})
 public class Product extends DeletableObject<Subject> implements Serializable {
 
     private static final long serialVersionUID = -1320148041663418996L;
-    
+
     @Column
     private String icon;
-    
+
     @Column
     private BigDecimal price;
-    
+
     @Column
     private BigDecimal priceB;
-    
+
     @Column
     private BigDecimal priceC;
-    
+
     @Column
     private BigDecimal priceCost;
-    
+
     @Column
     private ProductType productType;
-    
+
     @Column
     private TaxType taxType;
-    
+
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", insertable = true, updatable = true, nullable = true)
     private Group category;
-    
+
     @Transient
     private Statistics statistics = new Statistics();
 
@@ -157,7 +159,7 @@ public class Product extends DeletableObject<Subject> implements Serializable {
     public void setPriceCost(BigDecimal priceCost) {
         this.priceCost = priceCost;
     }
-    
+
     public byte[] getPhoto() {
         return photo;
     }
@@ -189,7 +191,7 @@ public class Product extends DeletableObject<Subject> implements Serializable {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-    
+
     public Group getCategory() {
         return category;
     }
@@ -205,7 +207,7 @@ public class Product extends DeletableObject<Subject> implements Serializable {
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
     }
-    
+
     @Override
     public int hashCode() {
         return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
@@ -214,7 +216,7 @@ public class Product extends DeletableObject<Subject> implements Serializable {
                 append(getName()).
                 toHashCode();
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -233,7 +235,7 @@ public class Product extends DeletableObject<Subject> implements Serializable {
                 append(getName(), other.getName()).
                 isEquals();
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
