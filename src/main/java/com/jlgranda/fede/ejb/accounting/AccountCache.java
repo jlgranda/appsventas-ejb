@@ -160,6 +160,19 @@ public class AccountCache {
         return matches;
     }
 
+    public List<Account> filterByNameOrCodeStart(String name, Organization organization) {
+        List<Account> matches = new ArrayList<>();
+        if (Strings.isNullOrEmpty(name)) {
+            return null; //vacio
+        }
+        accounts.values().stream().filter(account -> (((account.getName().toLowerCase().replace(" ", "")).equals((name.toLowerCase().replace(" ", "")))
+                || (account.getCode().toLowerCase().replace(" ", "")).equals((name.toLowerCase().replace(" ", ""))))
+                && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
+            matches.add(account);
+        });
+        return matches;
+    }
+
     public List<Account> filterByNameOrCodeChildrens(String name, Organization organization) {
         List<Account> matches = new ArrayList<>();
         if (Strings.isNullOrEmpty(name)) {
