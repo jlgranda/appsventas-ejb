@@ -12,7 +12,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.3.6.Final</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <!-- WildFly dependency versions -->
         <version.wildfly.maven.plugin>1.0.1.Final</version.wildfly.maven.plugin>
 
