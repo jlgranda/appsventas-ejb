@@ -161,7 +161,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 kardex.setQuantity(kardexDetail.getCummulativeQuantity());
                 kardex.setFund(kardexDetail.getCummulativeTotalValue());
 
-                if (kardex.isPersistent()){ //Sólo actualizar si el kardex ya existe.
+                if (kardex.isPersistent()) { //Sólo actualizar si el kardex ya existe.
                     kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
                 }
             }
@@ -171,7 +171,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
     }
 
     /**
-     * Retorna el kardex activo para el producto en la organización. 
+     * Retorna el kardex activo para el producto en la organización.
      *
      * @param product
      * @param subject
@@ -186,9 +186,10 @@ public class KardexService extends BussinesEntityHome<Kardex> {
         }
         return null;
     }
+
     /**
-     * Retorna el kardex activo para el producto en la organización. 
-     * Si el Kardex no existe lo crea.
+     * Retorna el kardex activo para el producto en la organización. Si el
+     * Kardex no existe lo crea.
      *
      * @param prefix
      * @param product
