@@ -72,6 +72,7 @@
     <class>net.tecnopro.document.model.Template</class>
     <class>net.tecnopro.mailing.Message</class>
     <class>net.tecnopro.mailing.Notification</class>
+    
     <!--SRI esquema v110-->
     <class>org.jlgranda.fede.sri.factura.v110.Factura</class>
     <class>org.jlgranda.fede.sri.factura.v110.InfoTributaria</class>
@@ -84,6 +85,7 @@
     <class>org.jlgranda.fede.sri.factura.v110.Retencion</class>
     <class>org.jlgranda.fede.sri.factura.v110.CampoAdicional</class>
     <class>org.jlgranda.fede.sri.factura.v110.Impuesto</class>
+    <!--// SRI esquema v110-->
     <class>org.jlgranda.fede.model.talentohumano.Employee</class>
     <class>org.jlgranda.fede.model.talentohumano.Journal</class>
     <class>org.jlgranda.fede.model.talentohumano.JobRole</class>
