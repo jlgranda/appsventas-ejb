@@ -44,12 +44,12 @@ public class SettingNames {
     public static String POPUP_FORMULARIO_PROVEEDOR = "popup_proveedor";
     
     //Edición de records
-    public static String POPUP_FORMULARIO_RECORD = "popup_record";
+    public static String POPUP_FORMULARIO_RECORD = "popup_record_journal";
     //Popup Libro Mayor
     public static String POPUP_FORMULARIO_GENERALLEDGER = "popup_general_ledger";
-    public static String POPUP_FORMULARIO_GENERALLEDGER_RECORD = "popup_general_ledger_record";
+    public static String POPUP_FORMULARIO_GENERALLEDGER_RECORD = "popup_record_ledger";
     public static String POPUP_FORMULARIO_RECORDTEMPLATE_EDICION = "popup_recordtemplate";
-    public static String POPUP_FORMULARIO_GENERALJOURNAL= "popup_general_journal";
+    public static String POPUP_FORMULARIO_GENERALJOURNAL= "popup_journal";
     
 
     //XML
