@@ -35,6 +35,7 @@ import org.jlgranda.fede.model.sales.Kardex;
 import org.jlgranda.fede.model.sales.KardexDetail;
 import org.jlgranda.fede.model.sales.Kardex_;
 import org.jlgranda.fede.model.sales.Product;
+import org.jlgranda.fede.model.sales.ProductType;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
@@ -115,54 +116,56 @@ public class KardexService extends BussinesEntityHome<Kardex> {
             if (!isValid(detail)) {
                 logger.error("El detalle no es válido {1}", detail);
             } else {
-                kardex = this.findOrCreateByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
-                kardexDetail = kardex.findKardexDetail(detail.getBussinesEntityType(), detail.getBussinesEntityId(), operationType); //Encuentra el Detalle correspondiente a la factura
-                if (kardexDetail == null) {
-                    kardexDetail = kardexDetailService.createInstance();
-                    kardexDetail.setOwner(subject);
-                    kardexDetail.setAuthor(subject);
-                    kardexDetail.setBussinesEntityId(detail.getBussinesEntityId());
-                    kardexDetail.setBussinesEntityType(detail.getBussinesEntityType());
-                    kardexDetail.setOperationType(operationType);
+                if (ProductType.PRODUCT.equals(detail.getProduct().getProductType())) {
+                    kardex = this.findOrCreateByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
+                    kardexDetail = kardex.findKardexDetail(detail.getBussinesEntityType(), detail.getBussinesEntityId(), operationType); //Encuentra el Detalle correspondiente a la factura
+                    if (kardexDetail == null) {
+                        kardexDetail = kardexDetailService.createInstance();
+                        kardexDetail.setOwner(subject);
+                        kardexDetail.setAuthor(subject);
+                        kardexDetail.setBussinesEntityId(detail.getBussinesEntityId());
+                        kardexDetail.setBussinesEntityType(detail.getBussinesEntityType());
+                        kardexDetail.setOperationType(operationType);
 
-                } else {
-                    //Disminuir los valores acumulados de cantidad y total para al momento de modificar no se duplique el valor a aumentar por la venta
-                    if (kardexDetail.getQuantity() != null && kardexDetail.getTotalValue() != null) {
-                        kardex.setQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
-                        kardex.setFund(kardex.getFund().add(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor))));
-                        kardexDetail.setCummulativeQuantity(kardex.getQuantity());
-                        kardexDetail.setCummulativeTotalValue(kardex.getFund());
+                    } else {
+                        //Disminuir los valores acumulados de cantidad y total para al momento de modificar no se duplique el valor a aumentar por la venta
+                        if (kardexDetail.getQuantity() != null && kardexDetail.getTotalValue() != null) {
+                            kardex.setQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
+                            kardex.setFund(kardex.getFund().add(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor))));
+                            kardexDetail.setCummulativeQuantity(kardex.getQuantity());
+                            kardexDetail.setCummulativeTotalValue(kardex.getFund());
+                        }
+                        kardexDetail.setAuthor(subject); //Saber quien lo modificó por última vez
+                        kardexDetail.setLastUpdate(Dates.now()); //Saber la hora que modificó por última vez
                     }
-                    kardexDetail.setAuthor(subject); //Saber quien lo modificó por última vez
-                    kardexDetail.setLastUpdate(Dates.now()); //Saber la hora que modificó por última vez
-                }
 
-                //Actualizar cantidades
-                kardexDetail.setCode(detail.getBussinesEntityCode());
-                kardexDetail.setUnitValue(detail.getPrice());
-                kardexDetail.setQuantity(detail.getAmount());
-                kardexDetail.setTotalValue(kardexDetail.getUnitValue().multiply(kardexDetail.getQuantity()));
+                    //Actualizar cantidades
+                    kardexDetail.setCode(detail.getBussinesEntityCode());
+                    kardexDetail.setUnitValue(detail.getPrice());
+                    kardexDetail.setQuantity(detail.getAmount());
+                    kardexDetail.setTotalValue(kardexDetail.getUnitValue().multiply(kardexDetail.getQuantity()));
 
-                if (kardex.isPersistent()) {
-                    kardexDetail.setCummulativeQuantity(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor)));
-                    kardexDetail.setCummulativeTotalValue(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor)));
-                } else {
-                    if (kardex.getQuantity() != null && kardex.getFund() != null) {
-                        kardexDetail.setCummulativeQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
-                        kardexDetail.setCummulativeTotalValue(kardex.getFund().subtract(kardexDetail.getTotalValue()));
+                    if (kardex.isPersistent()) {
+                        kardexDetail.setCummulativeQuantity(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor)));
+                        kardexDetail.setCummulativeTotalValue(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor)));
+                    } else {
+                        if (kardex.getQuantity() != null && kardex.getFund() != null) {
+                            kardexDetail.setCummulativeQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
+                            kardexDetail.setCummulativeTotalValue(kardex.getFund().subtract(kardexDetail.getTotalValue()));
+                        }
                     }
-                }
 
-                kardex.addKardexDetail(kardexDetail);
+                    kardex.addKardexDetail(kardexDetail);
 
-                if (kardex.getCode() == null) {
-                    kardex.setCode(prefix + detail.getProduct().getId());
-                }
-                kardex.setQuantity(kardexDetail.getCummulativeQuantity());
-                kardex.setFund(kardexDetail.getCummulativeTotalValue());
+                    if (kardex.getCode() == null) {
+                        kardex.setCode(prefix + detail.getProduct().getId());
+                    }
+                    kardex.setQuantity(kardexDetail.getCummulativeQuantity());
+                    kardex.setFund(kardexDetail.getCummulativeTotalValue());
 
-                if (kardex.isPersistent()) { //Sólo actualizar si el kardex ya existe.
-                    kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
+                    if (kardex.isPersistent()) { //Sólo actualizar si el kardex ya existe.
+                        kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
+                    }
                 }
             }
         }
