@@ -21,8 +21,6 @@ package org.jlgranda.fede.model.accounting;
  *
  * @author jlgranda
  */
-
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -52,52 +50,52 @@ import org.jpapi.model.DeletableObject;
 //})
 @Entity
 @Table(name = "Record_Detail")
-@NamedQueries({ @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null  and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2  and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2  and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate <=?2 and s.record.generalJournalId = j.id and  j.organization = ?3  and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.record.emissionDate, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s, GeneralJournal j  WHERE s.account = ?1 and s.record.emissionDate >=?2 and s.record.emissionDate <=?3 and s.record.generalJournalId = j.id and  j.organization = ?4  and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByAccountAndEmissionOnAndOrganization", query = "select s FROM RecordDetail s, GeneralJournal j  WHERE s.account = ?1 and s.record.emissionDate >=?2 and s.record.emissionDate <=?3 and s.record.generalJournalId = j.id and j.organization = ?4  and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate >=?3 and s.record.emissionDate <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findTotalByAccountAndTypeAndNotClassInvoiceFacturaElectronica", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate >=?3 and s.record.emissionDate <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and (s.record.bussinesEntityType IS NULL or (s.record.bussinesEntityType<>'Invoice' and s.record.bussinesEntityType<>'FacturaElectronica')) and s.deleted = false ORDER BY 1"),
-})
+@NamedQueries({
+    @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null  and s.deleted = false ORDER BY s.record.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2  and s.deleted = false ORDER BY s.record.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2  and s.deleted = false ORDER BY s.record.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate <=?2 and s.record.generalJournalId = j.id and j.organization = ?3 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY s.record.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.record.emissionDate, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate >=?2 and s.record.emissionDate <=?3 and s.record.generalJournalId = j.id and j.organization = ?4 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+    @NamedQuery(name = "RecordDetail.findByAccountAndEmissionOnAndOrganization", query = "select s FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate >=?2 and s.record.emissionDate <=?3 and s.deleted = false and s.record.deleted = false and s.record.generalJournalId = j.id and j.organization = ?4  and j.deleted = false ORDER BY s.record.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate >=?3 and s.record.emissionDate <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+    @NamedQuery(name = "RecordDetail.findTotalByAccountAndTypeAndNotClassInvoiceFacturaElectronica", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate >=?3 and s.record.emissionDate <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and (s.record.bussinesEntityType IS NULL or (s.record.bussinesEntityType<>'Invoice' and s.record.bussinesEntityType<>'FacturaElectronica')) and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),})
 public class RecordDetail extends DeletableObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
     /*
     Tipo de recordDetail
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)    
+    @Column(nullable = false)
     private RecordDetail.RecordTDetailType recordDetailType;
-    
+
     /**
      * Id de la entidad de negocio involucrada en el detalle de registro
      */
     Long bussineEntityId;
-    
+
     BigDecimal amount;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "account_id", insertable = true, updatable = true, nullable = true)
     private Account account;
-    
-    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
-    @JoinColumn (name = "record_id", insertable = true, updatable = true, nullable = true)
+
+    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "record_id", insertable = true, updatable = true, nullable = true)
     Record record;
-    
+
     //Campos para instanciación desde Rules
     @Transient
     private String accountId;
-    
+
     @Transient
     private String accountCode;
-    
+
     @Transient
     private String accountName;
-    
+
     @Transient
     private BigDecimal accumulatedBalance;
-    
+
     public enum RecordTDetailType {
         DEBE,
         HABER;
@@ -110,7 +108,7 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
     public void setAccount(Account account) {
         this.account = account;
     }
-    
+
     public RecordTDetailType getRecordDetailType() {
         return recordDetailType;
     }
@@ -118,7 +116,7 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
     public void setRecordDetailType(RecordTDetailType recordDetailType) {
         this.recordDetailType = recordDetailType;
     }
-    
+
     public void setRecordDetailTypeFromName(String recordDetailTypeName) {
         this.recordDetailType = RecordTDetailType.valueOf(recordDetailTypeName);
     }
@@ -170,9 +168,9 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
     public void setAccumulatedBalance(BigDecimal accumulatedBalance) {
         this.accumulatedBalance = accumulatedBalance;
     }
-    
+
     public String getAccountCode() {
-        if (this.account != null){
+        if (this.account != null) {
             accountCode = this.account.getCode();
         }
         return accountCode;
@@ -182,7 +180,7 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         this.accountCode = accountCode;
     }
 
-     @Override
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 53 * hash + Objects.hashCode(this.recordDetailType);
@@ -211,11 +209,11 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         if (!Objects.equals(this.account, other.account)) {
             return false;
         }
-        
+
         if (!Objects.equals(this.getId(), other.getId())) {
             return false;
         }
-        
+
         if (!Objects.equals(this.account, other.account)) {
             return false;
         }
@@ -228,11 +226,9 @@ public class RecordDetail extends DeletableObject<RecordDetail> implements Compa
         return true;
     }
 
-    
-    
     @Override
     public int compareTo(RecordDetail other) {
         return this.createdOn.compareTo(other.getCreatedOn());
     }
-    
+
 }

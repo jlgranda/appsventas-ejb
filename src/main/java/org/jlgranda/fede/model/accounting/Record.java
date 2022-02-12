@@ -44,13 +44,13 @@ import org.jpapi.model.DeletableObject;
 @Entity
 @Table(name = "Record")
 @NamedQueries({
-    @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 and s.deleted=false ORDER BY 1"),
-    @NamedQuery(name = "Record.findByJournalId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.deleted=false ORDER BY 1"),
-    @NamedQuery(name = "Record.findByJournalAndBussinesEntityId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityId = ?2 and s.deleted=false ORDER BY 1"),
-    @NamedQuery(name = "Record.findByBussinesEntityTypeAndId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.deleted=false ORDER BY 1"),
-    @NamedQuery(name = "Record.findByBussinesEntityTypeAndIdAndHashCode", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.bussinesEntityHashCode = ?4 and s.deleted=false ORDER BY 1"),
-    @NamedQuery(name = "Record.findByCreatedOnAndOrganization", query = "select r from Record r, GeneralJournal gn where r.generalJournalId = gn.id and r.createdOn >= ?1 and r.createdOn <= ?2 and gn.organization = ?3 order by r.createdOn DESC"),})
+    @NamedQuery(name = "Record.findByName", query = "select s FROM Record s WHERE s.name = ?1 and s.owner is null ORDER BY s.emissionDate ASC"),
+    @NamedQuery(name = "Record.findByNameAndOwner", query = "select s FROM Record s WHERE s.name = ?1 and s.owner = ?2 and s.deleted=false ORDER BY s.emissionDate ASC"),
+    @NamedQuery(name = "Record.findByJournalId", query = "select s FROM Record s WHERE s.generalJournalId = ?1 and s.deleted=false ORDER BY s.emissionDate ASC"),
+    @NamedQuery(name = "Record.findByJournalAndBussinesEntityId", query = "select s FROM Record s, GeneralJournal j WHERE s.generalJournalId = ?1 and j.id = s.generalJournalId and s.bussinesEntityId = ?2 and s.deleted=false and j.deleted=false ORDER BY s.emissionDate ASC"),
+    @NamedQuery(name = "Record.findByBussinesEntityTypeAndId", query = "select s FROM Record s, GeneralJournal j WHERE s.generalJournalId = ?1 and j.id = s.generalJournalId and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.deleted=false and j.deleted=false ORDER BY s.emissionDate ASC"),
+    @NamedQuery(name = "Record.findByBussinesEntityTypeAndIdAndHashCode", query = "select s FROM Record s, GeneralJournal j WHERE s.generalJournalId = ?1 and j.id = s.generalJournalId and s.bussinesEntityType = ?2 and s.bussinesEntityId = ?3 and s.bussinesEntityHashCode = ?4 and s.deleted=false and j.deleted=false ORDER BY s.emissionDate ASC"),
+    @NamedQuery(name = "Record.findByCreatedOnAndOrganization", query = "select s from Record s, GeneralJournal j WHERE s.generalJournalId= j.id and s.createdOn >= ?1 and s.createdOn <= ?2 and j.organization = ?3 and s.deleted=false and j.deleted=false ORDER BY s.emissionDate ASC"),})
 public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
 //    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
