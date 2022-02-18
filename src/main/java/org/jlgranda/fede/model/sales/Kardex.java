@@ -32,6 +32,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -62,6 +63,7 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kardex", fetch = FetchType.LAZY)
     @Where(clause = "deleted = false")
+    @OrderBy(value = "entryOn ASC")
     private List<KardexDetail> kardexDetails = new ArrayList<>();
     
     private BigDecimal quantity;
