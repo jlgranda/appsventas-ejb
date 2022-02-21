@@ -47,7 +47,7 @@ import org.jpapi.model.DeletableObject;
     @NamedQuery(name = "KardexDetail.findByKardexAndBussinesEntityTypeAndBussinesEntityIdAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.bussinesEntityType = ?2 and kd.bussinesEntityId = ?3 and kd.operationType = ?4 and kd.deleted = false"),
     //@NamedQuery(name = "KardexDetail.findByKardexAndFacturaAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.facturaElectronica = ?2 and kd.operationType = ?3 and kd.deleted = false"),
     //@NamedQuery(name = "KardexDetail.findByKardexAndFacturaAndOperation", query = "SELECT kd FROM KardexDetail kd WHERE kd.kardex = ?1 and kd.facturaElectronica = ?2 and kd.operationType = ?3 and kd.deleted = false"),
-    @NamedQuery(name = "KardexDetail.findCumulativeQuantityByKardex", query = "SELECT SUM( CASE WHEN kd.operationType in (?1) THEN (kd.quantity*-1) ELSE kd.quantity END) FROM KardexDetail kd WHERE kd.kardex = ?2 and kd.deleted = false"),
+    //@NamedQuery(name = "KardexDetail.findCumulativeQuantityByKardex", query = "SELECT SUM( CASE WHEN kd.operationType in (?1) THEN (kd.quantity*-1) ELSE kd.quantity END) FROM KardexDetail kd WHERE kd.kardex = ?2 and kd.deleted = false"),
 })
 public class KardexDetail extends DeletableObject<KardexDetail> implements Comparable<KardexDetail>, Serializable {
 
