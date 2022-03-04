@@ -187,8 +187,8 @@ public class AccountCache {
         if (Strings.isNullOrEmpty(name)) {
             return null; //vacio
         }
-        accounts.values().stream().filter(account -> (((account.getName().toLowerCase().replace(" ", "")).equals((name.toLowerCase().replace(" ", "")))
-                || (account.getCode().toLowerCase().replace(" ", "")).equals((name.toLowerCase().replace(" ", ""))))
+        accounts.values().stream().filter(account -> ((account.getName().toLowerCase().replace(" ", "").equals(name.toLowerCase().replace(" ", ""))
+                || account.getCode().toLowerCase().replace(" ", "").equals(name.toLowerCase().replace(" ", "")))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
             if (account.getParentAccountId() != null) {
                 Account parentAccount = accounts.values().stream().filter(parent -> (parent.getId().equals(account.getParentAccountId()))).findFirst().get();
