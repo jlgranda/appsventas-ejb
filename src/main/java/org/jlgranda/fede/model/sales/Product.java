@@ -76,7 +76,7 @@ import org.jpapi.model.statistics.Statistics;
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
     @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
     @NamedQuery(name = "Product.findNameByOrganization", query = "select p.name FROM Product p WHERE p.organization = ?1 ORDER BY p.name"),})
-public class Product extends DeletableObject<Subject> implements Serializable {
+public class Product extends DeletableObject<Product> implements Serializable {
 
     private static final long serialVersionUID = -1320148041663418996L;
 
