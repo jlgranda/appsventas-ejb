@@ -128,8 +128,16 @@ public class AccountCache {
         }
         accounts.values().stream().filter(account -> (parentAccountId.equals(account.getParentAccountId())
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-            matches.add(account);
-            matches.addAll(this.filterByParentIdOrganization(account.getId(), organization));
+            if (account.getParentAccountId() != null) {
+                Account parentAccount = accounts.values().stream().filter(parent -> (parent.getId().equals(account.getParentAccountId()))).findFirst().get();
+                if (organization.equals(parentAccount.getOrganization())) {
+                    matches.add(account);
+                    matches.addAll(this.filterByParentIdOrganization(account.getId(), organization));
+                }
+            } else {
+                matches.add(account);
+                matches.addAll(this.filterByParentIdOrganization(account.getId(), organization));
+            }
         });
 
         return matches; //devolver por defecto la clave buscada
@@ -142,7 +150,14 @@ public class AccountCache {
         }
         accounts.values().stream().filter(account -> (name.trim().equalsIgnoreCase(account.getName().trim())
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-            matches.add(account);
+            if (account.getParentAccountId() != null) {
+                Account parentAccount = accounts.values().stream().filter(parent -> (parent.getId().equals(account.getParentAccountId()))).findFirst().get();
+                if (organization.equals(parentAccount.getOrganization())) {
+                    matches.add(account);
+                }
+            } else {
+                matches.add(account);
+            }
         });
         return matches.isEmpty() ? null : matches.get(0); //devolver el 1er elemento
     }
@@ -155,7 +170,14 @@ public class AccountCache {
         accounts.values().stream().filter(account -> ((account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
                 || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase())))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-            matches.add(account);
+            if (account.getParentAccountId() != null) {
+                Account parentAccount = accounts.values().stream().filter(parent -> (parent.getId().equals(account.getParentAccountId()))).findFirst().get();
+                if (organization.equals(parentAccount.getOrganization())) {
+                    matches.add(account);
+                }
+            } else {
+                matches.add(account);
+            }
         });
         return matches;
     }
@@ -168,7 +190,14 @@ public class AccountCache {
         accounts.values().stream().filter(account -> (((account.getName().toLowerCase().replace(" ", "")).equals((name.toLowerCase().replace(" ", "")))
                 || (account.getCode().toLowerCase().replace(" ", "")).equals((name.toLowerCase().replace(" ", ""))))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-            matches.add(account);
+            if (account.getParentAccountId() != null) {
+                Account parentAccount = accounts.values().stream().filter(parent -> (parent.getId().equals(account.getParentAccountId()))).findFirst().get();
+                if (organization.equals(parentAccount.getOrganization())) {
+                    matches.add(account);
+                }
+            } else {
+                matches.add(account);
+            }
         });
         return matches;
     }
@@ -181,7 +210,14 @@ public class AccountCache {
         accounts.values().stream().filter(account -> ((account.getName().toLowerCase().matches(Strings.toRegex(name.toLowerCase()))
                 || account.getCode().toLowerCase().matches(Strings.toRegex(name.toLowerCase())))
                 && organization.equals(account.getOrganization()))).forEachOrdered(account -> {
-            matches.addAll(filterByParentIdOrganization(account.getId(), organization));
+            if (account.getParentAccountId() != null) {
+                Account parentAccount = accounts.values().stream().filter(parent -> (parent.getId().equals(account.getParentAccountId()))).findFirst().get();
+                if (organization.equals(parentAccount.getOrganization())) {
+                    matches.addAll(filterByParentIdOrganization(account.getId(), organization));
+                }
+            } else {
+                matches.addAll(filterByParentIdOrganization(account.getId(), organization));
+            }
         });
         return matches;
     }

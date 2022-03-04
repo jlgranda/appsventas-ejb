@@ -36,32 +36,33 @@ import org.jpapi.model.Organization;
  */
 @Entity
 @Table(name = "Account")
-@NamedQueries({ @NamedQuery(name = "Account.findByName", query = "select s FROM Account s WHERE s.name = ?1 and s.owner is null and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findByParentId", query = "select s FROM Account s WHERE s.parentAccountId = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
-@NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code"),
-})
+@NamedQueries({
+    @NamedQuery(name = "Account.findByName", query = "select s FROM Account s WHERE s.name = ?1 and s.owner is null and s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "Account.findByNameAndOwner", query = "select s FROM Account s WHERE s.name = ?1 and s.owner = ?2 and s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "Account.findByNameAndOrg", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "Account.findByParentId", query = "select s FROM Account s WHERE s.parentAccountId = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code"),})
 public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
-    
+
     private static final long serialVersionUID = -6428094275651428620L;
-    
-    @Column(name="parent_account_id", nullable = true, length = 1024)
+
+    @Column(name = "parent_account_id", nullable = true, length = 1024)
     protected Long parentAccountId;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
-    public Account(){
-        
+
+    public Account() {
+
     }
-    public Account(String code, String name){
+
+    public Account(String code, String name) {
         super();
-        setCode(code); 
-        setName(name);        
+        setCode(code);
+        setName(name);
     }
 
     public Long getParentAccountId() {
@@ -71,7 +72,7 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     public void setParentAccountId(Long parent_account_id) {
         this.parentAccountId = parent_account_id;
     }
-    
+
     public Organization getOrganization() {
         return organization;
     }
@@ -79,7 +80,7 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-    
+
     @Override
     public int hashCode() {
         return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
@@ -88,7 +89,7 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
                 append(getName()).
                 toHashCode();
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -107,16 +108,19 @@ public class Account extends DeletableObject<Account> implements Comparable<Acco
                 append(getName(), other.getName()).
                 isEquals();
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
-    
+
     @Override
     public int compareTo(Account t) {
-       //return getId().compareTo(t.getId());
-       return getCode().compareTo(t.getCode());
+//       return getId().compareTo(t.getId());
+        if (getCode() != null && t.getCode() != null) {
+            return getCode().compareTo(t.getCode());
+        }
+            return -1;
     }
-        
+
 }
