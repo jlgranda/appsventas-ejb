@@ -18,12 +18,9 @@
 package org.jlgranda.fede.model.production;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -34,6 +31,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.annotations.Where;
 import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.model.DeletableObject;
@@ -46,79 +45,76 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Aggregation")
 @NamedQueries({
-//    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),
-})
+    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1 order by agg.product ASC"),})
 public class Aggregation extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
-//    @ManyToOne(optional = true)
-//    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
-//    private Organization organization;
-//    
-//    @ManyToOne(optional = false)
-//    @JoinColumn(name = "product_id", insertable = true, updatable = true)
-//    private Product product;
-//    
-//    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "aggregation", fetch = FetchType.LAZY)
-//    @Where(clause = "deleted = false") //sólo no eliminados
-//    @OrderBy(value = "cost")
-//    private List<AggregationDetail> aggregationDetails = new ArrayList<>();
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
+    private Organization organization;
 
-//    public Organization getOrganization() {
-//        return organization;
-//    }
-//
-//    public void setOrganization(Organization organization) {
-//        this.organization = organization;
-//    }
-//
-//    public Product getProduct() {
-//        return product;
-//    }
-//
-//    public void setProduct(Product product) {
-//        this.product = product;
-//    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
+    private Product product;
 
-//    public List<AggregationDetail> getAggregationDetails() {
-//        return aggregationDetails;
-//    }
-//
-//    public void setAggregationDetails(List<AggregationDetail> aggregationDetails) {
-//        this.aggregationDetails = aggregationDetails;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int hash = 5;
-//        hash = 59 * hash + Objects.hashCode(this.organization);
-//        hash = 59 * hash + Objects.hashCode(this.product);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (obj == null) {
-//            return false;
-//        }
-//        if (getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        final Aggregation other = (Aggregation) obj;
-//        if (!Objects.equals(this.organization, other.organization)) {
-//            return false;
-//        }
-//        if (!Objects.equals(this.product, other.product)) {
-//            return false;
-//        }
-//        return true;
-//    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aggregation", fetch = FetchType.LAZY)
+    @Where(clause = "deleted = false")
+    @OrderBy(value = "entryOn ASC")
+    private List<AggregationDetail> aggregationDetails = new ArrayList<>();
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public List<AggregationDetail> getAggregationDetails() {
+        return aggregationDetails;
+    }
+
+    public void setAggregationDetails(List<AggregationDetail> aggregationDetails) {
+        this.aggregationDetails = aggregationDetails;
+    }
 
     @Override
-    public int compareTo(Aggregation t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+        hcb.append(getId()).append(getProduct());
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Aggregation other = (Aggregation) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+
+        eb.append(getOrganization(), other.getOrganization())
+                .append(getProduct(), other.getProduct());
+
+        return eb.isEquals();
+    }
+
+    @Override
+    public int compareTo(Aggregation other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
 
 }
