@@ -17,8 +17,10 @@
  */
 package com.jlgranda.fede.ejb.production;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -36,19 +38,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author usuario
  */
+@Stateless
 public class AggregationDetailService extends BussinesEntityHome<AggregationDetail> {
-
+    
     Logger logger = LoggerFactory.getLogger(AggregationDetailService.class);
-
+    
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(AggregationDetail.class);
     }
-
+    
     @Override
     public AggregationDetail createInstance() {
         AggregationDetail _instance = new AggregationDetail();
@@ -58,6 +61,8 @@ public class AggregationDetailService extends BussinesEntityHome<AggregationDeta
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setQuantity(BigDecimal.ONE);
+        _instance.setCost(BigDecimal.ZERO);
         return _instance;
     }
 
@@ -65,14 +70,14 @@ public class AggregationDetailService extends BussinesEntityHome<AggregationDeta
     public long count() {
         return super.count(AggregationDetail.class);
     }
-
+    
     public List<AggregationDetail> find(int maxresults, int firstresult) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<AggregationDetail> query = builder.createQuery(AggregationDetail.class);
-
+        
         Root<AggregationDetail> from = query.from(AggregationDetail.class);
         query.select(from).orderBy(builder.desc(from.get(AggregationDetail_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
+    
 }

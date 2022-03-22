@@ -51,14 +51,13 @@ import org.jpapi.model.DeletableObject;
 public class AggregationDetail extends DeletableObject<AggregationDetail> implements Comparable<AggregationDetail>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
+    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true)
     private Aggregation aggregation;
 
     @OneToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true)
     private Product product;
-    @Column(name = "product_id")
-    private Long productId;
+
     @Column(name = "quantity")
     private BigDecimal quantity;
     @Column(name = "cost")
@@ -79,6 +78,14 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
     public void setProduct(Product product) {
         this.product = product;
     }
+
+//    public Long getProductId() {
+//        return productId;
+//    }
+//
+//    public void setProductId(Long productId) {
+//        this.productId = productId;
+//    }
 
     public BigDecimal getQuantity() {
         return quantity;
@@ -121,9 +128,9 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
         if (!Objects.equals(this.product, other.product)) {
             return false;
         }
-        if (!Objects.equals(this.productId, other.productId)) {
-            return false;
-        }
+//        if (!Objects.equals(this.productId, other.productId)) {
+//            return false;
+//        }
         return true;
     }
 

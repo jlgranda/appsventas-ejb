@@ -28,6 +28,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -44,19 +45,17 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "aggregation")
 @NamedQueries({
-    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),
-})
+    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),})
 public class Aggregation extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
-    
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "organization_id", insertable = true, updatable = true)
     private Organization organization;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true)
+
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
-    
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "aggregation", fetch = FetchType.LAZY)
     @Where(clause = "deleted = false") //sólo no eliminados
     @OrderBy(value = "cost")
@@ -89,7 +88,7 @@ public class Aggregation extends DeletableObject<Aggregation> implements Compara
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-        hcb.append(getId()).append(getProduct());
+        hcb.append(getId());
         return hcb.toHashCode();
     }
 
