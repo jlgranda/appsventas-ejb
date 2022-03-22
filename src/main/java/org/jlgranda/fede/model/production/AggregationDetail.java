@@ -38,42 +38,43 @@ import org.jpapi.model.DeletableObject;
  * @author usuario
  */
 @Entity
-@Table(name = "AggregationDetail")
+@Table(name = "aggregation_detail")
 @NamedQueries({
-    @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail agg WHERE agg.aggregation = ?1 order by agg.cost"),})
-public class AggregationDetail extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
+    @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail aggd WHERE aggd.aggregation = ?1 order by aggd.cost"),})
+public class AggregationDetail extends DeletableObject<AggregationDetail> implements Comparable<AggregationDetail>, Serializable {
 
-//    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
-//    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
-//    private Aggregation aggregation;
-//
-//    @OneToOne(optional = false, cascade = {CascadeType.ALL})
-//    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
-//    private Product product;
+    @ManyToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
+    private Aggregation aggregation;
 
-    @Column(name = "product_id", insertable = true, updatable = true, nullable = false)
+    @OneToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
+    private Product product;
+
+    @Column(name = "product_id")
     private Long productId;
 
     @Column(name = "quantity")
     private BigDecimal quantity;
+    
     @Column(name = "cost")
     private BigDecimal cost;
 
-//    public Aggregation getAggregation() {
-//        return aggregation;
-//    }
-//
-//    public void setAggregation(Aggregation aggregation) {
-//        this.aggregation = aggregation;
-//    }
-//
-//    public Product getProduct() {
-//        return product;
-//    }
-//
-//    public void setProduct(Product product) {
-//        this.product = product;
-//    }
+    public Aggregation getAggregation() {
+        return aggregation;
+    }
+
+    public void setAggregation(Aggregation aggregation) {
+        this.aggregation = aggregation;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
     public Long getProductId() {
         return productId;
@@ -99,42 +100,43 @@ public class AggregationDetail extends DeletableObject<Aggregation> implements C
         this.cost = cost;
     }
 
-//    @Override
-//    public int hashCode() {
-//        int hash = 3;
-//        hash = 37 * hash + Objects.hashCode(this.aggregation);
-//        hash = 37 * hash + Objects.hashCode(this.product);
-//        hash = 37 * hash + Objects.hashCode(this.productId);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (obj == null) {
-//            return false;
-//        }
-//        if (getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        final AggregationDetail other = (AggregationDetail) obj;
-//        if (!Objects.equals(this.aggregation, other.aggregation)) {
-//            return false;
-//        }
-//        if (!Objects.equals(this.product, other.product)) {
-//            return false;
-//        }
-//        if (!Objects.equals(this.productId, other.productId)) {
-//            return false;
-//        }
-//        return true;
-//    }
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        //hash = 37 * hash + Objects.hashCode(this.aggregation);
+        //hash = 37 * hash + Objects.hashCode(this.product);
+        hash = 37 * hash + Objects.hashCode(this.productId);
+        return hash;
+    }
 
     @Override
-    public int compareTo(Aggregation t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AggregationDetail other = (AggregationDetail) obj;
+        if (!Objects.equals(this.aggregation, other.aggregation)) {
+            return false;
+        }
+        if (!Objects.equals(this.product, other.product)) {
+            return false;
+        }
+        if (!Objects.equals(this.productId, other.productId)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    public int compareTo(AggregationDetail t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

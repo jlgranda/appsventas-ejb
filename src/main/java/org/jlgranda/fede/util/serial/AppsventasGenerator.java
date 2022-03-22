@@ -107,7 +107,7 @@ public final class AppsventasGenerator implements Generator, Serializable {
     
     public static void main (String [] args){
         AppsventasGenerator ag = new AppsventasGenerator();
-        AppsventasGenerator ag1 = new AppsventasGenerator("JLG", true, 5, 1L);
+        AppsventasGenerator ag1 = new AppsventasGenerator("001-001", false, 9, 0L);
         System.err.println(">> " + ag.next());
         System.err.println(">> " + ag.next());
         System.err.println(">> " + ag.next());

@@ -30,21 +30,23 @@ public class SerialService {
     /**
      * singletone instance
      */
-    private static Generator singleton;
+    private static volatile Generator singleton;
 
     /**
      * get the singleton Generator
      * @return 
      */
     public static Generator getGenerator() {
+        Generator singleton = SerialService.singleton;
         if (singleton == null) {
             synchronized (SerialService.class) {
+                singleton = SerialService.singleton;
                 if (singleton == null) {
-                    singleton = new AppsventasGenerator();
+                    SerialService.singleton = singleton = new AppsventasGenerator();
                 }
             }
         }
-        return SerialService.singleton;
+        return singleton;
     }
 
     public static void main(String[] args) {

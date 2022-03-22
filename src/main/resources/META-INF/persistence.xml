@@ -34,6 +34,7 @@
     <class>org.jpapi.model.Structure</class>
     <class>org.jpapi.model.profile.Subject</class>
     <class>org.jlgranda.fede.model.document.FacturaElectronica</class>
+    <class>org.jlgranda.fede.model.document.FacturaElectronicaDetail</class>
     <class>org.jlgranda.fede.model.management.Diagnostic</class>
     <class>org.jlgranda.fede.model.management.Initiative</class>
     <class>org.jlgranda.fede.model.management.Linkage</class>
@@ -72,9 +73,8 @@
     <class>net.tecnopro.document.model.Template</class>
     <class>net.tecnopro.mailing.Message</class>
     <class>net.tecnopro.mailing.Notification</class>
-    
     <!--SRI esquema v110-->
-    <class>org.jlgranda.fede.sri.factura.v110.Factura</class>
+    <!--    <class>org.jlgranda.fede.sri.factura.v110.Factura</class>
     <class>org.jlgranda.fede.sri.factura.v110.InfoTributaria</class>
     <class>org.jlgranda.fede.sri.factura.v110.InfoFactura</class>
     <class>org.jlgranda.fede.sri.factura.v110.Pago</class>
@@ -84,7 +84,7 @@
     <class>org.jlgranda.fede.sri.factura.v110.ReembolsoDetalle</class>
     <class>org.jlgranda.fede.sri.factura.v110.Retencion</class>
     <class>org.jlgranda.fede.sri.factura.v110.CampoAdicional</class>
-    <class>org.jlgranda.fede.sri.factura.v110.Impuesto</class>
+    <class>org.jlgranda.fede.sri.factura.v110.Impuesto</class>-->
     <!--// SRI esquema v110-->
     <class>org.jlgranda.fede.model.talentohumano.Employee</class>
     <class>org.jlgranda.fede.model.talentohumano.Journal</class>
@@ -104,8 +104,8 @@
     <class>org.jlgranda.fede.model.accounting.CashBoxDetail</class>
     <class>org.jlgranda.fede.model.sales.Kardex</class>
     <class>org.jlgranda.fede.model.sales.KardexDetail</class>
-    <class>org.jlgranda.fede.model.document.FacturaElectronicaDetail</class>
     <class>org.jlgranda.fede.model.production.Aggregation</class>
+    <class>org.jlgranda.fede.model.production.AggregationDetail</class>
     <class>org.jlgranda.fede.model.reportes.Reporte</class>
     <class>org.jlgranda.fede.model.compras.Proveedor</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
