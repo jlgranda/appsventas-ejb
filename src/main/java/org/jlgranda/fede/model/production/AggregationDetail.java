@@ -20,15 +20,18 @@ package org.jlgranda.fede.model.production;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,20 +45,23 @@ import org.jpapi.model.DeletableObject;
  * @author usuario
  */
 @Entity
-@Table(name = "AggregationDetail")
+@Table(name = "aggregation_detail")
 @NamedQueries({
-    @NamedQuery(name = "AggregationDetail.findByAggregation", query = "SELECT aggd FROM AggregationDetail aggd WHERE aggd.aggregation = ?1 order by aggd.cost"),})
+    @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail aggd WHERE aggd.aggregation = ?1 order by aggd.cost"),})
 public class AggregationDetail extends DeletableObject<AggregationDetail> implements Comparable<AggregationDetail>, Serializable {
 
-    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+    @ManyToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
     private Aggregation aggregation;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true, nullable = true)
+    @OneToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
     private Product product;
-
+    @Column(name = "product_id")
+    private Long productId;
+    @Column(name = "quantity")
     private BigDecimal quantity;
+    @Column(name = "cost")
     private BigDecimal cost;
 
     public Aggregation getAggregation() {
@@ -98,7 +104,7 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -108,20 +114,23 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
         if (getClass() != obj.getClass()) {
             return false;
         }
-
-        AggregationDetail other = (AggregationDetail) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-
-//        eb.append(getId(), other.getId());
-        eb.append(getAggregation(), other.getAggregation())
-                .append(getProduct(), other.getProduct());
-
-        return eb.isEquals();
+        final AggregationDetail other = (AggregationDetail) obj;
+        if (!Objects.equals(this.aggregation, other.aggregation)) {
+            return false;
+        }
+        if (!Objects.equals(this.product, other.product)) {
+            return false;
+        }
+        if (!Objects.equals(this.productId, other.productId)) {
+            return false;
+        }
+        return true;
     }
 
+
     @Override
-    public int compareTo(AggregationDetail other) {
-        return this.product.getId().compareTo(other.getProduct().getId());
+    public int compareTo(AggregationDetail t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

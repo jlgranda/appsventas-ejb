@@ -28,7 +28,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -43,22 +42,24 @@ import org.jpapi.model.Organization;
  * @author usuario
  */
 @Entity
-@Table(name = "Aggregation")
+@Table(name = "aggregation")
 @NamedQueries({
-    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1 order by agg.product ASC"),})
+    @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),
+})
 public class Aggregation extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
+    
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable = true, updatable = true)
     private Organization organization;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true)
     private Product product;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aggregation", fetch = FetchType.LAZY)
-    @Where(clause = "deleted = false")
-    @OrderBy(value = "entryOn ASC")
+    
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "aggregation", fetch = FetchType.LAZY)
+    @Where(clause = "deleted = false") //sólo no eliminados
+    @OrderBy(value = "cost")
     private List<AggregationDetail> aggregationDetails = new ArrayList<>();
 
     public Organization getOrganization() {

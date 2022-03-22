@@ -92,25 +92,25 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
         return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
     }
 
-//    public List<ProductAggregations> findByGroupProductAndOrganization(Organization organization) {
-//        List<ProductAggregations> productosAgregaciones = new ArrayList<>();
-//        List<Product> productos = this.findByNamedQuery("Aggregation.findProductsOfAggregationsByOrganization", organization);
-//        if (!productos.isEmpty()) {
-//            productos.forEach(p -> {
-//                ProductAggregations productoAgregaciones = new ProductAggregations();
-//                productoAgregaciones.producto = p;
-//                productoAgregaciones.agregaciones = this.findByProductAndOrganization(p, organization);
-//                BigDecimal totalCost = BigDecimal.ZERO;
-//                if (!productoAgregacxiones.agregaciones.isEmpty()) {
-//                    for (Aggregation aggregation : productoAgregaciones.agregaciones) {
-//                        totalCost = totalCost.add(aggregation.getCost());
-//                    }
-//                }
-//                productoAgregaciones.costoTotal = totalCost;
-//                productosAgregaciones.add(productoAgregaciones);
-//            });
-//        }
-//        return productosAgregaciones;
-//    }
+    public List<ProductAggregations> findByGroupProductAndOrganization(Organization organization) {
+        List<ProductAggregations> productosAgregaciones = new ArrayList<>();
+        List<Product> productos = this.findByNamedQuery("Aggregation.findProductsOfAggregationsByOrganization", organization);
+        if (!productos.isEmpty()) {
+            productos.forEach(p -> {
+                ProductAggregations productoAgregaciones = new ProductAggregations();
+                productoAgregaciones.producto = p;
+                productoAgregaciones.agregaciones = this.findByProductAndOrganization(p, organization);
+                BigDecimal totalCost = BigDecimal.ZERO;
+                if (!productoAgregaciones.agregaciones.isEmpty()) {
+                    for (Aggregation aggregation : productoAgregaciones.agregaciones) {
+                        //totalCost = totalCost.add(aggregation.getCost());
+                    }
+                }
+                productoAgregaciones.costoTotal = totalCost;
+                productosAgregaciones.add(productoAgregaciones);
+            });
+        }
+        return productosAgregaciones;
+    }
 
 }
