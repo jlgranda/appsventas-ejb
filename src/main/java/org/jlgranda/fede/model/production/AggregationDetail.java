@@ -19,13 +19,10 @@ package org.jlgranda.fede.model.production;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,10 +30,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.model.DeletableObject;
 
@@ -50,16 +45,20 @@ import org.jpapi.model.DeletableObject;
     @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail aggd WHERE aggd.aggregation = ?1 order by aggd.cost"),})
 public class AggregationDetail extends DeletableObject<AggregationDetail> implements Comparable<AggregationDetail>, Serializable {
 
-    @ManyToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true)
+    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
     private Aggregation aggregation;
 
-    @OneToOne(optional = false, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
 
     @Column(name = "quantity")
     private BigDecimal quantity;
+
+    @Column(name = "price_unit")
+    private BigDecimal priceUnit;
+
     @Column(name = "cost")
     private BigDecimal cost;
 
@@ -79,20 +78,20 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
         this.product = product;
     }
 
-//    public Long getProductId() {
-//        return productId;
-//    }
-//
-//    public void setProductId(Long productId) {
-//        this.productId = productId;
-//    }
-
     public BigDecimal getQuantity() {
         return quantity;
     }
 
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+
+    public BigDecimal getPriceUnit() {
+        return priceUnit;
+    }
+
+    public void setPriceUnit(BigDecimal priceUnit) {
+        this.priceUnit = priceUnit;
     }
 
     public BigDecimal getCost() {
@@ -106,7 +105,7 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-        hcb.append(getId());
+        hcb.append(getAggregation()).append(getProduct());
         return hcb.toHashCode();
     }
 
@@ -121,23 +120,19 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AggregationDetail other = (AggregationDetail) obj;
+        AggregationDetail other = (AggregationDetail) obj;
         if (!Objects.equals(this.aggregation, other.aggregation)) {
             return false;
         }
         if (!Objects.equals(this.product, other.product)) {
             return false;
         }
-//        if (!Objects.equals(this.productId, other.productId)) {
-//            return false;
-//        }
         return true;
     }
 
-
     @Override
     public int compareTo(AggregationDetail t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.product.getId().compareTo(t.getProduct().getId());
     }
 
 }

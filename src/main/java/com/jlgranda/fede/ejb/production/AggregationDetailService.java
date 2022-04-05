@@ -18,7 +18,9 @@
 package com.jlgranda.fede.ejb.production;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,11 +28,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.jlgranda.fede.model.production.Aggregation;
 import org.jlgranda.fede.model.production.AggregationDetail;
 import org.jlgranda.fede.model.production.AggregationDetail_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
+import org.jpapi.util.QuerySortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,18 +44,18 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class AggregationDetailService extends BussinesEntityHome<AggregationDetail> {
-    
+
     Logger logger = LoggerFactory.getLogger(AggregationDetailService.class);
-    
+
     @PersistenceContext
     EntityManager em;
-    
+
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(AggregationDetail.class);
     }
-    
+
     @Override
     public AggregationDetail createInstance() {
         AggregationDetail _instance = new AggregationDetail();
@@ -63,6 +67,7 @@ public class AggregationDetailService extends BussinesEntityHome<AggregationDeta
         _instance.setAuthor(null); //Establecer al usuario actual
         _instance.setQuantity(BigDecimal.ONE);
         _instance.setCost(BigDecimal.ZERO);
+        _instance.setPriceUnit(BigDecimal.ZERO);
         return _instance;
     }
 
@@ -70,14 +75,20 @@ public class AggregationDetailService extends BussinesEntityHome<AggregationDeta
     public long count() {
         return super.count(AggregationDetail.class);
     }
-    
+
     public List<AggregationDetail> find(int maxresults, int firstresult) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<AggregationDetail> query = builder.createQuery(AggregationDetail.class);
-        
+
         Root<AggregationDetail> from = query.from(AggregationDetail.class);
         query.select(from).orderBy(builder.desc(from.get(AggregationDetail_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
+
+    public List<AggregationDetail> findByAggregation(Aggregation aggregation) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("aggregation", aggregation);
+        return this.find(-1, -1, "createdOn", QuerySortOrder.DESC, params).getResult();
+    }
+
 }

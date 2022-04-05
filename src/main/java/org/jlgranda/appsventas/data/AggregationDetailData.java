@@ -18,42 +18,39 @@
 package org.jlgranda.appsventas.data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import org.jlgranda.fede.model.production.Aggregation;
-import org.jlgranda.fede.model.sales.Product;
 
 /**
  *
  * @author usuario
  */
-public class ProductAggregations {
+public class AggregationDetailData {
 
-    public Product producto;
-    public List<Aggregation> agregaciones = new ArrayList<>();
-    public BigDecimal costoTotal;
+    private String elementName;
+    private BigDecimal quantity;
+    private BigDecimal cost;
 
-    public Product getProducto() {
-        return producto;
+    public String getElementName() {
+        return elementName;
     }
 
-    public void setProducto(Product producto) {
-        this.producto = producto;
+    public void setElementName(String elementName) {
+        this.elementName = elementName;
     }
 
-    public List<Aggregation> getAgregaciones() {
-        return agregaciones;
+    public BigDecimal getQuantity() {
+        return quantity;
     }
 
-    public void setAgregaciones(List<Aggregation> agregaciones) {
-        this.agregaciones = agregaciones;
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
-    public BigDecimal getCostoTotal() {
-        return costoTotal;
+    public BigDecimal getCost() {
+        return cost;
     }
 
-    public void setCostoTotal(BigDecimal costoTotal) {
-        this.costoTotal = costoTotal;
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
+
 }

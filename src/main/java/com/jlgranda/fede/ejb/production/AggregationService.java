@@ -29,10 +29,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.appsventas.data.ProductAggregations;
+import org.apache.commons.beanutils.BeanUtils;
+import org.jlgranda.appsventas.data.AggregationData;
+import org.jlgranda.appsventas.data.AggregationDetailData;
 import org.jlgranda.fede.model.production.Aggregation;
+import org.jlgranda.fede.model.production.AggregationDetail;
 import org.jlgranda.fede.model.production.Aggregation_;
-import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
@@ -47,18 +49,20 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class AggregationService extends BussinesEntityHome<Aggregation> {
-
+    
     Logger logger = LoggerFactory.getLogger(AggregationService.class);
-
+    
+    private BigDecimal costTotal;
+    
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(Aggregation.class);
     }
-
+    
     @Override
     public Aggregation createInstance() {
         Aggregation _instance = new Aggregation();
@@ -75,42 +79,53 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
     public long count() {
         return super.count(Aggregation.class);
     }
-
+    
     public List<Aggregation> find(int maxresults, int firstresult) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Aggregation> query = builder.createQuery(Aggregation.class);
-
+        
         Root<Aggregation> from = query.from(Aggregation.class);
         query.select(from).orderBy(builder.desc(from.get(Aggregation_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
-    public List<Aggregation> findByProductAndOrganization(Product product, Organization organization) {
+    
+    public List<Aggregation> findByOrganization(Organization organization) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
-        params.put("product", product);
-        return this.find(-1, -1, "name", QuerySortOrder.ASC, params).getResult();
+        return this.find(-1, -1, "name", QuerySortOrder.DESC, params).getResult();
     }
-
-    public List<ProductAggregations> findByGroupProductAndOrganization(Organization organization) {
-        List<ProductAggregations> productosAgregaciones = new ArrayList<>();
-        List<Product> productos = this.findByNamedQuery("Aggregation.findProductsOfAggregationsByOrganization", organization);
-        if (!productos.isEmpty()) {
-            productos.forEach(p -> {
-                ProductAggregations productoAgregaciones = new ProductAggregations();
-                productoAgregaciones.producto = p;
-                productoAgregaciones.agregaciones = this.findByProductAndOrganization(p, organization);
-                BigDecimal totalCost = BigDecimal.ZERO;
-                if (!productoAgregaciones.agregaciones.isEmpty()) {
-                    for (Aggregation aggregation : productoAgregaciones.agregaciones) {
-                        //totalCost = totalCost.add(aggregation.getCost());
-                    }
-                }
-                productoAgregaciones.costoTotal = totalCost;
-                productosAgregaciones.add(productoAgregaciones);
+    
+    public List<AggregationData> buildDatafindByOrganization(Organization organization) {
+        List<AggregationData> aggregationsData = new ArrayList<>();
+        List<Aggregation> aggregations = this.findByOrganization(organization);
+        if (!aggregations.isEmpty()) {
+            aggregations.forEach(agg -> {
+                AggregationData aggregationData = new AggregationData();
+                aggregationData.setId(agg.getId());
+                aggregationData.setProductName(agg.getProduct().getName());
+                aggregationData.setDescription(agg.getDescription());
+                aggregationData.setAggregationDetails(buildDataAggregationDetail(agg.getAggregationDetails()));
+                aggregationData.setCostTotal(this.costTotal);
+                aggregationsData.add(aggregationData);
             });
         }
-        return productosAgregaciones;
+        return aggregationsData;
+    }
+    
+    public List<AggregationDetailData> buildDataAggregationDetail(List<AggregationDetail> aggregationDetails) {
+        this.costTotal = BigDecimal.ZERO;
+        List<AggregationDetailData> aggregationDetailsData = new ArrayList<>();
+        if (!aggregationDetails.isEmpty()) {
+            aggregationDetails.forEach(aggd -> {
+                AggregationDetailData aggregationDetailData = new AggregationDetailData();
+                aggregationDetailData.setCost(aggd.getCost());
+                aggregationDetailData.setQuantity(aggd.getQuantity());
+                aggregationDetailData.setElementName(aggd.getProduct().getName());
+                this.costTotal = this.costTotal.add(aggd.getCost());
+                aggregationDetailsData.add(aggregationDetailData);
+            });
+        }
+        return aggregationDetailsData;
     }
 
 }

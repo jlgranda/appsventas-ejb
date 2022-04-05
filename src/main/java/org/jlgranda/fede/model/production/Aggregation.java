@@ -20,6 +20,7 @@ package org.jlgranda.fede.model.production;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +33,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.annotations.Where;
 import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.model.DeletableObject;
@@ -52,8 +52,8 @@ public class Aggregation extends DeletableObject<Aggregation> implements Compara
     @JoinColumn(name = "organization_id", insertable = true, updatable = true)
     private Organization organization;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true)
     private Product product;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "aggregation", fetch = FetchType.LAZY)
@@ -85,10 +85,20 @@ public class Aggregation extends DeletableObject<Aggregation> implements Compara
         this.aggregationDetails = aggregationDetails;
     }
 
+    public AggregationDetail addAggregationDetail(AggregationDetail aggregationDetail) {
+        aggregationDetail.setAggregation(this);
+        if (this.aggregationDetails.contains(aggregationDetail)) {
+            this.aggregationDetails.set(this.aggregationDetails.indexOf(aggregationDetail), aggregationDetail);
+        } else {
+            this.aggregationDetails.add(aggregationDetail);
+        }
+        return aggregationDetail;
+    }
+
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-        hcb.append(getId());
+        hcb.append(getOrganization()).append(getProduct());
         return hcb.toHashCode();
     }
 
@@ -104,12 +114,13 @@ public class Aggregation extends DeletableObject<Aggregation> implements Compara
             return false;
         }
         Aggregation other = (Aggregation) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-
-        eb.append(getOrganization(), other.getOrganization())
-                .append(getProduct(), other.getProduct());
-
-        return eb.isEquals();
+        if (!Objects.equals(this.organization, other.organization)) {
+            return false;
+        }
+        if (!Objects.equals(this.product, other.product)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
