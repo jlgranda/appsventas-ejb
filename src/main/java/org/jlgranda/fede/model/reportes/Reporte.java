@@ -36,6 +36,7 @@ import org.jpapi.model.Organization;
 @Table(name = "reporte")
 @NamedQueries({
     @NamedQuery(name = "Reporte.findByProductAndOrg", query = "SELECT r FROM Reporte r WHERE r.id = ?1 and r.organization = ?2 and r.deleted = false ORDER BY r.id DESC"),
+    @NamedQuery(name = "Reporte.findByModuloAndOrg", query = "SELECT r FROM Reporte r WHERE r.modulo = ?1 and r.organization = ?2 and r.deleted = false ORDER BY r.name ASC"),
 })
 public class Reporte extends DeletableObject<Reporte> implements Comparable<Reporte>, Serializable {
     

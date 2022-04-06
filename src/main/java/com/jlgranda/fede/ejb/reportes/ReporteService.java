@@ -28,6 +28,7 @@ import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.reportes.Reporte;
 import org.jlgranda.fede.model.reportes.Reporte_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 import org.slf4j.Logger;
@@ -62,19 +63,23 @@ public class ReporteService extends BussinesEntityHome<Reporte> {
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
-    
+
     //Soporte para lazy data model
     public long count() {
         return super.count(Reporte.class);
     }
-    
+
     public List<Reporte> find(int maxresults, int firstresult) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Reporte> query = builder.createQuery(Reporte.class);
-        
+
         Root<Reporte> from = query.from(Reporte.class);
         query.select(from).orderBy(builder.desc(from.get(Reporte_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
+
+    public List<Reporte> findByModuloAndOrganization(String modulo, Organization organization) {
+        return this.findByNamedQuery("Reporte.findByModuloAndOrg", modulo, organization);
+    }
+
 }
