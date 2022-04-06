@@ -48,17 +48,17 @@ import org.jpapi.model.Organization;
     @NamedQuery(name = "Aggregation.findProductsOfAggregationsByOrganization", query = "SELECT DISTINCT agg.product FROM Aggregation agg WHERE agg.organization = ?1"),})
 public class Aggregation extends DeletableObject<Aggregation> implements Comparable<Aggregation>, Serializable {
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
+    @ManyToOne()
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, nullable = true, unique = true)
     private Product product;
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "aggregation", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "aggregation", fetch = FetchType.LAZY)
     @Where(clause = "deleted = false") //sólo no eliminados
-    @OrderBy(value = "cost")
+    @OrderBy(value = "cost ASC")
     private List<AggregationDetail> aggregationDetails = new ArrayList<>();
 
     public Organization getOrganization() {

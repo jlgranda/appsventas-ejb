@@ -47,17 +47,16 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Kardex")
 @NamedQueries({
-    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false ORDER BY kd.id DESC"),
-})
-@AttributeOverride(name = "code", column = @Column(name = "code", unique=true, nullable = false))
-@AttributeOverride(name = "name", column = @Column(name = "name", unique=true, nullable = false))
+    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false ORDER BY kd.id DESC"),})
+@AttributeOverride(name = "code", column = @Column(name = "code", unique = true, nullable = false))
+@AttributeOverride(name = "name", column = @Column(name = "name", unique = true, nullable = false))
 public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex>, Serializable {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "organization_id", insertable = true, updatable = true)
     private Organization organization;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
 
@@ -65,16 +64,16 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     @Where(clause = "deleted = false")
     @OrderBy(value = "entryOn ASC")
     private List<KardexDetail> kardexDetails = new ArrayList<>();
-    
+
     private BigDecimal quantity;
     private BigDecimal fund;
-    @Column( name = "unit_measure")
+    @Column(name = "unit_measure")
     private String unitMeasure;
-    @Column( name = "unit_minimum")
+    @Column(name = "unit_minimum")
     private BigDecimal unitMinimum;
-    @Column( name = "unit_maximum")
+    @Column(name = "unit_maximum")
     private BigDecimal unitMaximum;
-    
+
     public Organization getOrganization() {
         return organization;
     }
@@ -139,16 +138,16 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
         this.unitMaximum = unitMaximum;
     }
 
-    public void addKardexDetail(KardexDetail kardexDetail){
+    public void addKardexDetail(KardexDetail kardexDetail) {
         kardexDetail.setKardex(this);
-        if(this.kardexDetails.contains(kardexDetail)){
+        if (this.kardexDetails.contains(kardexDetail)) {
             replaceKardexDetail(kardexDetail);
-        }else{
+        } else {
             this.kardexDetails.add(kardexDetail);
         }
     }
-    
-    public KardexDetail replaceKardexDetail(KardexDetail kardexDetail){
+
+    public KardexDetail replaceKardexDetail(KardexDetail kardexDetail) {
         getKardexDetails().set(getKardexDetails().indexOf(kardexDetail), kardexDetail);
         return kardexDetail;
     }
@@ -186,11 +185,14 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     }
 
     /**
-     * Encuentra la instancia <tt>KardexDetail</tt> para la bussinesEntityId y bussinesEntityType y el operationType
+     * Encuentra la instancia <tt>KardexDetail</tt> para la bussinesEntityId y
+     * bussinesEntityType y el operationType
+     *
      * @param bussinesEntityType
      * @param bussinesEntityId
      * @param operationType
-     * @return El <tt>KardexDetail</tt> que coinicide con los criterios datos o null en caso contrario
+     * @return El <tt>KardexDetail</tt> que coinicide con los criterios datos o
+     * null en caso contrario
      */
     public KardexDetail findKardexDetail(String bussinesEntityType, Long bussinesEntityId, KardexDetail.OperationType operationType) {
 

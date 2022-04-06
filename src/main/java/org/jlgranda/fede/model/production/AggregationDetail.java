@@ -31,7 +31,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.model.DeletableObject;
 
@@ -45,12 +44,12 @@ import org.jpapi.model.DeletableObject;
     @NamedQuery(name = "Aggregation.findByAggregation", query = "SELECT aggd FROM AggregationDetail aggd WHERE aggd.aggregation = ?1 order by aggd.cost"),})
 public class AggregationDetail extends DeletableObject<AggregationDetail> implements Comparable<AggregationDetail>, Serializable {
 
-    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
     private Aggregation aggregation;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "product_id", insertable = true, updatable = true, nullable = true)
     private Product product;
 
     @Column(name = "quantity")
