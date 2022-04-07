@@ -88,11 +88,22 @@ public class Aggregation extends DeletableObject<Aggregation> implements Compara
     public AggregationDetail addAggregationDetail(AggregationDetail aggregationDetail) {
         aggregationDetail.setAggregation(this);
         if (this.aggregationDetails.contains(aggregationDetail)) {
-            this.aggregationDetails.set(this.aggregationDetails.indexOf(aggregationDetail), aggregationDetail);
+            replaceAggregationDetail(aggregationDetail);
         } else {
             this.aggregationDetails.add(aggregationDetail);
         }
         return aggregationDetail;
+    }
+    public AggregationDetail removeAggregationDetail(AggregationDetail aggregationDetail) {
+        if (this.aggregationDetails.contains(aggregationDetail)) {
+            this.aggregationDetails.remove(aggregationDetail);
+        }
+        return aggregationDetail;
+    }
+    
+    public AggregationDetail replaceAggregationDetail(AggregationDetail detail) {
+        getAggregationDetails().set(getAggregationDetails().indexOf(detail), detail);
+        return detail;
     }
 
     @Override

@@ -23,14 +23,11 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.model.DeletableObject;
 
@@ -48,9 +45,12 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
     @JoinColumn(name = "aggregation_id", insertable = true, updatable = true, nullable = true)
     private Aggregation aggregation;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "product_id", insertable = true, updatable = true, nullable = true)
+    @ManyToOne(optional = true, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "product_id", insertable=false, updatable=false, nullable=false)
     private Product product;
+    
+    @Column(name = "product_id", insertable=true, updatable=true, nullable=false)
+    private Long productId;
 
     @Column(name = "quantity")
     private BigDecimal quantity;
@@ -75,6 +75,14 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public BigDecimal getQuantity() {
@@ -103,8 +111,17 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
 
     @Override
     public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-        hcb.append(getAggregation()).append(getProduct());
+        org.apache.commons.lang3.builder.HashCodeBuilder hcb = new org.apache.commons.lang3.builder.HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+        if (getProduct() != null) {
+            hcb.append(getAggregation()).
+                    append(getProductId()).
+                    append(getProduct());
+        } else {
+            hcb.append(getAggregation()).
+                    append(getProductId());
+        }
+
         return hcb.toHashCode();
     }
 
@@ -123,10 +140,7 @@ public class AggregationDetail extends DeletableObject<AggregationDetail> implem
         if (!Objects.equals(this.aggregation, other.aggregation)) {
             return false;
         }
-        if (!Objects.equals(this.product, other.product)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.product, other.product);
     }
 
     @Override
