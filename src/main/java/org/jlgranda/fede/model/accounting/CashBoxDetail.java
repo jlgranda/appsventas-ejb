@@ -52,8 +52,7 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)    
-    private CashBoxDetail.DenominationType denomination_type;
-            
+    private CashBoxDetail.DenominationType denominationType;
     String denomination;
     BigDecimal valuer;
     Long quantity;
@@ -80,12 +79,12 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         this.denomination = denomination;
     }
 
-    public DenominationType getDenomination_type() {
-        return denomination_type;
+    public DenominationType getDenominationType() {
+        return denominationType;
     }
 
-    public void setDenomination_type(DenominationType denomination_type) {
-        this.denomination_type = denomination_type;
+    public void setDenominationType(DenominationType denominationType) {
+        this.denominationType = denominationType;
     }
 
     public BigDecimal getValuer() {

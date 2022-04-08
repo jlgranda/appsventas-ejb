@@ -54,8 +54,7 @@ import org.jpapi.model.PersistentObject;
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.id <> ?3 ORDER BY 1"),
     @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority_order = ?2"),
     @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxGeneral", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1"),
-    @NamedQuery(name = "CashBoxPartial.findByPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.priority = ?1"),
-})
+    @NamedQuery(name = "CashBoxPartial.findByPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.priority = ?1"),})
 public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements Comparable<CashBoxPartial>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
@@ -65,43 +64,33 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBoxPartial", fetch = FetchType.LAZY)
     private List<CashBoxDetail> cashBoxDetails = new ArrayList<>();
 
-    BigDecimal cashPartial; //Todo el dinero en efectivo que se tenía antes de hacer un depósito (si hubiese, sería diferente al saldoPartial).
+    private BigDecimal cashPartial; //Todo el dinero en efectivo recolectado hasta el momento de hacer el registro de billetes/monedas.
+    private BigDecimal totalcashBills; //Subtotal de billetes.
+    private BigDecimal totalcashMoneys; //Subtotal de monedas.
+    private BigDecimal totalCashBreakdown; //Total de dinero desglosado.
+    private BigDecimal missCashPartial; //Dinero faltante.
+    private BigDecimal excessCashPartial; //Dinero sobrante.
 
-    BigDecimal saldoPartial; //Dinero que queda luego de hacer un depósito y el que se va a desglosar.
+    private BigDecimal amountDeposit; //Dinero de depósito.
+    @ManyToOne()
+    private Account accountDeposit; //Cuenta de depósito.
+    private BigDecimal cashFinally; //Dinero en efectivo final que queda luego de haber registrado y haber hecho un depósito (si no hay deposito es igual que el cashPartial).
 
-    BigDecimal totalcashBills; //Subtotal de billetes.
+    private Boolean statusComplete; //Marca si el cashBoxPartial está cerrado/completo;
+    private Boolean statusFinal; //Marca si el cashBoxPartial es el final del día;
 
-    BigDecimal totalcashMoneys; //Subtotal de monedas.
-
-    BigDecimal totalCashBreakdown; //Total de dinero desglosado (Suma de billetes y monedas).
-
-    BigDecimal missCashPartial; //Dinero faltante.
-
-    BigDecimal excessCashPartial; //Dinero sobrante.
-    
-    BigDecimal amountDeposit; //Dinero de depósito.
-    
-    Account accountDeposit; //Cuenta de depósito.
-
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) //Marca el tipo de verificación del cashBoxPartial
     @Column(nullable = true)
-    private CashBoxPartial.Status statusCashBoxPartial;
+    private CashBoxPartial.Verification typeVerification;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) //Marca la prioridad del cashBoxPartial
     @Column(nullable = true)
-    private CashBoxPartial.Priority priority_order;
+    private CashBoxPartial.Priority orderPriority;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private CashBoxPartial.StatusPriority status_priority;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private CashBoxPartial.Verification verification_TotalBreakdown;
-    
-    public enum Status {
-        OPEN,
-        CLOSED;
+    public enum Verification {
+        CORRECT,
+        INCORRECT,
+        NOT_VERIFIED;
     }
 
     public enum Priority {
@@ -109,18 +98,7 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         MAIN,
         SECONDARY;
     }
-    
-    public enum StatusPriority{
-        INTERMEDIATE,
-        FINAL;
-    }
-    
-    public enum Verification{
-        CORRECT,
-        INCORRECT,
-        NOT_VERIFIED;
-    }
-            
+
     public CashBoxGeneral getCashBoxGeneral() {
         return cashBoxGeneral;
     }
@@ -137,35 +115,12 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         this.cashBoxDetails = cashBoxDetails;
     }
 
-    public void addCashBoxDetail(CashBoxDetail cashBoxDetail) {
-        cashBoxDetail.setCashBoxPartial(this);
-        if (this.cashBoxDetails.contains(cashBoxDetail)) {
-            replaceCashBoxDetail(cashBoxDetail);
-        } else {
-            this.cashBoxDetails.add(cashBoxDetail);
-        }
-    }
-
-    public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
-        getCashBoxDetails().set(getCashBoxDetails().indexOf(cashBoxDetail), cashBoxDetail);
-
-        return cashBoxDetail;
-    }
-
     public BigDecimal getCashPartial() {
         return cashPartial;
     }
 
     public void setCashPartial(BigDecimal cashPartial) {
         this.cashPartial = cashPartial;
-    }
-
-    public BigDecimal getSaldoPartial() {
-        return saldoPartial;
-    }
-
-    public void setSaldoPartial(BigDecimal saldoPartial) {
-        this.saldoPartial = saldoPartial;
     }
 
     public BigDecimal getTotalcashBills() {
@@ -224,36 +179,59 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         this.accountDeposit = accountDeposit;
     }
 
-    public Status getStatusCashBoxPartial() {
-        return statusCashBoxPartial;
+    public BigDecimal getCashFinally() {
+        return cashFinally;
     }
 
-    public void setStatusCashBoxPartial(Status statusCashBoxPartial) {
-        this.statusCashBoxPartial = statusCashBoxPartial;
+    public void setCashFinally(BigDecimal cashFinally) {
+        this.cashFinally = cashFinally;
     }
 
-    public Priority getPriority_order() {
-        return priority_order;
+    public Boolean getStatusComplete() {
+        return statusComplete;
     }
 
-    public void setPriority_order(Priority priority_order) {
-        this.priority_order = priority_order;
+    public void setStatusComplete(Boolean statusComplete) {
+        this.statusComplete = statusComplete;
     }
 
-    public StatusPriority getStatus_priority() {
-        return status_priority;
+    public Boolean getStatusFinal() {
+        return statusFinal;
     }
 
-    public void setStatus_priority(StatusPriority status_priority) {
-        this.status_priority = status_priority;
+    public void setStatusFinal(Boolean statusFinal) {
+        this.statusFinal = statusFinal;
     }
 
-    public Verification getVerification_TotalBreakdown() {
-        return verification_TotalBreakdown;
+    public Verification getTypeVerification() {
+        return typeVerification;
     }
 
-    public void setVerification_TotalBreakdown(Verification verification_TotalBreakdown) {
-        this.verification_TotalBreakdown = verification_TotalBreakdown;
+    public void setTypeVerification(Verification typeVerification) {
+        this.typeVerification = typeVerification;
+    }
+
+    public Priority getOrderPriority() {
+        return orderPriority;
+    }
+
+    public void setOrderPriority(Priority orderPriority) {
+        this.orderPriority = orderPriority;
+    }
+
+    public void addCashBoxDetail(CashBoxDetail cashBoxDetail) {
+        cashBoxDetail.setCashBoxPartial(this);
+        if (this.cashBoxDetails.contains(cashBoxDetail)) {
+            replaceCashBoxDetail(cashBoxDetail);
+        } else {
+            this.cashBoxDetails.add(cashBoxDetail);
+        }
+    }
+
+    public CashBoxDetail replaceCashBoxDetail(CashBoxDetail cashBoxDetail) {
+        getCashBoxDetails().set(getCashBoxDetails().indexOf(cashBoxDetail), cashBoxDetail);
+
+        return cashBoxDetail;
     }
 
     @Override
