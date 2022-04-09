@@ -39,19 +39,19 @@ import org.jpapi.util.Dates;
  */
 @Stateless
 public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
-
+    
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(CashBoxPartial.class);
     }
-
+    
     @Override
     public CashBoxPartial createInstance() {
-
+        
         CashBoxPartial _instance = new CashBoxPartial();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
@@ -59,14 +59,16 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
 //        _instance.setAuthor(null); //Establecer al usuario actual
-        _instance.setStatusCashBoxPartial(CashBoxPartial.Status.OPEN);
-        _instance.setSaldoPartial(BigDecimal.ZERO);
-        _instance.setTotalcashBills(BigDecimal.ZERO);
-        _instance.setTotalcashMoneys(BigDecimal.ZERO);
-        _instance.setTotalCashBreakdown(BigDecimal.ZERO);
-        _instance.setMissCashPartial(BigDecimal.ZERO);
-        _instance.setExcessCashPartial(BigDecimal.ZERO);
         _instance.setCashPartial(BigDecimal.ZERO);
+        _instance.setTotalCashBills(BigDecimal.ZERO);
+        _instance.setTotalCashMoneys(BigDecimal.ZERO);
+        _instance.setTotalCashBreakdown(BigDecimal.ZERO);
+        _instance.setMissCash(BigDecimal.ZERO);
+        _instance.setExcessCash(BigDecimal.ZERO);
+        _instance.setCashFinally(BigDecimal.ZERO);
+        _instance.setStatusComplete(Boolean.FALSE);
+        _instance.setStatusFinally(Boolean.FALSE);
+        _instance.setTypeVerification(CashBoxPartial.Verification.NOT_VERIFIED);
         return _instance;
     }
 
@@ -74,17 +76,17 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
     public long count() {
         return super.count(CashBoxPartial.class);
     }
-
+    
     public List<CashBoxPartial> find(int maxresults, int firstresult) {
-
+        
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<CashBoxPartial> query = builder.createQuery(CashBoxPartial.class);
-
+        
         Root<CashBoxPartial> from = query.from(CashBoxPartial.class);
         query.select(from).orderBy(builder.desc(from.get(CashBoxPartial_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
+    
     public int getPriority(CashBoxGeneral cashBoxGeneral) {
         if (cashBoxGeneral.getId() == null) {
             return 0;
@@ -92,13 +94,5 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
             return (int) this.count("CashBoxPartial.countCashBoxPartialByCashBoxGeneral", cashBoxGeneral);
         }
     }
-
-    public CashBoxPartial.Priority getPriorityOrder(CashBoxPartial cashBoxPartial) {
-        if (cashBoxPartial.getPriority_order() == null) {
-            return CashBoxPartial.Priority.MAIN;
-        } else {
-            return cashBoxPartial.getPriority_order();
-        }
-    }
-
+    
 }

@@ -44,17 +44,18 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "CashBox_Partial")
 @NamedQueries({
-    @NamedQuery(name = "CashBoxPartial.findByName", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY s.id DESC"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.priority_order = ?3 ORDER BY s.id DESC"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 ORDER BY s.id DESC"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndStatusPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.status_priority = ?3 ORDER BY s.id DESC"),
-    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.id <> ?3 ORDER BY 1"),
-    @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority_order = ?2"),
+//    @NamedQuery(name = "CashBoxPartial.findByName", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+//    @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+//    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY 1"),
+//    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2 ORDER BY s.id DESC"),
+//    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndOwnerAndPriorityOrder", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.owner = ?2  and s.orderPriority = ?3 ORDER BY s.id DESC"),
+//    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatus", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 ORDER BY s.id DESC"),
+//    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndStatusPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusCashBoxPartial = ?2 and s.status_priority = ?3 ORDER BY s.id DESC"),
+//    @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndStatusAndId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.statusComplete = ?2 and s.id <> ?3 ORDER BY 1"),
+//    @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxPriorityOrder", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.orderPriority = ?2"),
+//    @NamedQuery(name = "CashBoxPartial.findByPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.priority = ?1"),
     @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxGeneral", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1"),
-    @NamedQuery(name = "CashBoxPartial.findByPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.priority = ?1"),})
+})
 public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements Comparable<CashBoxPartial>, Serializable {
 
     @ManyToOne(optional = false, cascade = {CascadeType.ALL})
@@ -65,38 +66,28 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
     private List<CashBoxDetail> cashBoxDetails = new ArrayList<>();
 
     private BigDecimal cashPartial; //Todo el dinero en efectivo recolectado hasta el momento de hacer el registro de billetes/monedas.
-    private BigDecimal totalcashBills; //Subtotal de billetes.
-    private BigDecimal totalcashMoneys; //Subtotal de monedas.
+    private BigDecimal totalCashBills; //Subtotal de billetes.
+    private BigDecimal totalCashMoneys; //Subtotal de monedas.
     private BigDecimal totalCashBreakdown; //Total de dinero desglosado.
-    private BigDecimal missCashPartial; //Dinero faltante.
-    private BigDecimal excessCashPartial; //Dinero sobrante.
+    private BigDecimal missCash; //Dinero faltante.
+    private BigDecimal excessCash; //Dinero sobrante.
 
     private BigDecimal amountDeposit; //Dinero de depósito.
     @ManyToOne()
     private Account accountDeposit; //Cuenta de depósito.
-    private BigDecimal cashFinally; //Dinero en efectivo final que queda luego de haber registrado y haber hecho un depósito (si no hay deposito es igual que el cashPartial).
+    private BigDecimal cashFinally; //Dinero en efectivo final que queda luego de haber registrado y haber hecho un depósito (si no hay deposito es igual que el totalCashBreakdown).
 
     private Boolean statusComplete; //Marca si el cashBoxPartial está cerrado/completo;
-    private Boolean statusFinal; //Marca si el cashBoxPartial es el final del día;
+    private Boolean statusFinally; //Marca si el cashBoxPartial es el final del día;
 
     @Enumerated(EnumType.STRING) //Marca el tipo de verificación del cashBoxPartial
     @Column(nullable = true)
     private CashBoxPartial.Verification typeVerification;
 
-    @Enumerated(EnumType.STRING) //Marca la prioridad del cashBoxPartial
-    @Column(nullable = true)
-    private CashBoxPartial.Priority orderPriority;
-
     public enum Verification {
         CORRECT,
         INCORRECT,
         NOT_VERIFIED;
-    }
-
-    public enum Priority {
-        BASIC,
-        MAIN,
-        SECONDARY;
     }
 
     public CashBoxGeneral getCashBoxGeneral() {
@@ -123,20 +114,20 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         this.cashPartial = cashPartial;
     }
 
-    public BigDecimal getTotalcashBills() {
-        return totalcashBills;
+    public BigDecimal getTotalCashBills() {
+        return totalCashBills;
     }
 
-    public void setTotalcashBills(BigDecimal totalcashBills) {
-        this.totalcashBills = totalcashBills;
+    public void setTotalCashBills(BigDecimal totalCashBills) {
+        this.totalCashBills = totalCashBills;
     }
 
-    public BigDecimal getTotalcashMoneys() {
-        return totalcashMoneys;
+    public BigDecimal getTotalCashMoneys() {
+        return totalCashMoneys;
     }
 
-    public void setTotalcashMoneys(BigDecimal totalcashMoneys) {
-        this.totalcashMoneys = totalcashMoneys;
+    public void setTotalCashMoneys(BigDecimal totalCashMoneys) {
+        this.totalCashMoneys = totalCashMoneys;
     }
 
     public BigDecimal getTotalCashBreakdown() {
@@ -147,20 +138,20 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         this.totalCashBreakdown = totalCashBreakdown;
     }
 
-    public BigDecimal getMissCashPartial() {
-        return missCashPartial;
+    public BigDecimal getMissCash() {
+        return missCash;
     }
 
-    public void setMissCashPartial(BigDecimal missCashPartial) {
-        this.missCashPartial = missCashPartial;
+    public void setMissCash(BigDecimal missCash) {
+        this.missCash = missCash;
     }
 
-    public BigDecimal getExcessCashPartial() {
-        return excessCashPartial;
+    public BigDecimal getExcessCash() {
+        return excessCash;
     }
 
-    public void setExcessCashPartial(BigDecimal excessCashPartial) {
-        this.excessCashPartial = excessCashPartial;
+    public void setExcessCash(BigDecimal excessCash) {
+        this.excessCash = excessCash;
     }
 
     public BigDecimal getAmountDeposit() {
@@ -195,12 +186,12 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
         this.statusComplete = statusComplete;
     }
 
-    public Boolean getStatusFinal() {
-        return statusFinal;
+    public Boolean getStatusFinally() {
+        return statusFinally;
     }
 
-    public void setStatusFinal(Boolean statusFinal) {
-        this.statusFinal = statusFinal;
+    public void setStatusFinally(Boolean statusFinally) {
+        this.statusFinally = statusFinally;
     }
 
     public Verification getTypeVerification() {
@@ -209,14 +200,6 @@ public class CashBoxPartial extends PersistentObject<CashBoxPartial> implements 
 
     public void setTypeVerification(Verification typeVerification) {
         this.typeVerification = typeVerification;
-    }
-
-    public Priority getOrderPriority() {
-        return orderPriority;
-    }
-
-    public void setOrderPriority(Priority orderPriority) {
-        this.orderPriority = orderPriority;
     }
 
     public void addCashBoxDetail(CashBoxDetail cashBoxDetail) {
