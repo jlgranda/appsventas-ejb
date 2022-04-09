@@ -32,9 +32,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Where;
 import org.jpapi.model.Organization;
 import org.jpapi.model.PersistentObject;
 
@@ -44,54 +46,33 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "CashBox_General")
-@NamedQueries({ @NamedQuery (name="CashBoxGeneral.findByName", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery (name="CashBoxGeneral.findByNameAndOwner", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery (name="CashBoxGeneral.findByNameAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
-@NamedQuery (name="CashBoxGeneral.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY s.id DESC"),
-@NamedQuery (name="CashBoxGeneral.findSaldoByCreatedOnAndOrg", query = "SELECT s.saldoFinal FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
-@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByCreatedOnAndOrg", query = "SELECT s.totalBreakdownFinal FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
-@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByLastCreatedOnAndOrg", query = "SELECT s.totalBreakdownFinal FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
-@NamedQuery (name="CashBoxGeneral.findCashBoxGeneralByLastCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
-})
-public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable <CashBoxGeneral>, Serializable {
-    
+@NamedQueries({
+    //@NamedQuery (name="CashBoxGeneral.findByName", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+    //@NamedQuery (name="CashBoxGeneral.findByNameAndOwner", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+    //@NamedQuery (name="CashBoxGeneral.findByNameAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
+    //@NamedQuery (name="CashBoxGeneral.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY s.id DESC"),
+    //@NamedQuery (name="CashBoxGeneral.findSaldoByCreatedOnAndOrg", query = "SELECT s.cashFinally FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+    //@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByCreatedOnAndOrg", query = "SELECT s.totalBreakdown FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
+    //@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByLastCreatedOnAndOrg", query = "SELECT s.totalBreakdown FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
+    //@NamedQuery (name="CashBoxGeneral.findCashBoxGeneralByLastCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
+    @NamedQuery(name = "CashBoxGeneral.findCashBoxGeneralByOrganizationAndCreatedOn", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn >= ?2 and s.createdOn <= ?3 ORDER BY s.createdOn DESC"),
+    @NamedQuery(name = "CashBoxGeneral.findCashBoxGeneralByOrganizationAndLastCreatedOn", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),})
+public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable<CashBoxGeneral>, Serializable {
+
     @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
-    private Account account;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBoxGeneral", fetch = FetchType.LAZY)
+    @OrderBy(value = "createdOn DESC")
     private List<CashBoxPartial> cashBoxPartials = new ArrayList<>();
-    
-    BigDecimal cashFinal;
-    
-    BigDecimal saldoFinal;
-    
-    BigDecimal missCashFinal;
-    
-    BigDecimal excessCashFinal;
-    
-    BigDecimal totalBreakdownFinal;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)    
-    private CashBoxGeneral.Status statusCashBoxGeneral;
 
-    public enum Status {
-        OPEN,
-        CLOSED;
-    }
-    
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+    private BigDecimal cashGeneral; //Todo el dinero en efectivo recolectado hasta el momento de cerrar el cashBoxGeneral;
+    private BigDecimal totalBreakdown; //EL dinero último que se desglosó.
+    private BigDecimal missCash; //El dinero faltante final.
+    private BigDecimal excessCash; //El dinero sobrante final.
+    private BigDecimal cashFinally; //Dinero en efectivo final que queda luego de haber registrado y haber hecho un depósito (si no hay deposito es igual que el totalBreakdown).
+    private Boolean statusComplete; //Marca si el cashBoxGeneral está cerrado/completo;
 
     public Organization getOrganization() {
         return organization;
@@ -108,68 +89,68 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     public void setCashBoxPartials(List<CashBoxPartial> cashBoxPartials) {
         this.cashBoxPartials = cashBoxPartials;
     }
-    
-    public CashBoxPartial addCashBoxPartial(CashBoxPartial cashBoxPartial){
+
+    public BigDecimal getCashGeneral() {
+        return cashGeneral;
+    }
+
+    public void setCashGeneral(BigDecimal cashGeneral) {
+        this.cashGeneral = cashGeneral;
+    }
+
+    public BigDecimal getTotalBreakdown() {
+        return totalBreakdown;
+    }
+
+    public void setTotalBreakdown(BigDecimal totalBreakdown) {
+        this.totalBreakdown = totalBreakdown;
+    }
+
+    public BigDecimal getMissCash() {
+        return missCash;
+    }
+
+    public void setMissCash(BigDecimal missCash) {
+        this.missCash = missCash;
+    }
+
+    public BigDecimal getExcessCash() {
+        return excessCash;
+    }
+
+    public void setExcessCash(BigDecimal excessCash) {
+        this.excessCash = excessCash;
+    }
+
+    public BigDecimal getCashFinally() {
+        return cashFinally;
+    }
+
+    public void setCashFinally(BigDecimal cashFinally) {
+        this.cashFinally = cashFinally;
+    }
+
+    public Boolean getStatusComplete() {
+        return statusComplete;
+    }
+
+    public void setStatusComplete(Boolean statusComplete) {
+        this.statusComplete = statusComplete;
+    }
+
+    public CashBoxPartial addCashBoxPartial(CashBoxPartial cashBoxPartial) {
         cashBoxPartial.setCashBoxGeneral(this);
-        if(this.cashBoxPartials.contains(cashBoxPartial)){
+        if (this.cashBoxPartials.contains(cashBoxPartial)) {
             replaceCashBoxPartial(cashBoxPartial);
-        }else{
+        } else {
             this.cashBoxPartials.add(cashBoxPartial);
         }
         return cashBoxPartial;
     }
-    
-    public CashBoxPartial replaceCashBoxPartial(CashBoxPartial cashBoxPartial){
+
+    public CashBoxPartial replaceCashBoxPartial(CashBoxPartial cashBoxPartial) {
         getCashBoxPartials().set(getCashBoxPartials().indexOf(cashBoxPartial), cashBoxPartial);
         return cashBoxPartial;
-    }
-    
-    public BigDecimal getCashFinal() {
-        return cashFinal;
-    }
-
-    public void setCashFinal(BigDecimal cashFinal) {
-        this.cashFinal = cashFinal;
-    }
-
-    public BigDecimal getSaldoFinal() {
-        return saldoFinal;
-    }
-
-    public void setSaldoFinal(BigDecimal saldoFinal) {
-        this.saldoFinal = saldoFinal;
-    }
-
-    public BigDecimal getMissCashFinal() {
-        return missCashFinal;
-    }
-
-    public void setMissCashFinal(BigDecimal missCashFinal) {
-        this.missCashFinal = missCashFinal;
-    }
-
-    public BigDecimal getExcessCashFinal() {
-        return excessCashFinal;
-    }
-
-    public void setExcessCashFinal(BigDecimal excessCashFinal) {
-        this.excessCashFinal = excessCashFinal;
-    }
-
-    public BigDecimal getTotalBreakdownFinal() {
-        return totalBreakdownFinal;
-    }
-
-    public void setTotalBreakdownFinal(BigDecimal totalBreakdownFinal) {
-        this.totalBreakdownFinal = totalBreakdownFinal;
-    }
-    
-    public Status getStatusCashBoxGeneral() {
-        return statusCashBoxGeneral;
-    }
-
-    public void setStatusCashBoxGeneral(Status statusCashBoxGeneral) {
-        this.statusCashBoxGeneral = statusCashBoxGeneral;
     }
 
     @Override
@@ -194,15 +175,14 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
         }
         CashBoxGeneral other = (CashBoxGeneral) obj;
         EqualsBuilder eb = new EqualsBuilder();
-        
+
         eb.append(getId(), other.getId());
         return eb.isEquals();
     }
-    
 
     @Override
     public int compareTo(CashBoxGeneral other) {
         return this.createdOn.compareTo(other.getCreatedOn());
     }
-    
+
 }

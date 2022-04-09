@@ -39,10 +39,11 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table (name = "CashBox_detail")
-@NamedQueries({ @NamedQuery (name="CashBoxDetail.findByName", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery (name="CashBoxDetail.findByNameAndOwner", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery (name="CashBoxDetail.findByCashBoxPartial", query = "SELECT s FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 ORDER BY 1"),
-@NamedQuery (name="CashBoxDetail.findPropertiesByCashBoxPartialAndQuantity", query = "SELECT s.denomination, s.quantity, s.amount FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 and s.quantity>0"),
+@NamedQueries({
+// @NamedQuery (name="CashBoxDetail.findByName", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+//@NamedQuery (name="CashBoxDetail.findByNameAndOwner", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+//@NamedQuery (name="CashBoxDetail.findByCashBoxPartial", query = "SELECT s FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 ORDER BY 1"),
+//@NamedQuery (name="CashBoxDetail.findPropertiesByCashBoxPartialAndQuantity", query = "SELECT s.denomination, s.quantity, s.amount FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 and s.quantity>0"),
 })
 public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Comparable<CashBoxDetail>, Serializable {
     
@@ -52,8 +53,7 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)    
-    private CashBoxDetail.DenominationType denomination_type;
-            
+    private CashBoxDetail.DenominationType denominationType;
     String denomination;
     BigDecimal valuer;
     Long quantity;
@@ -80,12 +80,12 @@ public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Co
         this.denomination = denomination;
     }
 
-    public DenominationType getDenomination_type() {
-        return denomination_type;
+    public DenominationType getDenominationType() {
+        return denominationType;
     }
 
-    public void setDenomination_type(DenominationType denomination_type) {
-        this.denomination_type = denomination_type;
+    public void setDenominationType(DenominationType denominationType) {
+        this.denominationType = denominationType;
     }
 
     public BigDecimal getValuer() {

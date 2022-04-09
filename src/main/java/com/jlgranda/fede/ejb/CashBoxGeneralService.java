@@ -17,6 +17,8 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,12 @@ public class CashBoxGeneralService extends BussinesEntityHome<CashBoxGeneral> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
 //        _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setCashGeneral(BigDecimal.ZERO);
+        _instance.setTotalBreakdown(BigDecimal.ZERO);
+        _instance.setMissCash(BigDecimal.ZERO);
+        _instance.setExcessCash(BigDecimal.ZERO);
+        _instance.setCashFinally(BigDecimal.ZERO);
+        _instance.setStatusComplete(Boolean.FALSE);
         return _instance;
     }
 
@@ -84,8 +92,29 @@ public class CashBoxGeneralService extends BussinesEntityHome<CashBoxGeneral> {
         return this.find(-1, -1, "createdOn", QuerySortOrder.DESC, params).getResult();
     }
 
-    public Long findIdByLastCashBoxGeneral(Organization organization) {
-        List<CashBoxGeneral> listCashBoxGeneral = this.findByOrganization(organization);
+    public Boolean isInitialByOrganization(Organization organization) {
+        return this.findByOrganization(organization).isEmpty();
+    }
+
+    public List<CashBoxGeneral> findByOrganizationAndLastCreatedOn(Organization organization, Date end) {
+        return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndLastCreatedOn", organization, Dates.minimumDate(end));
+    }
+
+    public BigDecimal findTotalBreakdownFinalByOrganizationAndLastCreatedOn(Organization organization, Date end) {
+        List<CashBoxGeneral> listCashBoxGeneral = this.findByOrganizationAndLastCreatedOn(organization, Dates.minimumDate(end));
+        if (!listCashBoxGeneral.isEmpty()) {
+            return listCashBoxGeneral.get(0).getTotalBreakdown();
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public List<CashBoxGeneral> findByOrganizationAndCreatedOn(Organization organization, Date start, Date end) {
+        return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndCreatedOn", organization, Dates.minimumDate(start), end);
+    }
+
+    public Long findIdByOrganizationAndCreatedOn(Organization organization, Date start, Date end) {
+        List<CashBoxGeneral> listCashBoxGeneral = this.findByOrganizationAndCreatedOn(organization, Dates.minimumDate(start), end);
         if (!listCashBoxGeneral.isEmpty()) {
             return listCashBoxGeneral.get(0).getId();
         } else {

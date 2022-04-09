@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -35,13 +36,12 @@ import org.jpapi.util.Dates;
  *
  * @author author
  */
-
 @Stateless
 public class CashBoxDetailService extends BussinesEntityHome<CashBoxDetail> {
-
+    
     @PersistenceContext
     EntityManager em;
-
+    
     @PostConstruct
     private void init() {
         setEntityManager(em);
@@ -49,7 +49,7 @@ public class CashBoxDetailService extends BussinesEntityHome<CashBoxDetail> {
     }
     
     @Override
-    public CashBoxDetail createInstance(){
+    public CashBoxDetail createInstance() {
         
         CashBoxDetail _instance = new CashBoxDetail();
         _instance.setCreatedOn(Dates.now());
@@ -58,10 +58,12 @@ public class CashBoxDetailService extends BussinesEntityHome<CashBoxDetail> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
 //        _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setQuantity(0L);
+        _instance.setAmount(BigDecimal.ZERO);
         return _instance;
         
     }
-    
+
     //soporte para Lazy Data Model
     public long count() {
         return super.count(CashBoxDetail.class);
@@ -71,7 +73,7 @@ public class CashBoxDetailService extends BussinesEntityHome<CashBoxDetail> {
         
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<CashBoxDetail> query = builder.createQuery(CashBoxDetail.class);
-
+        
         Root<CashBoxDetail> from = query.from(CashBoxDetail.class);
         query.select(from).orderBy(builder.desc(from.get(CashBoxDetail_.name)));
         return getResultList(query, maxresults, firstresult);
