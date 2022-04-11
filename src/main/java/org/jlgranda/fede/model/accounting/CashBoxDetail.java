@@ -27,7 +27,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -38,7 +37,7 @@ import org.jpapi.model.PersistentObject;
  * @author author
  */
 @Entity
-@Table (name = "CashBox_detail")
+@Table (name = "caja_detalle")
 @NamedQueries({
 // @NamedQuery (name="CashBoxDetail.findByName", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 //@NamedQuery (name="CashBoxDetail.findByNameAndOwner", query = "SELECT s FROM CashBoxDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),

@@ -42,7 +42,7 @@ import org.jpapi.model.PersistentObject;
  * @author author
  */
 @Entity
-@Table(name = "CashBox_Partial")
+@Table(name = "caja_parcial")
 @NamedQueries({
 //    @NamedQuery(name = "CashBoxPartial.findByName", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
 //    @NamedQuery(name = "CashBoxPartial.findByNameAndOwner", query = "SELECT s FROM CashBoxPartial s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),

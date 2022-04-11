@@ -22,10 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,7 +33,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Where;
 import org.jpapi.model.Organization;
 import org.jpapi.model.PersistentObject;
 
@@ -45,7 +41,7 @@ import org.jpapi.model.PersistentObject;
  * @author author
  */
 @Entity
-@Table(name = "CashBox_General")
+@Table(name = "caja_general")
 @NamedQueries({
     //@NamedQuery (name="CashBoxGeneral.findByName", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
     //@NamedQuery (name="CashBoxGeneral.findByNameAndOwner", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
