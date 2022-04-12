@@ -153,7 +153,7 @@ public class AccountService extends BussinesEntityHome<Account> {
      * @param hasta fecha de final
      * @return El valor de la mayorización de la cuenta
      */
-    public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta) {
+     public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta) {
 
         BigDecimal balance = new BigDecimal(BigInteger.ZERO);
         List<Account> childs = this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
@@ -168,6 +168,34 @@ public class AccountService extends BussinesEntityHome<Account> {
         if (!childs.isEmpty()) {
             for (Account child : childs) {
                 balance = balance.add(mayorizar(child, organization, desde, hasta));
+            }
+        }
+        return balance;
+    }
+
+    /**
+     * Calcula el valor de la cuenta desde el primer asiento hasta la fecha
+     *
+     * @param account
+     * @param organization
+     * @param hasta fecha de final
+     * @return El valor de la mayorización de la cuenta
+     */
+     public BigDecimal mayorizarTo(Account account, Organization organization, Date hasta) {
+
+        BigDecimal balance = new BigDecimal(BigInteger.ZERO);
+        List<Account> childs = this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
+
+        //Obtener balance la cuenta
+        BigDecimal debe = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndTypeTo", account, RecordDetail.RecordTDetailType.DEBE, hasta, organization);
+
+        BigDecimal haber = recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndTypeTo", account, RecordDetail.RecordTDetailType.HABER, hasta, organization);
+        if (debe != null && haber != null) {
+            balance = balance.add(debe.subtract(haber));
+        }
+        if (!childs.isEmpty()) {
+            for (Account child : childs) {
+                balance = balance.add(mayorizarTo(child, organization, hasta));
             }
         }
         return balance;
