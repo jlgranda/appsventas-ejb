@@ -17,6 +17,7 @@
  */
 package com.jlgranda.fede.ejb.sales;
 
+import com.jlgranda.fede.ejb.production.AggregationService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +32,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.Detailable;
+import org.jlgranda.fede.model.production.Aggregation;
 import org.jlgranda.fede.model.sales.Kardex;
 import org.jlgranda.fede.model.sales.KardexDetail;
+import org.jlgranda.fede.model.sales.KardexType;
 import org.jlgranda.fede.model.sales.Kardex_;
 import org.jlgranda.fede.model.sales.Product;
 import org.jlgranda.fede.model.sales.ProductType;
@@ -59,6 +62,9 @@ public class KardexService extends BussinesEntityHome<Kardex> {
 
     @EJB
     KardexDetailService kardexDetailService;
+    
+    @EJB
+    AggregationService aggregationService;
 
     @PostConstruct
     private void init() {
@@ -99,72 +105,41 @@ public class KardexService extends BussinesEntityHome<Kardex> {
     }
 
     /**
-     *
+     * Registra la venta del producto y realiza la operación correspondiente en el KARDEX
      * @param details
-     * @param prefix
+     * @param prefixComercialization
+     * @param prefixProduction
      * @param subject
      * @param organization
      * @param operationType
      * @return
      */
-    public List<Kardex> save(List<Detailable> details, String prefix, Subject subject, Organization organization, KardexDetail.OperationType operationType) {
+    public List<Kardex> save(List<Detailable> details, String prefixComercialization, String prefixProduction, Subject subject, Organization organization, KardexDetail.OperationType operationType) {
         List<Kardex> kardexs = new ArrayList<>();
-        Kardex kardex = null;
-        KardexDetail kardexDetail = null;
-        int factor = KardexDetail.OperationType.COMPRA.equals(operationType) ? 1 : -1; //sumar o restar
+        
         for (Detailable detail : details) {
             if (!isValid(detail)) {
                 logger.error("El detalle no es válido {1}", detail);
             } else {
                 if (ProductType.PRODUCT.equals(detail.getProduct().getProductType())) {
-                    kardex = this.findOrCreateByProductAndOrganization(prefix, detail.getProduct(), subject, organization);
-                    kardexDetail = kardex.findKardexDetail(detail.getBussinesEntityType(), detail.getBussinesEntityId(), operationType); //Encuentra el Detalle correspondiente a la factura
-                    if (kardexDetail == null) {
-                        kardexDetail = kardexDetailService.createInstance();
-                        kardexDetail.setOwner(subject);
-                        kardexDetail.setAuthor(subject);
-                        kardexDetail.setBussinesEntityId(detail.getBussinesEntityId());
-                        kardexDetail.setBussinesEntityType(detail.getBussinesEntityType());
-                        kardexDetail.setOperationType(operationType);
-
-                    } else {
-                        //Disminuir los valores acumulados de cantidad y total para al momento de modificar no se duplique el valor a aumentar por la venta
-                        if (kardexDetail.getQuantity() != null && kardexDetail.getTotalValue() != null) {
-                            kardex.setQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
-                            kardex.setFund(kardex.getFund().add(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor))));
-                            kardexDetail.setCummulativeQuantity(kardex.getQuantity());
-                            kardexDetail.setCummulativeTotalValue(kardex.getFund());
-                        }
-                        kardexDetail.setAuthor(subject); //Saber quien lo modificó por última vez
-                        kardexDetail.setLastUpdate(Dates.now()); //Saber la hora que modificó por última vez
-                    }
-
-                    //Actualizar cantidades
-                    kardexDetail.setCode(detail.getBussinesEntityCode());
-                    kardexDetail.setUnitValue(detail.getPrice());
-                    kardexDetail.setQuantity(detail.getAmount());
-                    kardexDetail.setTotalValue(kardexDetail.getUnitValue().multiply(kardexDetail.getQuantity()));
-
-                    if (kardex.isPersistent()) {
-                        kardexDetail.setCummulativeQuantity(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor)));
-                        kardexDetail.setCummulativeTotalValue(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor)));
-                    } else {
-                        if (kardex.getQuantity() != null && kardex.getFund() != null) {
-                            kardexDetail.setCummulativeQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
-                            kardexDetail.setCummulativeTotalValue(kardex.getFund().subtract(kardexDetail.getTotalValue()));
-                        }
-                    }
-
-                    kardex.addKardexDetail(kardexDetail);
-
-                    if (kardex.getCode() == null) {
-                        kardex.setCode(prefix + detail.getProduct().getId());
-                    }
-                    kardex.setQuantity(kardexDetail.getCummulativeQuantity());
-                    kardex.setFund(kardexDetail.getCummulativeTotalValue());
-
+                    Kardex kardex = aplicarOperacionesKardex(prefixComercialization, detail.getProduct(), detail.getBussinesEntityType(), detail.getBussinesEntityCode(), detail.getBussinesEntityId(), detail.getPrice(), detail.getAmount(), subject, organization, operationType);
                     if (kardex.isPersistent()) { //Sólo actualizar si el kardex ya existe.
                         kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
+                    }
+                } else if (ProductType.SERVICE.equals(detail.getProduct().getProductType())) {
+                    
+                    final KardexDetail.OperationType productionOperationType = KardexDetail.OperationType.VENTA.equals(operationType) ? KardexDetail.OperationType.PRODUCCION_PRODUCTO_TERMINADO : operationType;
+                    //1. Verificar si existe agregación del servicio
+                    List<Aggregation> aggregations = aggregationService.findByProduct(detail.getProduct());
+                    if (!aggregations.isEmpty()){
+                        Aggregation aggregation = aggregations.get(0);
+                        aggregation.getAggregationDetails().forEach(agg -> {
+                            Kardex kardex;
+                            kardex = aplicarOperacionesKardex(prefixProduction, agg.getProduct(), detail.getBussinesEntityType(), detail.getBussinesEntityCode(), detail.getBussinesEntityId(), agg.getPriceUnit(), agg.getQuantity(), subject, organization, productionOperationType);
+                            if (kardex.isPersistent()) { //Sólo actualizar si el kardex ya existe.
+                                kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
+                            }
+                        });
                     }
                 }
             }
@@ -214,8 +189,11 @@ public class KardexService extends BussinesEntityHome<Kardex> {
             kardex.setName(product.getName());
             kardex.setUnitMinimum(BigDecimal.ONE);
             kardex.setUnitMaximum(BigDecimal.ONE);
+            kardex.setKardexType(ProductType.PRODUCT.equals(product.getProductType()) ? KardexType.COMERCIALIZACION : ProductType.SERVICE.equals(product.getProductType()) ? KardexType.SERVICE : KardexType.PRODUCCION);
+            
             save(kardex); //persistir y recuperar instancia
             kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
+            
         } else {
             kardex = listKardex.get(0);
         }
@@ -230,6 +208,74 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 && detail.getBussinesEntityType() != null
                 && detail.getBussinesEntityId() != null
                 && detail.getBussinesEntityCode() != null;
+    }
+
+
+    /**
+     * 
+     * @param prefix
+     * @param product
+     * @param bussinesEntityType
+     * @param bussinesEntityCode
+     * @param bussinesEntityId
+     * @param price
+     * @param amount
+     * @param subject
+     * @param organization
+     * @param operationType
+     * @return 
+     */
+    private Kardex aplicarOperacionesKardex(String prefix, Product product, String bussinesEntityType, String bussinesEntityCode, Long bussinesEntityId, BigDecimal price, BigDecimal amount, Subject subject, Organization organization, KardexDetail.OperationType operationType) {
+        Kardex kardex = null;
+        KardexDetail kardexDetail = null;
+        int factor = KardexDetail.OperationType.COMPRA.equals(operationType) ? 1 : -1; //sumar o restar
+        kardex = this.findOrCreateByProductAndOrganization(prefix, product, subject, organization);
+        kardexDetail = kardex.findKardexDetail(bussinesEntityType, bussinesEntityId, operationType); //Encuentra el Detalle correspondiente a la factura
+        if (kardexDetail == null) {
+            kardexDetail = kardexDetailService.createInstance();
+            kardexDetail.setOwner(subject);
+            kardexDetail.setAuthor(subject);
+            kardexDetail.setBussinesEntityId(bussinesEntityId);
+            kardexDetail.setBussinesEntityType(bussinesEntityType);
+            kardexDetail.setOperationType(operationType);
+
+        } else {
+            //Disminuir los valores acumulados de cantidad y total para al momento de modificar no se duplique el valor a aumentar por la venta
+            if (kardexDetail.getQuantity() != null && kardexDetail.getTotalValue() != null) {
+                kardex.setQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
+                kardex.setFund(kardex.getFund().add(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor))));
+                kardexDetail.setCummulativeQuantity(kardex.getQuantity());
+                kardexDetail.setCummulativeTotalValue(kardex.getFund());
+            }
+            kardexDetail.setAuthor(subject); //Saber quien lo modificó por última vez
+            kardexDetail.setLastUpdate(Dates.now()); //Saber la hora que modificó por última vez
+        }
+
+        //Actualizar cantidades
+        kardexDetail.setCode(bussinesEntityCode);
+        kardexDetail.setUnitValue(price);
+        kardexDetail.setQuantity(amount);
+        kardexDetail.setTotalValue(kardexDetail.getUnitValue().multiply(kardexDetail.getQuantity()));
+
+        if (kardex.isPersistent()) {
+            kardexDetail.setCummulativeQuantity(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor)));
+            kardexDetail.setCummulativeTotalValue(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor)));
+        } else {
+            if (kardex.getQuantity() != null && kardex.getFund() != null) {
+                kardexDetail.setCummulativeQuantity(kardex.getQuantity().add(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor))));
+                kardexDetail.setCummulativeTotalValue(kardex.getFund().subtract(kardexDetail.getTotalValue()));
+            }
+        }
+
+        kardex.addKardexDetail(kardexDetail);
+
+        if (kardex.getCode() == null) {
+            kardex.setCode(prefix + product.getId());
+        }
+        kardex.setQuantity(kardexDetail.getCummulativeQuantity());
+        kardex.setFund(kardexDetail.getCummulativeTotalValue());
+
+        return kardex;
     }
 
 }

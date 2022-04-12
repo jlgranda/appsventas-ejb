@@ -93,6 +93,9 @@ public class KardexDetail extends DeletableObject<KardexDetail> implements Compa
         SALIDA_INVENTARIO,
         DEVOLUCION_COMPRA,
         DEVOLUCION_VENTA,
+        PRODUCCION_PRODUCTO_TERMINADO,
+        PRODUCCION_INGRESO_MATERIA_PRIMA,
+        PRODUCCION_BAJA_MATERIA_PRIMA,
     }
 
     public Kardex getKardex() {

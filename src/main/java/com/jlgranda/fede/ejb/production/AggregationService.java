@@ -35,6 +35,7 @@ import org.jlgranda.appsventas.data.AggregationDetailData;
 import org.jlgranda.fede.model.production.Aggregation;
 import org.jlgranda.fede.model.production.AggregationDetail;
 import org.jlgranda.fede.model.production.Aggregation_;
+import org.jlgranda.fede.model.sales.Product;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
@@ -92,6 +93,12 @@ public class AggregationService extends BussinesEntityHome<Aggregation> {
     public List<Aggregation> findByOrganization(Organization organization) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
+        return this.find(-1, -1, "name", QuerySortOrder.DESC, params).getResult();
+    }
+    public List<Aggregation> findByProduct(Product product) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("product", product);
+        params.put("deleted", false);
         return this.find(-1, -1, "name", QuerySortOrder.DESC, params).getResult();
     }
     

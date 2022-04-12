@@ -59,6 +59,10 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
+    
+    
+    @Column(name = "kardex_type")
+    private KardexType kardexType;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "kardex", fetch = FetchType.LAZY)
     @Where(clause = "deleted = false")
@@ -89,6 +93,15 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    public KardexType getKardexType() {
+        return kardexType;
+    }
+
+    public void setKardexType(KardexType kardexType) {
+        this.kardexType = kardexType;
+    }
+
 
     public List<KardexDetail> getKardexDetails() {
         return kardexDetails;
