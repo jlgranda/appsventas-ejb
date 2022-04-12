@@ -228,7 +228,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
     private Kardex aplicarOperacionesKardex(String prefix, Product product, String bussinesEntityType, String bussinesEntityCode, Long bussinesEntityId, BigDecimal price, BigDecimal amount, Subject subject, Organization organization, KardexDetail.OperationType operationType) {
         Kardex kardex = null;
         KardexDetail kardexDetail = null;
-        int factor = KardexDetail.OperationType.COMPRA.equals(operationType) ? 1 : -1; //sumar o restar
+        int factor = KardexDetail.OperationType.COMPRA.equals(operationType) || KardexDetail.OperationType.PRODUCCION_INGRESO_MATERIA_PRIMA.equals(operationType) ? 1 : -1; //sumar o restar
         kardex = this.findOrCreateByProductAndOrganization(prefix, product, subject, organization);
         kardexDetail = kardex.findKardexDetail(bussinesEntityType, bussinesEntityId, operationType); //Encuentra el Detalle correspondiente a la factura
         if (kardexDetail == null) {
