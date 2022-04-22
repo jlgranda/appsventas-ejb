@@ -43,7 +43,7 @@ import org.jpapi.model.Organization;
     @NamedQuery(name = "Account.findByIdAndOrg", query = "select s FROM Account s WHERE s.id = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
     @NamedQuery(name = "Account.findByNameAndOrganization", query = "select s FROM Account s WHERE lower(s.name) = lower(?1) and s.organization = ?2 and s.deleted = false ORDER BY 1"),
     @NamedQuery(name = "Account.findByParentId", query = "select s FROM Account s WHERE s.parentAccountId = ?1 and s.organization = ?2 and s.deleted = false ORDER BY 1"),
-    @NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code"),})
+    @NamedQuery(name = "Account.findAll", query = "select s FROM Account s WHERE s.deleted = false ORDER BY code ASC"),})
 public class Account extends DeletableObject<Account> implements Comparable<Account>, Serializable {
 
     private static final long serialVersionUID = -6428094275651428620L;
