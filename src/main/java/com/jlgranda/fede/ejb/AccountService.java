@@ -147,13 +147,35 @@ public class AccountService extends BussinesEntityHome<Account> {
     /**
      * Calcula el valor de la cuenta entre las fechas
      *
+     * @param accountName Nombre de la cuenta
+     * @param organization
+     * @param desde fecha de inicio
+     * @param hasta fecha de final
+     * @return El valor de la mayorización de la cuenta
+     */
+    public BigDecimal mayorizarPorTipo(RecordDetail.RecordTDetailType type, String accountName, Organization organization, Date desde, Date hasta) {
+
+        Account account = this.findUniqueByNamedQuery("Account.findByNameAndOrganization", accountName, organization);
+
+        return mayorizarPorTipo(type, account, organization, desde, hasta);
+    }
+
+    public BigDecimal mayorizarPorTipo(RecordDetail.RecordTDetailType type, Account account, Organization organization, Date desde, Date hasta) {
+
+        return recordDetailService.findBigDecimal("RecordDetail.findTotalByAccountAndType", account, type, desde, hasta, organization);
+
+    }
+
+    /**
+     * Calcula el valor de la cuenta entre las fechas
+     *
      * @param account
      * @param organization
      * @param desde fecha de inicio
      * @param hasta fecha de final
      * @return El valor de la mayorización de la cuenta
      */
-     public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta) {
+    public BigDecimal mayorizar(Account account, Organization organization, Date desde, Date hasta) {
 
         BigDecimal balance = new BigDecimal(BigInteger.ZERO);
         List<Account> childs = this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
@@ -181,7 +203,7 @@ public class AccountService extends BussinesEntityHome<Account> {
      * @param hasta fecha de final
      * @return El valor de la mayorización de la cuenta
      */
-     public BigDecimal mayorizarTo(Account account, Organization organization, Date hasta) {
+    public BigDecimal mayorizarTo(Account account, Organization organization, Date hasta) {
 
         BigDecimal balance = new BigDecimal(BigInteger.ZERO);
         List<Account> childs = this.findByNamedQuery("Account.findByParentId", account.getId(), organization);
