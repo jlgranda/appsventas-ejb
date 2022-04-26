@@ -22,6 +22,7 @@ package org.jlgranda.fede.model.accounting;
  * @author jlgranda
  */
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Where;
@@ -196,6 +198,23 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
     @Override
     public int compareTo(Record other) {
         return this.createdOn.compareTo(other.getCreatedOn());
+    }
+
+    @Transient
+    public String getDetailsPrint() {
+        String detail = "";
+        for (RecordDetail d : getRecordDetails()) {
+            if (detail.equals("")) {
+                detail = detail.concat(detail.concat(d.getAccount().getName().toUpperCase()));
+            } else {
+                detail = detail.concat("\n");
+                if (RecordDetail.RecordTDetailType.HABER.equals(d.getRecordDetailType())) {
+                    detail = detail.concat("\t");
+                }
+                detail = detail.concat(d.getAccount().getName().toUpperCase());
+            }
+        }
+        return detail;
     }
 
 }
