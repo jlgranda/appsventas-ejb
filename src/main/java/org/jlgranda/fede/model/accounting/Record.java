@@ -21,6 +21,7 @@ package org.jlgranda.fede.model.accounting;
  *
  * @author jlgranda
  */
+import com.jlgranda.fede.ejb.GeneralJournalService;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -55,9 +58,9 @@ import org.jpapi.model.DeletableObject;
     @NamedQuery(name = "Record.findByCreatedOnAndOrganization", query = "select s from Record s, GeneralJournal j WHERE s.generalJournalId= j.id and s.createdOn >= ?1 and s.createdOn <= ?2 and j.organization = ?3 and s.deleted=false and j.deleted=false ORDER BY s.emissionDate ASC"),})
 public class Record extends DeletableObject<Record> implements Comparable<Record>, Serializable {
 
-//    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
-//    @JoinColumn (name = "journal_id", insertable = true, updatable = true, nullable = true)
-//    private GeneralJournal journal;
+    @ManyToOne(optional = true, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "journal_id", insertable = false, updatable = false, nullable = true)
+    private GeneralJournal journal;
 //    
 //    @OneToOne
 //    @JoinColumn (name = "facturaElectronica_id")
@@ -92,13 +95,6 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
     @Column(name = "emissionDate")
     private Date emissionDate;
 
-//    public GeneralJournal getJournal() {
-//        return journal;
-//    }
-//
-//    public void setJournal(GeneralJournal journal) {
-//        this.journal = journal;
-//    }
     public List<RecordDetail> getRecordDetails() {
         return recordDetails;
     }
@@ -129,13 +125,6 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
         return recordDetail;
     }
 
-//    public FacturaElectronica getFacturaElectronica() {
-//        return facturaElectronica;
-//    }
-//
-//    public void setFacturaElectronica(FacturaElectronica facturaElectronica) {
-//        this.facturaElectronica = facturaElectronica;
-//    }
     public Long getGeneralJournalId() {
         return generalJournalId;
     }
@@ -166,6 +155,10 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
 
     public void setBussinesEntityHashCode(Integer bussinesEntityHashCode) {
         this.bussinesEntityHashCode = bussinesEntityHashCode;
+    }
+
+    public GeneralJournal getJournal() {
+        return journal;
     }
 
     @Override
