@@ -178,14 +178,14 @@ public class SetupService implements Serializable {
         props.put("mail.imap.port", "25:Puerto IMAP:IMAP");
         props.put("mail.imaps.ssl.trust", "*:SSL TRUST:SMTPS");
 
-        props.put("mail.smtps.port", "25:Puerto SMTP:SMTPS");
-        props.put("mail.smtps.host", "jlgranda.com:Servidor de envios SMTPS:SMTPS");
-        props.put("mail.smtps.from", "AppsVentas <consiguemas@jlgranda.com>:Remitente de correo:SMTPS");
-        props.put("mail.smtps.username", "consiguemas@jlgranda.com:SMTP Username:SMTPS");
-        props.put("mail.smtps.password", "LitePorePrudePursed13:SMTP Password:SMTPS");
-        props.put("mail.smtps.auth", "true:Usar autenticación:SMTPS");
-        props.put("mail.smtps.ssl", "true:SSL:SMTPS");
-        props.put("mail.smtp.starttls.enable", "false:Usar TTLS:SMTPS");
+//        props.put("mail.smtps.port", "25:Puerto SMTP:SMTPS");
+//        props.put("mail.smtps.host", "jlgranda.com:Servidor de envios SMTPS:SMTPS");
+//        props.put("mail.smtps.from", "AppsVentas <consiguemas@jlgranda.com>:Remitente de correo:SMTPS");
+//        props.put("mail.smtps.username", "consiguemas@jlgranda.com:SMTP Username:SMTPS");
+//        props.put("mail.smtps.password", "LitePorePrudePursed13:SMTP Password:SMTPS");
+//        props.put("mail.smtps.auth", "true:Usar autenticación:SMTPS");
+//        props.put("mail.smtps.ssl", "true:SSL:SMTPS");
+//        props.put("mail.smtp.starttls.enable", "false:Usar TTLS:SMTPS");
 
         //XML utils settings
         props.put("fede.xml.tag.numeroAutorizacion", "<numeroAutorizacion></numeroAutorizacion>:Etiqueta de número de autorización en XML:XML");
