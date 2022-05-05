@@ -18,10 +18,12 @@
 package com.jlgranda.fede.ejb;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -34,6 +36,7 @@ import org.jlgranda.fede.model.accounting.CashBoxGeneral_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
 import org.jpapi.util.QuerySortOrder;
 
@@ -110,16 +113,35 @@ public class CashBoxGeneralService extends BussinesEntityHome<CashBoxGeneral> {
     }
 
     public List<CashBoxGeneral> findByOrganizationAndCreatedOn(Organization organization, Date start, Date end) {
-        return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndCreatedOn", organization, Dates.minimumDate(start), end);
+        return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndCreatedOn", organization, Dates.minimumDate(start), Dates.maximumDate(end));
     }
 
-    public Long findIdByOrganizationAndCreatedOn(Organization organization, Date start, Date end) {
-        List<CashBoxGeneral> listCashBoxGeneral = this.findByOrganizationAndCreatedOn(organization, Dates.minimumDate(start), end);
-        if (!listCashBoxGeneral.isEmpty()) {
-            return listCashBoxGeneral.get(0).getId();
+    public List<CashBoxGeneral> findByOrganizationAndEmissionOn(Organization organization, Date start, Date end) {
+        return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndEmissionOn", organization, Dates.minimumDate(start), Dates.maximumDate(end));
+    }
+
+    public CashBoxGeneral find(Date emissionDate, Organization organization, Subject owner, String cashBoxGeneralPrefix, String timestampPattern) {
+        //Buscar el registro hasta antes del fin del emissionDate
+        List<CashBoxGeneral> list = this.findByOrganizationAndEmissionOn(organization, emissionDate, emissionDate);
+        CashBoxGeneral cashBoxGeneral = null;
+        if (list.isEmpty()) {
+            cashBoxGeneral = this.createInstance();//Crear el general para la fecha
+            cashBoxGeneral.setEmissionDate(emissionDate);
+            cashBoxGeneral.setCode(UUID.randomUUID().toString());
+            cashBoxGeneral.setName(cashBoxGeneralPrefix + ": " + Dates.toString(emissionDate, timestampPattern));
+            cashBoxGeneral.setDescription(cashBoxGeneral.getName() + "\n" + organization.getInitials() + "\n" + owner.getFullName());
+            cashBoxGeneral.setOrganization(organization);
+            cashBoxGeneral.setOwner(owner);
+            cashBoxGeneral.setAuthor(owner);
+            this.save(cashBoxGeneral);
+            list = this.findByOrganizationAndEmissionOn(organization, emissionDate, emissionDate);
+            if (!list.isEmpty()) {
+                cashBoxGeneral = list.get(0);
+            }
         } else {
-            return null;
+            cashBoxGeneral = list.get(0);
         }
+        return cashBoxGeneral;
     }
 
 }

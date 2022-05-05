@@ -39,19 +39,19 @@ import org.jpapi.util.Dates;
  */
 @Stateless
 public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
-    
+
     @PersistenceContext
     EntityManager em;
-    
+
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(CashBoxPartial.class);
     }
-    
+
     @Override
     public CashBoxPartial createInstance() {
-        
+
         CashBoxPartial _instance = new CashBoxPartial();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
@@ -76,17 +76,17 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
     public long count() {
         return super.count(CashBoxPartial.class);
     }
-    
+
     public List<CashBoxPartial> find(int maxresults, int firstresult) {
-        
+
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<CashBoxPartial> query = builder.createQuery(CashBoxPartial.class);
-        
+
         Root<CashBoxPartial> from = query.from(CashBoxPartial.class);
         query.select(from).orderBy(builder.desc(from.get(CashBoxPartial_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-    
+
     public int getPriority(CashBoxGeneral cashBoxGeneral) {
         if (cashBoxGeneral.getId() == null) {
             return 0;
@@ -94,5 +94,13 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
             return (int) this.count("CashBoxPartial.countCashBoxPartialByCashBoxGeneral", cashBoxGeneral);
         }
     }
-    
+//    
+
+    public Long getLastCashBoxPartialByCashBoxGeneral(CashBoxGeneral cashBoxGeneral) {
+        List<CashBoxPartial> list = this.findByNamedQuery("CashBoxPartial.findByCashBoxGeneral", cashBoxGeneral);
+        if (!list.isEmpty()) {
+            return list.get(0).getId();
+        }
+        return null;
+    }
 }

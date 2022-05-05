@@ -20,8 +20,10 @@ package org.jlgranda.fede.model.accounting;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -31,6 +33,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.Organization;
@@ -43,16 +47,10 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "caja_general")
 @NamedQueries({
-    //@NamedQuery (name="CashBoxGeneral.findByName", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    //@NamedQuery (name="CashBoxGeneral.findByNameAndOwner", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-    //@NamedQuery (name="CashBoxGeneral.findByNameAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.name = ?1 and s.organization = ?2 ORDER BY 1"),
-    //@NamedQuery (name="CashBoxGeneral.findByCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY s.id DESC"),
-    //@NamedQuery (name="CashBoxGeneral.findSaldoByCreatedOnAndOrg", query = "SELECT s.cashFinally FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
-    //@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByCreatedOnAndOrg", query = "SELECT s.totalBreakdown FROM CashBoxGeneral s WHERE s.createdOn>= ?1 and s.createdOn <= ?2 and s.organization = ?3 ORDER BY 1"),
-    //@NamedQuery (name="CashBoxGeneral.findTotalBreakdownFundByLastCreatedOnAndOrg", query = "SELECT s.totalBreakdown FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
-    //@NamedQuery (name="CashBoxGeneral.findCashBoxGeneralByLastCreatedOnAndOrg", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
     @NamedQuery(name = "CashBoxGeneral.findCashBoxGeneralByOrganizationAndCreatedOn", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn >= ?2 and s.createdOn <= ?3 ORDER BY s.createdOn DESC"),
-    @NamedQuery(name = "CashBoxGeneral.findCashBoxGeneralByOrganizationAndLastCreatedOn", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),})
+    @NamedQuery(name = "CashBoxGeneral.findCashBoxGeneralByOrganizationAndLastCreatedOn", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.createdOn < ?2 ORDER BY s.createdOn DESC"),
+    @NamedQuery(name = "CashBoxGeneral.findCashBoxGeneralByOrganizationAndEmissionOn", query = "SELECT s FROM CashBoxGeneral s WHERE s.organization = ?1 and s.emissionDate >= ?2 and s.emissionDate <= ?3 ORDER BY s.emissionDate DESC"),
+})
 public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements Comparable<CashBoxGeneral>, Serializable {
 
     @ManyToOne(optional = false)
@@ -60,7 +58,7 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     private Organization organization;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cashBoxGeneral", fetch = FetchType.LAZY)
-    @OrderBy(value = "createdOn DESC")
+    @OrderBy(value = "priority DESC")
     private List<CashBoxPartial> cashBoxPartials = new ArrayList<>();
 
     private BigDecimal cashGeneral; //Todo el dinero en efectivo recolectado hasta el momento de cerrar el cashBoxGeneral;
@@ -69,6 +67,10 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
     private BigDecimal excessCash; //El dinero sobrante final.
     private BigDecimal cashFinally; //Dinero en efectivo final que queda luego de haber registrado y haber hecho un depósito (si no hay deposito es igual que el totalBreakdown).
     private Boolean statusComplete; //Marca si el cashBoxGeneral está cerrado/completo;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "emissionDate")
+    private Date emissionDate;
 
     public Organization getOrganization() {
         return organization;
@@ -132,6 +134,14 @@ public class CashBoxGeneral extends PersistentObject<CashBoxGeneral> implements 
 
     public void setStatusComplete(Boolean statusComplete) {
         this.statusComplete = statusComplete;
+    }
+
+    public Date getEmissionDate() {
+        return emissionDate;
+    }
+
+    public void setEmissionDate(Date emissionDate) {
+        this.emissionDate = emissionDate;
     }
 
     public CashBoxPartial addCashBoxPartial(CashBoxPartial cashBoxPartial) {
