@@ -88,7 +88,7 @@ public class Record extends DeletableObject<Record> implements Comparable<Record
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "record", fetch = FetchType.LAZY)
     @Where(clause = "deleted = false") //sólo no eliminados
-    @OrderBy(value = "orden")
+    @OrderBy(value = "recordDetailType")
     private List<RecordDetail> recordDetails = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
