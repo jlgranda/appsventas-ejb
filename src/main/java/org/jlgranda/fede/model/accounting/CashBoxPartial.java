@@ -44,6 +44,7 @@ import org.jpapi.model.PersistentObject;
 @Entity
 @Table(name = "caja_parcial")
 @NamedQueries({
+    @NamedQuery(name = "CashBoxPartial.findByOrganizationAndLastId", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral.organization = ?1 ORDER BY s.id DESC"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneral", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 ORDER BY s.createdOn DESC"),
     @NamedQuery(name = "CashBoxPartial.findByCashBoxGeneralAndPriority", query = "SELECT s FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1 and s.priority = ?2 ORDER BY s.priority DESC"),
     @NamedQuery(name = "CashBoxPartial.countCashBoxPartialByCashBoxGeneral", query = "SELECT COUNT(s) FROM CashBoxPartial s WHERE s.cashBoxGeneral = ?1"),})

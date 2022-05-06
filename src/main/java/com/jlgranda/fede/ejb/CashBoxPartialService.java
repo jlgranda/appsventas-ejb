@@ -30,6 +30,7 @@ import org.jlgranda.fede.model.accounting.CashBoxGeneral;
 import org.jlgranda.fede.model.accounting.CashBoxPartial;
 import org.jlgranda.fede.model.accounting.CashBoxPartial_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
 import org.jpapi.util.Dates;
 
@@ -94,7 +95,6 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
             return (int) this.count("CashBoxPartial.countCashBoxPartialByCashBoxGeneral", cashBoxGeneral);
         }
     }
-//    
 
     public Long getLastCashBoxPartialByCashBoxGeneral(CashBoxGeneral cashBoxGeneral) {
         List<CashBoxPartial> list = this.findByNamedQuery("CashBoxPartial.findByCashBoxGeneral", cashBoxGeneral);
@@ -103,4 +103,14 @@ public class CashBoxPartialService extends BussinesEntityHome<CashBoxPartial> {
         }
         return null;
     }
+
+    public CashBoxPartial findByOrganizationAndLastId(Organization organization) {
+        List<CashBoxPartial> listCashBoxPartial = this.findByNamedQuery("CashBoxPartial.findByOrganizationAndLastId", organization);
+        if (!listCashBoxPartial.isEmpty()) {
+            return listCashBoxPartial.get(0);
+        } else {
+            return null;
+        }
+    }
+
 }

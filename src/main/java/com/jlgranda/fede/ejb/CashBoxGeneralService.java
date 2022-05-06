@@ -103,15 +103,6 @@ public class CashBoxGeneralService extends BussinesEntityHome<CashBoxGeneral> {
         return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndLastCreatedOn", organization, Dates.minimumDate(end));
     }
 
-    public BigDecimal findTotalBreakdownFinalByOrganizationAndLastCreatedOn(Organization organization, Date end) {
-        List<CashBoxGeneral> listCashBoxGeneral = this.findByOrganizationAndLastCreatedOn(organization, Dates.minimumDate(end));
-        if (!listCashBoxGeneral.isEmpty()) {
-            return listCashBoxGeneral.get(0).getTotalBreakdown();
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
     public List<CashBoxGeneral> findByOrganizationAndCreatedOn(Organization organization, Date start, Date end) {
         return this.findByNamedQuery("CashBoxGeneral.findCashBoxGeneralByOrganizationAndCreatedOn", organization, Dates.minimumDate(start), Dates.maximumDate(end));
     }
