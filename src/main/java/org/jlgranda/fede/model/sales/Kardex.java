@@ -47,7 +47,8 @@ import org.jpapi.model.Organization;
 @Entity
 @Table(name = "Kardex")
 @NamedQueries({
-    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false ORDER BY kd.id DESC"),})
+    @NamedQuery(name = "Kardex.findByProductAndOrg", query = "SELECT kd FROM Kardex kd WHERE kd.product = ?1 and kd.organization = ?2 and kd.deleted = false ORDER BY kd.id DESC"),
+})
 @AttributeOverride(name = "code", column = @Column(name = "code", unique = true, nullable = false))
 @AttributeOverride(name = "name", column = @Column(name = "name", unique = true, nullable = false))
 public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex>, Serializable {
@@ -59,8 +60,7 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", insertable = true, updatable = true, unique = true)
     private Product product;
-    
-    
+
     @Column(name = "kardex_type")
     private KardexType kardexType;
 
@@ -101,7 +101,6 @@ public class Kardex extends DeletableObject<Kardex> implements Comparable<Kardex
     public void setKardexType(KardexType kardexType) {
         this.kardexType = kardexType;
     }
-
 
     public List<KardexDetail> getKardexDetails() {
         return kardexDetails;

@@ -24,5 +24,6 @@ package org.jlgranda.fede.model.sales;
 public enum KardexType {
     COMERCIALIZACION,
     PRODUCCION,
-    SERVICE
+    SERVICE,
+    DEPRECATED
 }

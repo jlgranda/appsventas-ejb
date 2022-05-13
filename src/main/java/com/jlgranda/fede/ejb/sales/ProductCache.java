@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -36,6 +38,7 @@ import org.jpapi.util.Strings;
 
 /**
  * Cache de productos de venta al público
+ *
  * @author jlgranda
  */
 @Singleton
@@ -43,30 +46,30 @@ public class ProductCache {
 
     @EJB
     ProductService productService;
-    
+
     private final Map<Long, Product> products = new HashMap<>();
-    
+
     @PostConstruct
     public void init() {
         load();
     }
-    
+
     /**
      * Cargar productos en el cache.
      */
-    public void load(){
-        
+    public void load() {
+
         List<Product> productList = productService.findByNamedQuery("Product.findByOrganization");
         productList.forEach(p -> {
             products.put(p.getId(), p);
         });
     }
-    
+
     public Product lookup(Long key) {
         Product product = null;
         if (products.containsKey(key)) {
             product = products.get(key);
-        } 
+        }
         return product; //devolver por defecto la clave buscada
     }
 
@@ -98,42 +101,48 @@ public class ProductCache {
 
     public List<Product> lookup(String key, int attempt) {
         List<Product> matches = new ArrayList<>();
-        
+
         products.values().stream().filter(product -> (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase())))).forEachOrdered(product -> {
             matches.add(product);
         });
         return matches; //devolver por defecto la clave buscada
     }
-    
+
     public List<Product> lookup(String key, ProductType productType, Organization organization) {
         return lookup(key, productType, organization, 0);
     }
-    
+
+    public List<Product> lookupContains(String key, ProductType productType, Organization organization, List<Product> productsContains) {
+        return lookup(key, productType, organization, 0).stream()
+                .filter(element -> productsContains.contains(element))
+                .collect(Collectors.toList());
+    }
+
     /**
-     * 
+     *
      * @param key
      * @param productType
      * @param organization
      * @param attempt
-     * @return 
+     * @return
      */
     public List<Product> lookup(String key, ProductType productType, Organization organization, int attempt) {
         List<Product> matches = new ArrayList<>();
-        products.values().stream().filter(product -> ( product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
-                && productType.equals(product.getProductType()) && organization.equals(product.getOrganization()) )).forEachOrdered(product -> {
-                    matches.add(product);
-        }); 
+        products.values().stream().filter(product -> (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
+                && productType.equals(product.getProductType()) && organization.equals(product.getOrganization()))).forEachOrdered(product -> {
+            matches.add(product);
+        });
         return matches; //devolver por defecto la clave buscada
     }
-    
-    public List<Product> filterByOrganization(Organization organization){
+
+    public List<Product> filterByOrganization(Organization organization) {
         List<Product> matches = new ArrayList<>();
-        if (organization == null){
+        if (organization == null) {
             return matches; //vacio
         }
-        products.values().stream().filter(product -> ( organization.equals(product.getOrganization()) )).forEachOrdered(product -> {
-                    matches.add(product);
-        }); 
+        products.values().stream().filter(product -> (organization.equals(product.getOrganization()))).forEachOrdered(product -> {
+            matches.add(product);
+        });
         return matches; //devolver por defecto la clave buscada
     }
 }
