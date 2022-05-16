@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A Invoice document in fede
+ *
  * @author jlgranda
  */
 @Entity
@@ -81,62 +82,62 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Invoice.countTotalInvoiceBetween", query = "select count(i) from Invoice i WHERE i.author=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.countTotalInvoiceBetweenOrg", query = "select count(i) from Invoice i WHERE i.organization=?1 and i.documentType=?2 and i.status=?3 and i.emissionOn >= ?4 and i.emissionOn <= ?5"),
     @NamedQuery(name = "Invoice.findTotalInvoiceSalesDiscountByOwnerBetween", query = "select sum(p.amount), sum(p.discount), sum(p.amount-p.discount) from Payment p LEFT JOIN p.invoice i WHERE i.author=?1 and i.owner=?2 and i.documentType=?3 and i.status=?4 and i.emissionOn >= ?5 and i.emissionOn <= ?6"),
-})
+   })
 
 public class Invoice extends DeletableObject<Invoice> implements Serializable {
-    
+
     private static Logger log = LoggerFactory.getLogger(Invoice.class);
-    
+
     private static final long serialVersionUID = 2087202727290952436L;
-    
-    public static final double IVA=0d;
-    
+
+    public static final double IVA = 0d;
+
     /**
      * Número de mesa en la que se generó en invoice.
      */
     private String boardNumber;
-    
+
     private EnvironmentType environmentType;
-    
+
     private EmissionType emissionType;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "emissionOn")
     private Date emissionOn;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
+
     private DocumentType documentType;
-    
+
     private DocumentType documentTypeSource;
-    
+
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "establishment_id", insertable=false, updatable=false, nullable=true)
+    @JoinColumn(name = "establishment_id", insertable = false, updatable = false, nullable = true)
     private Establishment establishment;
-    
+
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "emissionpoint_id", insertable=false, updatable=false, nullable=true)
+    @JoinColumn(name = "emissionpoint_id", insertable = false, updatable = false, nullable = true)
     private EmissionPoint emissionPoint;
-    
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Detail> details = new ArrayList<>();
-    
+
     private String sequencial;
-    
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
-    
+
     @Column(nullable = true)
     private Boolean printAlias;
-    
+
     @Column(nullable = true, length = 1024)
     protected String printAliasSummary;
-    
+
     @Column(nullable = true, length = 1024)
     protected Long pax;
-    
+
     /**
      * Referencia al record registrado
      */
@@ -215,16 +216,16 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
         this.emissionOn = emissionOn;
     }
 
-    public Detail addDetail(Detail detail){
+    public Detail addDetail(Detail detail) {
         detail.setInvoice(this);
-        if (this.details.contains(detail)){
+        if (this.details.contains(detail)) {
             replaceDetail(detail);
         } else {
             this.details.add(detail);
         }
         return detail;
     }
-    
+
     public List<Detail> getDetails() {
         return details;
     }
@@ -248,10 +249,10 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
-    
-    public Payment addPayment(Payment payment){
+
+    public Payment addPayment(Payment payment) {
         payment.setInvoice(this);
-        if (this.payments.contains(payment)){
+        if (this.payments.contains(payment)) {
             replacePayment(payment);
         } else {
             this.payments.add(payment);
@@ -274,6 +275,7 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     public void setPrintAliasSummary(String printAliasSummary) {
         this.printAliasSummary = printAliasSummary;
     }
+
     @Transient
     public Long getPax() {
         return pax;
@@ -282,7 +284,7 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     public void setPax(Long pax) {
         this.pax = pax;
     }
-    
+
     public Long getRecordId() {
         return recordId;
     }
@@ -290,94 +292,100 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
     }
-    
+
     @Transient
-    public String getSummary(){
+    public String getSummary() {
         List<Detail> list = getDetails();
         Collections.sort(list);
         Collections.reverse(list);
         return Lists.toString(list, ", ");
     }
-    
-    
+
     /**
      * Calcula el subtotal del detalle de la factura de venta
-     * @return 
+     *
+     * @return
      */
     @Transient
-    public BigDecimal getTotalSinImpuesto(){
+    public BigDecimal getTotalSinImpuesto() {
         BigDecimal total = new BigDecimal(0);
-        for (Detail d : getDetails()){
+        for (Detail d : getDetails()) {
             total = total.add(d.getPrice().multiply(d.getAmount()));
         }
-        
+
         return total;
     }
+
     /**
      * Calcula el subtotal del detalle de la factura de venta
-     * @return 
+     *
+     * @return
      */
     @Transient
-    public BigDecimal getTotal(){
+    public BigDecimal getTotal() {
         return getTotalSinImpuesto().add(getTotalTax(TaxType.IVA));
     }
-    
+
     /**
-     * Calcula el subtotal del detalle de la factura de venta por tipo de impuesto
+     * Calcula el subtotal del detalle de la factura de venta por tipo de
+     * impuesto
+     *
      * @param taxType
-     * @return 
+     * @return
      */
-    public BigDecimal getTotalTax(TaxType taxType){
+    public BigDecimal getTotalTax(TaxType taxType) {
         BigDecimal total = new BigDecimal(0);
-        for (Detail d : getDetails()){
-            if (taxType.equals(d.getProduct().getTaxType())){
+        for (Detail d : getDetails()) {
+            if (taxType.equals(d.getProduct().getTaxType())) {
                 //TODO identificar el porcentaje en función del tipo de impuesto
                 total = total.add(d.getPrice().multiply(d.getAmount()).multiply(BigDecimal.valueOf(IVA)));
             }
         }
-        
+
         return total;
     }
-    
+
     @Transient
-    public BigDecimal getPaymentsDiscount(){
+    public BigDecimal getPaymentsDiscount() {
         return getPaymentsField("discount");
     }
-    
+
     @Transient
-    public BigDecimal getPaymentsAmount(){
+    public BigDecimal getPaymentsAmount() {
         return getPaymentsField("amount");
     }
-    
+
     @Transient
-    public BigDecimal getPaymentsCash(){
+    public BigDecimal getPaymentsCash() {
         return getPaymentsField("cash");
     }
-    
+
     @Transient
-    public BigDecimal getPaymentsChange(){
+    public BigDecimal getPaymentsChange() {
         return getPaymentsField("change");
     }
-    
+
     @Transient
     public BigDecimal getPaymentsField(String field) {
         BigDecimal total = new BigDecimal(0);
         for (Payment p : getPayments()) {
-            if (null != field) switch (field) {
-                case "amount":
-                    total = total.add(p.getAmount());
-                    break;
-                case "cash":
-                    total = total.add(p.getCash());
-                    break;
-                case "change":
-                    total = total.add(p.getChange());
-                    break;
-                case "discount":
-                    total = total.add(p.getDiscount());
-                    break;
-                default:
-                    break;
+            if (null != field) {
+                switch (field) {
+                    case "amount":
+                        total = total.add(p.getAmount());
+                        break;
+                    case "cash":
+                        total = total.add(p.getCash());
+                        break;
+                    case "change":
+                        total = total.add(p.getChange());
+                        break;
+                    case "discount":
+                        total = total.add(p.getDiscount());
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -417,13 +425,13 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     }
 
     public Detail replaceDetail(Detail detail) {
-    
+
         getDetails().set(getDetails().indexOf(detail), detail);
         return detail;
     }
-    
+
     public Payment replacePayment(Payment payment) {
-    
+
         getPayments().set(getPayments().indexOf(payment), payment);
         return payment;
     }
