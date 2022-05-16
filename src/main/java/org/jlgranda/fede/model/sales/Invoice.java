@@ -299,7 +299,6 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
         return Lists.toString(list, ", ");
     }
     
-    
     /**
      * Calcula el subtotal del detalle de la factura de venta
      * @return 
