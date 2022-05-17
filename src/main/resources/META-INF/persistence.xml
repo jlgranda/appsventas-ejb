@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="       http://java.sun.com/xml/ns/persistence       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-    <persistence-unit name="fede" transaction-type="JTA">
-        <!--
+  <persistence-unit name="fede" transaction-type="JTA">
+    <!--
                 Uncomment one of the following to enable a non-default JPA provider
         -->
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <!--
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <!--
                         
                 <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         -->
-        <!--
+    <!--
                 Glassfish Default Datasource
         -->
-        <!--    <jta-data-source>jdbc/__default</jta-data-source>-->
-        <!--Glassfish-->
-        <!--    	<jta-data-source>jdbc/fededb</jta-data-source>-->
-        <!--WildFly-->
-        <jta-data-source>java:/FedeXADS</jta-data-source>
-        <!--
+    <!--    <jta-data-source>jdbc/__default</jta-data-source>-->
+    <!--Glassfish-->
+    <!--    	<jta-data-source>jdbc/fededb</jta-data-source>-->
+    <!--WildFly-->
+    <jta-data-source>java:/FedeXADS</jta-data-source>
+    <!--
                 JBoss Default Datasource
                 <jta-data-source>java:/DefaultDS</jta-data-source>
         -->
@@ -108,6 +108,7 @@
     <class>org.jlgranda.fede.model.production.AggregationDetail</class>
     <class>org.jlgranda.fede.model.reportes.Reporte</class>
     <class>org.jlgranda.fede.model.compras.Proveedor</class>
+    <class>org.jlgranda.fede.model.sri.SriDigitalCert</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
