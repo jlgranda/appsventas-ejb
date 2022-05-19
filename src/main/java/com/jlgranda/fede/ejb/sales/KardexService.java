@@ -54,24 +54,24 @@ import org.slf4j.LoggerFactory;
  */
 @Stateless
 public class KardexService extends BussinesEntityHome<Kardex> {
-
+    
     Logger logger = LoggerFactory.getLogger(KardexService.class);
-
+    
     @PersistenceContext
     EntityManager em;
-
+    
     @EJB
     KardexDetailService kardexDetailService;
     
     @EJB
     AggregationService aggregationService;
-
+    
     @PostConstruct
     private void init() {
         setEntityManager(em);
         setEntityClass(Kardex.class);
     }
-
+    
     @Override
     public Kardex createInstance() {
         Kardex _instance = new Kardex();
@@ -81,6 +81,8 @@ public class KardexService extends BussinesEntityHome<Kardex> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
+        _instance.setQuantity(BigDecimal.ZERO);
+        _instance.setFund(BigDecimal.ZERO);
         return _instance;
     }
 
@@ -88,16 +90,16 @@ public class KardexService extends BussinesEntityHome<Kardex> {
     public long count() {
         return super.count(Kardex.class);
     }
-
+    
     public List<Kardex> find(int maxresults, int firstresult) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Kardex> query = builder.createQuery(Kardex.class);
-
+        
         Root<Kardex> from = query.from(Kardex.class);
         query.select(from).orderBy(builder.desc(from.get(Kardex_.name)));
         return getResultList(query, maxresults, firstresult);
     }
-
+    
     public List<Kardex> findByOrganization(Organization organization) {
         Map<String, Object> params = new HashMap<>();
         params.put("organization", organization);
@@ -105,7 +107,9 @@ public class KardexService extends BussinesEntityHome<Kardex> {
     }
 
     /**
-     * Registra la venta del producto y realiza la operación correspondiente en el KARDEX
+     * Registra la venta del producto y realiza la operación correspondiente en
+     * el KARDEX
+     *
      * @param details
      * @param prefixComercialization
      * @param prefixProduction
@@ -131,7 +135,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                     final KardexDetail.OperationType productionOperationType = KardexDetail.OperationType.VENTA.equals(operationType) ? KardexDetail.OperationType.PRODUCCION_PRODUCTO_TERMINADO : operationType;
                     //1. Verificar si existe agregación del servicio
                     List<Aggregation> aggregations = aggregationService.findByProduct(detail.getProduct());
-                    if (!aggregations.isEmpty()){
+                    if (!aggregations.isEmpty()) {
                         Aggregation aggregation = aggregations.get(0);
                         aggregation.getAggregationDetails().forEach(agg -> {
                             Kardex kardex;
@@ -144,7 +148,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 }
             }
         }
-
+        
         return kardexs;
     }
 
@@ -157,7 +161,6 @@ public class KardexService extends BussinesEntityHome<Kardex> {
      * @return
      */
     public Kardex findByProductAndOrganization(Product product, Subject subject, Organization organization) {
-        //Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
         List<Kardex> listKardex = this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization);
         if (!listKardex.isEmpty()) {
             return listKardex.get(0);
@@ -176,7 +179,6 @@ public class KardexService extends BussinesEntityHome<Kardex> {
      * @return
      */
     public Kardex findOrCreateByProductAndOrganization(String prefix, Product product, Subject subject, Organization organization) {
-        //Kardex kardex = this.findUniqueByNamedQuery("Kardex.findByProductAndOrg", product, organization);
         List<Kardex> listKardex = this.findByNamedQueryWithLimit("Kardex.findByProductAndOrg", 1, product, organization);
         Kardex kardex;
         if (listKardex.isEmpty()) {
@@ -197,10 +199,10 @@ public class KardexService extends BussinesEntityHome<Kardex> {
         } else {
             kardex = listKardex.get(0);
         }
-
+        
         return kardex;
     }
-
+    
     private boolean isValid(Detailable detail) {
         return detail.getProduct() != null
                 && detail.getAmount() != null
@@ -210,9 +212,8 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 && detail.getBussinesEntityCode() != null;
     }
 
-
     /**
-     * 
+     *
      * @param prefix
      * @param product
      * @param bussinesEntityType
@@ -223,7 +224,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
      * @param subject
      * @param organization
      * @param operationType
-     * @return 
+     * @return
      */
     private Kardex aplicarOperacionesKardex(String prefix, Product product, String bussinesEntityType, String bussinesEntityCode, Long bussinesEntityId, BigDecimal price, BigDecimal amount, Subject subject, Organization organization, KardexDetail.OperationType operationType) {
         Kardex kardex = null;
@@ -238,7 +239,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
             kardexDetail.setBussinesEntityId(bussinesEntityId);
             kardexDetail.setBussinesEntityType(bussinesEntityType);
             kardexDetail.setOperationType(operationType);
-
+            
         } else {
             //Disminuir los valores acumulados de cantidad y total para al momento de modificar no se duplique el valor a aumentar por la venta
             if (kardexDetail.getQuantity() != null && kardexDetail.getTotalValue() != null) {
@@ -256,7 +257,7 @@ public class KardexService extends BussinesEntityHome<Kardex> {
         kardexDetail.setUnitValue(price);
         kardexDetail.setQuantity(amount);
         kardexDetail.setTotalValue(kardexDetail.getUnitValue().multiply(kardexDetail.getQuantity()));
-
+        
         if (kardex.isPersistent()) {
             kardexDetail.setCummulativeQuantity(kardexDetail.getQuantity().multiply(BigDecimal.valueOf(factor)));
             kardexDetail.setCummulativeTotalValue(kardexDetail.getTotalValue().multiply(BigDecimal.valueOf(factor)));
@@ -266,16 +267,16 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 kardexDetail.setCummulativeTotalValue(kardex.getFund().subtract(kardexDetail.getTotalValue()));
             }
         }
-
+        
         kardex.addKardexDetail(kardexDetail);
-
+        
         if (kardex.getCode() == null) {
             kardex.setCode(prefix + product.getId());
         }
         kardex.setQuantity(kardexDetail.getCummulativeQuantity());
         kardex.setFund(kardexDetail.getCummulativeTotalValue());
-
+        
         return kardex;
     }
-
+    
 }

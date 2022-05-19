@@ -60,7 +60,6 @@ public class KardexDetailService extends BussinesEntityHome<KardexDetail> {
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
         _instance.setAuthor(null); //Establecer al usuario actual
-        _instance.setOperationType(KardexDetail.OperationType.SALIDA_INVENTARIO);
         _instance.setEntryOn(Dates.now());
         return _instance;
     }
