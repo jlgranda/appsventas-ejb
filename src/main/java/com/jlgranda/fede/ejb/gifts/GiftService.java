@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
+ * Generador de regalos para appsventas
  * @author jlgranda
  */
 @Stateless
