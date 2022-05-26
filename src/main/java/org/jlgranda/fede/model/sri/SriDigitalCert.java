@@ -26,16 +26,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.jpapi.model.profile.Subject;
 
 /**
  *
@@ -47,13 +42,7 @@ import org.jpapi.model.profile.Subject;
 @NamedQueries({})
 
 public class SriDigitalCert implements Serializable {
-   
-//    @Id
-//    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 20)
-//    @Column(name = "digital_cert_id")
-//    private String digitalCertId;
+
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,9 +60,8 @@ public class SriDigitalCert implements Serializable {
     @Column(name = "insert_date")
     private Date insertDate;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "owner", nullable = true)
-    private Subject owner;
+    @Column(name = "owner")
+    private String owner;
 
     @Column(nullable = true)
     protected Boolean active;
@@ -110,11 +98,11 @@ public class SriDigitalCert implements Serializable {
         this.insertDate = insertDate;
     }
 
-    public Subject getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(Subject owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -126,5 +114,4 @@ public class SriDigitalCert implements Serializable {
         this.active = active;
     }   
     
-
 }

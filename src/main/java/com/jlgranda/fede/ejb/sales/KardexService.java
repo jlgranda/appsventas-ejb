@@ -126,12 +126,18 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                 logger.error("El detalle no es válido {1}", detail);
             } else {
                 if (ProductType.PRODUCT.equals(detail.getProduct().getProductType())) {
+                    System.out.println(">>>>>>>>>>>>>>>>><< ");
+                    System.out.println("aplicarOperacionesKardex PRODUCT");
                     Kardex kardex = aplicarOperacionesKardex(prefixComercialization, detail.getProduct(), detail.getBussinesEntityType(), detail.getBussinesEntityCode(), detail.getBussinesEntityId(), detail.getPrice(), detail.getAmount(), subject, organization, operationType);
                     if (kardex.isPersistent()) { //Sólo actualizar si el kardex ya existe.
                         kardexs.add(save(kardex.getId(), kardex)); //Para regresar los valores creados/modificados
                     }
+                    System.out.println("./aplicarOperacionesKardex");
+                    System.out.println(">>>>>>>>>>>>>>>>><< ");
                 } else if (ProductType.SERVICE.equals(detail.getProduct().getProductType())) {
                     
+                    System.out.println(">>>>>>>>>>>>>>>>><< ");
+                    System.out.println("aplicarOperacionesKardex SERVICE");
                     final KardexDetail.OperationType productionOperationType = KardexDetail.OperationType.VENTA.equals(operationType) ? KardexDetail.OperationType.PRODUCCION_PRODUCTO_TERMINADO : operationType;
                     //1. Verificar si existe agregación del servicio
                     List<Aggregation> aggregations = aggregationService.findByProduct(detail.getProduct());
@@ -145,6 +151,9 @@ public class KardexService extends BussinesEntityHome<Kardex> {
                             }
                         });
                     }
+                    
+                    System.out.println("./aplicarOperacionesKardex");
+                    System.out.println(">>>>>>>>>>>>>>>>><< ");
                 }
             }
         }

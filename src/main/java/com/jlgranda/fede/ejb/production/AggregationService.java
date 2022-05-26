@@ -29,7 +29,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.apache.commons.beanutils.BeanUtils;
 import org.jlgranda.appsventas.data.AggregationData;
 import org.jlgranda.appsventas.data.AggregationDetailData;
 import org.jlgranda.fede.model.production.Aggregation;

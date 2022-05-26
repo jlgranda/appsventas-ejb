@@ -46,37 +46,6 @@ public class SriDigitalCertService extends BussinesEntityHome<SriDigitalCert> {
         setEntityClass(SriDigitalCert.class);
     }
 
-//    @Override
-//    public SriDigitalCert createInstance() {
-//
-//        SriDigitalCert _instance = new SriDigitalCert();
-//        _instance.setCreatedOn(Dates.now());
-//        _instance.setLastUpdate(Dates.now());
-//        _instance.setStatus(StatusType.ACTIVE.toString());
-//        _instance.setActivationTime(Dates.now());
-//        //_instance.setExpirationTime();
-//        _instance.setAuthor(null); //Establecer al usuario actual
-//        _instance.setEnvironmentType(EnvironmentType.TEST);
-//        _instance.setEmissionType(EmissionType.SALE);
-//        _instance.setDocumentType(DocumentType.PRE_INVOICE);
-//        _instance.setEmissionOn(Dates.now()); 
-//        
-//        return _instance;
-//    }
-//    public SriDigitalCert createInstance(DocumentType documentType, EnvironmentType environmentType){
-//
-//        SriDigitalCert _instance = new SriDigitalCert();
-//        _instance.setCreatedOn(Dates.now());
-//        _instance.setLastUpdate(Dates.now());
-//        _instance.setStatus(StatusType.ACTIVE.toString());
-//        _instance.setActivationTime(Dates.now());
-//        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
-//        _instance.setEnvironmentType(environmentType);
-//        _instance.setEmissionType(EmissionType.SALE);
-//        _instance.setDocumentType(documentType);
-//        return _instance;
-//    }
     public long count() {
         return super.count(SriDigitalCert.class);
     }
