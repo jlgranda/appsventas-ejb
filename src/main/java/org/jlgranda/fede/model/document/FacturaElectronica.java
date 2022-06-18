@@ -17,13 +17,15 @@
  */
 package org.jlgranda.fede.model.document;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,15 +35,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Transient;
+import org.hibernate.annotations.Where;
 import org.jpapi.model.Organization;
 import org.jlgranda.fede.model.sales.Payment;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.SourceType;
+import org.jpapi.util.Lists;
 
 /**
  * Modelo de persistencia de factura electrónica fede, almacena datos básicos de
@@ -52,14 +56,15 @@ import org.jpapi.model.SourceType;
  */
 @Entity
 @Table(name = "FACTURA_ELECTRONICA")
-@DiscriminatorValue(value = "FEDE")
-@PrimaryKeyJoinColumn(name = "facturaElectronicaId")
 @NamedQueries({
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
-    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+//    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTag", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+//    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwner", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+//    @NamedQuery(name = "FacturaElectronica.findBussinesEntityByTagAndOwnerAndEmision", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2 and m.bussinesEntity.fechaEmision  >= ?3 and m.bussinesEntity.fechaEmision <= ?4 ORDER BY m.bussinesEntity.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.findByOrg", query = "SELECT f FROM FacturaElectronica f WHERE f.organization=?1 and f.active=?2 ORDER BY f.lastUpdate DESC"),
+    @NamedQuery(name = "FacturaElectronica.findCodeByOrg", query = "SELECT f.code FROM FacturaElectronica f WHERE f.organization=?1 and f.active=?2 ORDER BY f.lastUpdate DESC"),
     @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmision", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision  >= ?2 and f.fechaEmision <= ?3 and f.active=?4 ORDER BY f.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmisionAndEmissionType", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision  >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4 and f.active=?5 ORDER BY f.fechaEmision DESC"),
+    @NamedQuery(name = "FacturaElectronica.findByOwnerAndEmisionAndEmissionTypeAndOrg", query = "SELECT f FROM FacturaElectronica f WHERE f.owner = ?1 and f.fechaEmision>=?2 and f.fechaEmision<=?3 and f.emissionType=?4 and f.active=?5 and f.organization=?6 ORDER BY f.fechaEmision DESC"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByTagAndOwner", query = "select count(m.bussinesEntity) FROM Group g JOIN g.memberships m WHERE g.code=?1 and m.bussinesEntity.owner = ?2"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOwner", query = "select count(f) FROM FacturaElectronica f WHERE f.owner = ?1"),
     @NamedQuery(name = "FacturaElectronica.countBussinesEntityByOrg", query = "select count(f) FROM FacturaElectronica f WHERE f.organization = ?1"),
@@ -67,11 +72,10 @@ import org.jpapi.model.SourceType;
     @NamedQuery(name = "FacturaElectronica.findTotalBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3"),
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetween", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.owner=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypeBetweenOrg", query = "select sum(f.importeTotal) from FacturaElectronica f WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 and f.emissionType=?4"),
+    @NamedQuery(name = "FacturaElectronica.findTotalByEmissionTypePayBetweenOrg", query = "select sum(p.amount) from Payment p LEFT JOIN p.facturaElectronica f WHERE f.organization=?1 and p.createdOn >= ?2 and p.createdOn <= ?3 and f.emissionType=?4"),
     @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetween", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.author=sb.id and f.fechaEmision >= ?1 and f.fechaEmision <= ?2 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
-    @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetweenOrg", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),
-})
-@XmlRootElement
-public class FacturaElectronica extends BussinesEntity {
+    @NamedQuery(name = "FacturaElectronica.findTopTotalBussinesEntityIdsBetweenOrg", query = "select sb.initials, sum(f.importeTotal), sb.firstname, sb.surname from FacturaElectronica f JOIN f.author sb WHERE f.organization=?1 and f.fechaEmision >= ?2 and f.fechaEmision <= ?3 GROUP BY sb ORDER BY sum(f.importeTotal) DESC"),})
+public class FacturaElectronica extends DeletableObject<FacturaElectronica> implements Serializable {
 
     private static final long serialVersionUID = -1326570634296607679L;
 
@@ -81,7 +85,7 @@ public class FacturaElectronica extends BussinesEntity {
 
     private BigDecimal totalIVA12;
 
-    private BigDecimal totalDescuento;
+    private BigDecimal totalDescuento = BigDecimal.ZERO;
 
     private BigDecimal importeTotal;
 
@@ -101,11 +105,21 @@ public class FacturaElectronica extends BussinesEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected SourceType sourceType;
-    
+
+    /**
+     * Naturaleza de la factura
+     */
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected EmissionType emissionType;
-    
+
+    /**
+     * Clasificación de la factura
+     */
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = true)
+    protected FacturaType facturaType;
+
     /**
      * Nombre de archivo de donde se importó la factura
      */
@@ -119,16 +133,52 @@ public class FacturaElectronica extends BussinesEntity {
     private String claveAcceso;
 
     private String numeroAutorizacion;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
+
     /**
      * Para el seguimiento de pagos en facturas a crédito
      */
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
+    @Where(clause = "deleted = false") //sólo no eliminados
+    @OrderBy(value = "id")
     private List<Payment> payments = new ArrayList<>();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fechaVencimiento")
+    private Date fechaVencimiento;
+
+    @Transient
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ultima_fecha_pago")
+    private Date ultimaFechaPago;
+
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "facturaElectronica", fetch = FetchType.LAZY)
+    private List<FacturaElectronicaDetail> facturaElectronicaDetails = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true, name = "document_type")
+    private FacturaElectronica.DocumentType documentType;
+
+    @Transient
+    private BigDecimal subtotalIVA0 = BigDecimal.ZERO;
+
+    @Transient
+    private BigDecimal subtotalIVA12 = BigDecimal.ZERO;
+
+    /**
+     * Referencia al record registrado
+     */
+    @Column(name = "record_id", nullable = true)
+    private Long recordId;
+
+    public enum DocumentType {
+        FACTURA,
+        NOTA_COMPRA,
+        PRODUCCION,
+    }
 
     public BigDecimal getTotalSinImpuestos() {
         return totalSinImpuestos;
@@ -218,6 +268,14 @@ public class FacturaElectronica extends BussinesEntity {
         this.emissionType = emissionType;
     }
 
+    public FacturaType getFacturaType() {
+        return facturaType;
+    }
+
+    public void setFacturaType(FacturaType facturaType) {
+        this.facturaType = facturaType;
+    }
+
     public String getContenido() {
         return contenido;
     }
@@ -249,17 +307,17 @@ public class FacturaElectronica extends BussinesEntity {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
-    
-    public Payment addPayment(Payment payment){
+
+    public Payment addPayment(Payment payment) {
         payment.setFacturaElectronica(this);
-        if (this.payments.contains(payment)){
+        if (this.payments.contains(payment)) {
             replacePayment(payment);
         } else {
             this.payments.add(payment);
         }
         return payment;
     }
-    
+
     public Payment replacePayment(Payment payment) {
         getPayments().set(getPayments().indexOf(payment), payment);
         return payment;
@@ -273,4 +331,175 @@ public class FacturaElectronica extends BussinesEntity {
         this.organization = organization;
     }
 
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public Date getUltimaFechaPago() {
+        return ultimaFechaPago;
+    }
+
+    public void setUltimaFechaPago(Date ultimaFechaPago) {
+        this.ultimaFechaPago = ultimaFechaPago;
+    }
+
+    public List<FacturaElectronicaDetail> getFacturaElectronicaDetails() {
+        return facturaElectronicaDetails;
+    }
+
+    public void setFacturaElectronicaDetails(List<FacturaElectronicaDetail> facturaElectronicaDetails) {
+        this.facturaElectronicaDetails = facturaElectronicaDetails;
+    }
+
+    public FacturaElectronicaDetail addFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail) {
+        facturaElectronicaDetail.setFacturaElectronica(this);
+        if (this.facturaElectronicaDetails.contains(facturaElectronicaDetail)) {
+            replaceFacturaElectronicaDetail(facturaElectronicaDetail);
+        } else {
+            this.facturaElectronicaDetails.add(facturaElectronicaDetail);
+        }
+        return facturaElectronicaDetail;
+    }
+
+    public FacturaElectronicaDetail replaceFacturaElectronicaDetail(FacturaElectronicaDetail facturaElectronicaDetail) {
+        getFacturaElectronicaDetails().set(getFacturaElectronicaDetails().indexOf(facturaElectronicaDetail), facturaElectronicaDetail);
+        return facturaElectronicaDetail;
+    }
+
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
+    public BigDecimal getSubtotalIVA0() {
+        return subtotalIVA0;
+    }
+
+    public void setSubtotalIVA0(BigDecimal subtotalIVA0) {
+        this.subtotalIVA0 = subtotalIVA0;
+    }
+
+    public BigDecimal getSubtotalIVA12() {
+        return subtotalIVA12;
+    }
+
+    public void setSubtotalIVA12(BigDecimal subtotalIVA12) {
+        this.subtotalIVA12 = subtotalIVA12;
+    }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.documentType);
+        hash = 59 * hash + Objects.hashCode(this.emissionType);
+        hash = 59 * hash + Objects.hashCode(this.payments);
+        hash = 59 * hash + Objects.hashCode(this.getId());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FacturaElectronica other = (FacturaElectronica) obj;
+        if (!Objects.equals(this.moneda, other.moneda)) {
+            return false;
+        }
+        if (!Objects.equals(this.filename, other.filename)) {
+            return false;
+        }
+        if (!Objects.equals(this.contenido, other.contenido)) {
+            return false;
+        }
+        if (!Objects.equals(this.claveAcceso, other.claveAcceso)) {
+            return false;
+        }
+        if (!Objects.equals(this.numeroAutorizacion, other.numeroAutorizacion)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalSinImpuestos, other.totalSinImpuestos)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalIVA0, other.totalIVA0)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalIVA12, other.totalIVA12)) {
+            return false;
+        }
+        if (!Objects.equals(this.totalDescuento, other.totalDescuento)) {
+            return false;
+        }
+        if (!Objects.equals(this.importeTotal, other.importeTotal)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaEmision, other.fechaEmision)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaAutorizacion, other.fechaAutorizacion)) {
+            return false;
+        }
+        if (this.sourceType != other.sourceType) {
+            return false;
+        }
+        if (this.emissionType != other.emissionType) {
+            return false;
+        }
+        if (!Objects.equals(this.organization, other.organization)) {
+            return false;
+        }
+        if (!Objects.equals(this.payments, other.payments)) {
+            return false;
+        }
+        if (!Objects.equals(this.fechaVencimiento, other.fechaVencimiento)) {
+            return false;
+        }
+        if (!Objects.equals(this.ultimaFechaPago, other.ultimaFechaPago)) {
+            return false;
+        }
+        if (!Objects.equals(this.facturaElectronicaDetails, other.facturaElectronicaDetails)) {
+            return false;
+        }
+        if (this.documentType != other.documentType) {
+            return false;
+        }
+        if (!Objects.equals(this.subtotalIVA0, other.subtotalIVA0)) {
+            return false;
+        }
+        return Objects.equals(this.subtotalIVA12, other.subtotalIVA12);
+    }
+
+    @Transient
+    public String getSummary() {
+        List<FacturaElectronicaDetail> list = getFacturaElectronicaDetails();
+        Collections.sort(list);
+        Collections.reverse(list);
+        return Lists.toString(list, ", ");
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
+    }
 }

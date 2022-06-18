@@ -5,14 +5,18 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.Setting;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
@@ -26,7 +30,7 @@ import org.jpapi.util.Dates;
 public class SettingService extends BussinesEntityHome<Setting> {
 
     private static final long serialVersionUID = 4575953142699951180L;
-
+    
     @PersistenceContext
     EntityManager em;
 
@@ -42,7 +46,24 @@ public class SettingService extends BussinesEntityHome<Setting> {
     }
 
     public Setting findByName(String name, Subject owner) {
-        List<Setting> settings = this.findByNamedQuery("Setting.findByNameAndOwner", name, owner);
+        List<Setting> settings = new ArrayList<>();
+        if (owner == null){
+            settings = this.findByNamedQuery("Setting.findByNameAndOwnerIsNull", name);
+        } else {
+            settings = this.findByNamedQuery("Setting.findByNameAndOwner", name, owner);
+        }
+        return settings.isEmpty() ? null : settings.get(0);
+    }
+    
+    public Setting findByNameAndOrganization(String name, Subject owner, Long organizationId ) {
+        List<Setting> settings = new ArrayList<>();
+        if (owner == null && organizationId == null){
+            settings = this.findByNamedQuery("Setting.findByNameAndOwnerIsNullAndOrganizationIsNull", name);
+        } else if (owner == null && organizationId != null){
+            settings = this.findByNamedQuery("Setting.findByNameAndOwnerIsNullAndOrganization", name, organizationId);
+        } else if (owner != null && organizationId != null){
+            settings = this.findByNamedQuery("Setting.findByNameAndOwnerAndOrganization", name, owner, organizationId);
+        }
         return settings.isEmpty() ? null : settings.get(0);
     }
 
@@ -79,9 +100,9 @@ public class SettingService extends BussinesEntityHome<Setting> {
         sql.append(" and setting.owner is null");
         sql.append(" and setting.active=True order by setting.name");
         final Query q = em.createQuery(sql.toString());
-        for (String key : parametros.keySet()) {
+        parametros.keySet().forEach(key -> {
             q.setParameter(key, parametros.get(key));
-        }
+        });
         return q.getResultList();
     }
 

@@ -17,22 +17,24 @@
  */
 package org.jlgranda.fede.model.sales;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.jpapi.model.Organization;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Group;
 import org.jpapi.model.TaxType;
+import org.jpapi.model.profile.Subject;
+import org.jpapi.model.statistics.Statistics;
 
 /**
  *
@@ -40,12 +42,13 @@ import org.jpapi.model.TaxType;
  */
 @Entity
 @Table(name = "Product")
-@DiscriminatorValue(value = "PROD")
-@PrimaryKeyJoinColumn(name = "productId")
 @NamedQueries({
     @NamedQuery(name = "Product.findById", query = "select p FROM Product p WHERE p.id = ?1"),
-    @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p ORDER BY p.name DESC"),
+    @NamedQuery(name = "Product.findByCode", query = "select p FROM Product p WHERE p.code = ?1"),
+    @NamedQuery(name = "Product.findByUUID", query = "select p FROM Product p WHERE p.uuid = ?1"),
+    @NamedQuery(name = "Product.findByOrganization", query = "select p FROM Product p WHERE p.deleted = false ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findByProductType", query = "select p FROM Product p WHERE p.productType = ?1 ORDER BY p.name DESC"),
+    @NamedQuery(name = "Product.findByOrganizationAndProductTypes", query = "select p FROM Product p WHERE p.organization = ?1 and p.productType in ?2 ORDER BY p.name DESC"),
     @NamedQuery(name = "Product.findLastProduct", query = "select p FROM Product p ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProductOrg", query = "select p FROM Product p WHERE p.organization=?1 ORDER BY p.id DESC"),
     @NamedQuery(name = "Product.findLastProducts", query = "select p FROM Product p ORDER BY p.id DESC"),
@@ -54,53 +57,61 @@ import org.jpapi.model.TaxType;
     @NamedQuery(name = "Product.findTopProductIds", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetween", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.createdOn >= ?1 and d.createdOn <= ?2 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetweenOrg", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenTypeOrganization", query = "SELECT p.id, sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.invoice.emissionOn >= ?2 and d.invoice.emissionOn <= ?3 and d.invoice.documentType = ?4 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetweenPrice", query = "SELECT p.id,  sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.createdOn >= ?1 and d.createdOn <= ?2 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductIdsBetweenPriceOrg", query = "SELECT p.id,  sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p ORDER BY 2 DESC"),
-    @NamedQuery(name = "Product.findTopProductIdsBetweenCategoryOrg", query = "SELECT p.category.name,  sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p.category.name ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenPriceTypeOrganization", query = "SELECT p.id, sum(d.price*d.amount), sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.invoice.emissionOn >= ?2 and d.invoice.emissionOn <= ?3 and d.invoice.documentType = ?4 GROUP BY p ORDER BY 3 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenCategoryOrg", query = "SELECT p.category.name, sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.createdOn >= ?2 and d.createdOn <= ?3 GROUP BY p.category.name ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findTopProductIdsBetweenCategoryTypeOrganization", query = "SELECT p.category.name, sum(d.price*d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 and d.invoice.emissionOn >= ?2 and d.invoice.emissionOn <= ?3 and d.invoice.documentType = ?4 GROUP BY p.category.name ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductNames", query = "SELECT p.name,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) AND d.createdOn BETWEEN ?1 AND ?2 GROUP BY p.name ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.findTopProductNamesOrg", query = "SELECT p.name,  sum(d.amount) FROM Detail d JOIN d.product p WHERE not p.id in (75, 676,672) and d.invoice.organization=?1 AND d.createdOn BETWEEN ?1 AND ?2 GROUP BY p.name ORDER BY 2 DESC"),
+    @NamedQuery(name = "Product.findWhithoutKardex", query = "SELECT p FROM Product p WHERE p NOT IN ( SELECT k.product FROM Kardex k WHERE k.deleted = false) AND p.organization=?1 and p.deleted = false"),
+    @NamedQuery(name = "Product.countWhithoutKardex", query = "SELECT count(p) FROM Product p WHERE p NOT IN ( SELECT k.product FROM Kardex k WHERE k.deleted = false) AND p.organization=?1 and p.deleted = false"),
     @NamedQuery(name = "Product.countProduct", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.id = ?1 AND d.createdOn BETWEEN ?2 AND ?3 GROUP BY p.id ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countProductOrg", query = "SELECT p.id,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.id = ?1 AND p.organization = ?2 AND d.createdOn BETWEEN ?3 AND ?4 GROUP BY p.id ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countSoldProductByOwner", query = "SELECT p,  sum(d.amount) FROM Detail d JOIN d.product p WHERE p.owner = ?1 AND d.createdOn BETWEEN ?2 AND ?3 GROUP BY p ORDER BY 2 DESC"),
     @NamedQuery(name = "Product.countByOwner", query = "select count(p) FROM Product p WHERE p.owner = ?1"),
     @NamedQuery(name = "Product.countProductByCategories", query = "select g.name, count(p.category) FROM Product p JOIN p.category g WHERE not p.id in (75, 676,672) and p.createdOn >= ?1 and p.createdOn <= ?2 GROUP BY p.category, g.name ORDER BY COUNT(p.category) DESC"),
-})
-//SELECT
-//b.name,
-//count(p.group_id)
-//FROM public.product as p
-//INNER JOIN public.ggroup as g on g.groupid=p.group_id
-//INNER JOIN bussinesentity as b on b.id=g.groupid
-//WHERE not p.productid in (75, 676,672) AND
-// b.createdon >='2021-03-01' AND b.createdon <='2021-03-14'
-//GROUP BY p.group_id, b.name;
-public class Product extends BussinesEntity {
+    @NamedQuery(name = "Product.findNameByOrganization", query = "select p.name FROM Product p WHERE p.organization = ?1 ORDER BY p.name"),})
+public class Product extends DeletableObject<Product> implements Serializable {
 
     private static final long serialVersionUID = -1320148041663418996L;
-    
+
     @Column
     private String icon;
-    
+
     @Column
     private BigDecimal price;
-    
+
+    @Column
+    private BigDecimal priceB;
+
+    @Column
+    private BigDecimal priceC;
+
+    @Column
+    private BigDecimal priceCost;
+
     @Column
     private ProductType productType;
-    
+
     @Column
     private TaxType taxType;
-    
+
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
 
-    @ManyToOne
-    @JoinColumn(name = "group_id", insertable=true, updatable=true, nullable=true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", insertable = true, updatable = true, nullable = true)
     private Group category;
+
+    @Transient
+    private Statistics statistics = new Statistics();
 
     public Product() {
         icon = "fa fa-question-circle "; //icon by default
@@ -120,6 +131,30 @@ public class Product extends BussinesEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getPriceB() {
+        return priceB;
+    }
+
+    public void setPriceB(BigDecimal priceB) {
+        this.priceB = priceB;
+    }
+
+    public BigDecimal getPriceC() {
+        return priceC;
+    }
+
+    public void setPriceC(BigDecimal priceC) {
+        this.priceC = priceC;
+    }
+
+    public BigDecimal getPriceCost() {
+        return priceCost;
+    }
+
+    public void setPriceCost(BigDecimal priceCost) {
+        this.priceCost = priceCost;
     }
 
     public byte[] getPhoto() {
@@ -153,7 +188,7 @@ public class Product extends BussinesEntity {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-    
+
     public Group getCategory() {
         return category;
     }
@@ -161,7 +196,15 @@ public class Product extends BussinesEntity {
     public void setCategory(Group category) {
         this.category = category;
     }
-    
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
+    }
+
     @Override
     public int hashCode() {
         return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
@@ -170,7 +213,7 @@ public class Product extends BussinesEntity {
                 append(getName()).
                 toHashCode();
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -189,7 +232,7 @@ public class Product extends BussinesEntity {
                 append(getName(), other.getName()).
                 isEquals();
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s[id=%d]", getClass().getSimpleName(), getId());

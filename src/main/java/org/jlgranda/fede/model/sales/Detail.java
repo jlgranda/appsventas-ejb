@@ -28,6 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jlgranda.fede.model.Detailable;
 import org.jpapi.model.PersistentObject;
 
 /**
@@ -36,7 +37,7 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "INVOICE_DETAIL")
-public class Detail extends PersistentObject implements Comparable<Detail>, Serializable {
+public class Detail extends PersistentObject implements Comparable<Detail>, Serializable, Detailable {
 
     private static final long serialVersionUID = 2616187458131227603L;
     
@@ -51,7 +52,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
     @Column(name = "product_id", insertable=true, updatable=true, nullable=false)
     private Long productId;
     
-    private float amount;
+    private BigDecimal amount;
     
     private String unit;
     
@@ -60,7 +61,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
 
     public Detail() {
         this.product = null;
-        this.amount = 0;
+        this.amount = BigDecimal.ZERO;
         this.unit = "u";
         this.showAmountInSummary = true;
     }
@@ -68,7 +69,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
     public Detail(Product product, float amount) {
         this.product = product;
         this.productId = product.getId();
-        this.amount = amount;
+        this.amount = BigDecimal.valueOf(amount);
         this.unit = "u";
         this.showAmountInSummary = true;
     }
@@ -76,7 +77,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
     public Detail(Product product, float amount, String unit) {
         this.productId = product.getId();
         this.product = product;
-        this.amount = amount;
+        this.amount = BigDecimal.valueOf(amount);
         this.unit = unit;
         this.showAmountInSummary = true;
     }
@@ -89,6 +90,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
         this.invoice = invoice;
     }
 
+    @Override
     public Product getProduct() {
         return product;
     }
@@ -107,14 +109,16 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
         this.productId = productId;
     }
 
-    public float getAmount() {
+    @Override
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
+    @Override
     public String getUnit() {
         return unit;
     }
@@ -123,6 +127,7 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
         this.unit = unit;
     }
 
+    @Override
     public BigDecimal getPrice() {
         return price;
     }
@@ -203,6 +208,21 @@ public class Detail extends PersistentObject implements Comparable<Detail>, Seri
     @Override
     public int compareTo(Detail other) {
         return this.product.getName().compareTo(other.product.getName());
+    }
+
+    @Override
+    public Long getBussinesEntityId() {
+        return getInvoice().getId();
+    }
+
+    @Override
+    public String getBussinesEntityType() {
+        return Invoice.class.getSimpleName();
+    }
+    
+    @Override
+    public String getBussinesEntityCode() {
+        return getInvoice().getSequencial();
     }
      
 }

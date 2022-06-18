@@ -1,0 +1,145 @@
+/*
+ * Copyright (C) 2021 author
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+package org.jlgranda.fede.model.accounting;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jpapi.model.PersistentObject;
+
+/**
+ *
+ * @author author
+ */
+@Entity
+@Table (name = "caja_detalle")
+@NamedQueries({
+    @NamedQuery (name="CashBoxDetail.findByCashBoxPartial", query = "SELECT s FROM CashBoxDetail s WHERE s.cashBoxPartial = ?1 ORDER BY s.id ASC"),
+})
+public class CashBoxDetail extends PersistentObject<CashBoxDetail> implements Comparable<CashBoxDetail>, Serializable {
+    
+    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
+    @JoinColumn (name = "cashBoxPartial_id", insertable = true, updatable = true, nullable = true)
+    private CashBoxPartial cashBoxPartial;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)    
+    private CashBoxDetail.DenominationType denominationType;
+    String denomination;
+    BigDecimal valuer;
+    Long quantity;
+    BigDecimal amount;
+    
+    public enum DenominationType {
+        BILL,
+        MONEY;
+    }
+    
+    public CashBoxPartial getCashBoxPartial() {
+        return cashBoxPartial;
+    }
+
+    public void setCashBoxPartial(CashBoxPartial cashBoxPartial) {
+        this.cashBoxPartial = cashBoxPartial;
+    }
+
+    public String getDenomination() {
+        return denomination;
+    }
+
+    public void setDenomination(String denomination) {
+        this.denomination = denomination;
+    }
+
+    public DenominationType getDenominationType() {
+        return denominationType;
+    }
+
+    public void setDenominationType(DenominationType denominationType) {
+        this.denominationType = denominationType;
+    }
+
+    public BigDecimal getValuer() {
+        return valuer;
+    }
+
+    public void setValuer(BigDecimal valuer) {
+        this.valuer = valuer;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public int hashCode(){
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+        hcb.append(getCashBoxPartial()).append(getDenomination());
+        return hcb.toHashCode();
+    }
+    
+
+    @Override
+    public boolean equals(final Object obj){
+        if(this==obj){
+            return true;
+        }
+        if(obj == null){
+            return false;
+        }
+        if(getClass()!=obj.getClass()){
+            return false;
+        }
+        
+        CashBoxDetail other = (CashBoxDetail) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        
+//        eb.append(getId(), other.getId());
+        eb.append(getCashBoxPartial(), other.getCashBoxPartial()).append(getDenomination(), other.getDenomination());
+        
+        return eb.isEquals();
+    }
+
+    @Override
+    public int compareTo(CashBoxDetail other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
+    }
+}

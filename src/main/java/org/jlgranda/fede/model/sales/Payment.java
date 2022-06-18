@@ -19,15 +19,21 @@ package org.jlgranda.fede.model.sales;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jlgranda.fede.model.document.FacturaElectronica;
-import org.jpapi.model.PersistentObject;
+import org.jpapi.model.DeletableObject;
 
 /**
  * Payment for a invoice
@@ -35,7 +41,11 @@ import org.jpapi.model.PersistentObject;
  */
 @Entity
 @Table(name = "PAYMENT")
-public class Payment extends PersistentObject implements Comparable<Payment>, Serializable {
+@NamedQueries({
+@NamedQuery(name = "Payment.findByInvoice", query = "SELECT p FROM Payment p WHERE p.invoice=?1 and p.deleted=false ORDER BY p.invoice.id DESC"),
+@NamedQuery(name = "Payment.findByFacturaElectronica", query = "SELECT p FROM Payment p WHERE p.facturaElectronica=?1 and p.deleted=false ORDER BY p.facturaElectronica.id DESC"),
+})
+public class Payment extends DeletableObject<Payment> implements Comparable<Payment>, Serializable {
 
     private static final long serialVersionUID = -6685382197357879651L;
 
@@ -68,6 +78,16 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
      */
     private BigDecimal change;
 
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    protected Date datePaymentCancel;
+    
+    /**
+     * Referencia al record registrado
+     */
+    @Column(name = "record_id", nullable = true)
+    private Long recordId;
+    
     public Invoice getInvoice() {
         return invoice;
     }
@@ -124,14 +144,29 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
         this.change = change;
     }
 
+    public Date getDatePaymentCancel() {
+        return datePaymentCancel;
+    }
+
+    public void setDatePaymentCancel(Date datePaymentCancel) {
+        this.datePaymentCancel = datePaymentCancel;
+    }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
+    }
     
-           
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
         // if deriving: appendSuper(super.hashCode()).
-        hcb.append(getInvoice()).
-                    append(getId());
+//        hcb.append(getInvoice()).
+//                    append(getId());
+        hcb.append(getId());
 
         return hcb.toHashCode();
     }
@@ -150,8 +185,9 @@ public class Payment extends PersistentObject implements Comparable<Payment>, Se
         Payment other = (Payment) obj;
         EqualsBuilder eb = new EqualsBuilder();
         
-        eb.append(getId(), other.getId()).
-                    append(getInvoice(), other.getInvoice());
+        eb.append(getId(), other.getId());
+//        eb.append(getId(), other.getId()).
+//                    append(getInvoice(), other.getInvoice());
         return eb.isEquals();
     }
 

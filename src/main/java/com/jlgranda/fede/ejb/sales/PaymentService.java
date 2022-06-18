@@ -18,6 +18,8 @@
 package com.jlgranda.fede.ejb.sales;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -63,10 +65,10 @@ public class PaymentService extends BussinesEntityHome<Payment> {
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-        _instance.setUuid(UUID.randomUUID().toString());
+//        _instance.setUuid(UUID.randomUUID().toString());
         return _instance;
     }
-    
+
     public Payment createInstance(String method, BigDecimal amount, BigDecimal cash, BigDecimal discount) {
 
         Payment _instance = new Payment();
@@ -82,6 +84,14 @@ public class PaymentService extends BussinesEntityHome<Payment> {
         _instance.setUuid(UUID.randomUUID().toString());
         return _instance;
     }
-    
-}
 
+    public Payment findByCode(Payment payment) {
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("uuid", payment.getUuid()); //Recuperar por código
+        if (!this.find(filters).getResult().isEmpty()) {
+            payment = this.find(filters).getResult().get(0); //debe ser único
+        }
+        return payment;
+    }
+
+}

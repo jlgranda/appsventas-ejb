@@ -5,9 +5,12 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,7 +20,10 @@ import org.jpapi.model.Organization;
 import org.jpapi.model.Organization_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
+import org.jpapi.util.QuerySortOrder;
+import org.jpapi.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,26 +32,25 @@ import org.slf4j.LoggerFactory;
  * @author jlgranda
  */
 @Stateless
-public class OrganizationService extends BussinesEntityHome<Organization>{
-     
-    Logger  logger = LoggerFactory.getLogger(OrganizationService.class);
-    
+public class OrganizationService extends BussinesEntityHome<Organization> {
+
+    Logger logger = LoggerFactory.getLogger(OrganizationService.class);
+
     private static final long serialVersionUID = 6654364438741958096L;
-    
+
     @PersistenceContext
     EntityManager em;
 
     @PostConstruct
-    private void init(){
+    private void init() {
         setEntityClass(Organization.class);
         setEntityManager(em);
     }
-    
-    public List<Organization> getOrganizations(){
+
+    public List<Organization> getOrganizations() {
         return this.findAll(Organization.class);
     }
 
-    
     @Override
     public Organization createInstance() {
 
@@ -55,14 +60,15 @@ public class OrganizationService extends BussinesEntityHome<Organization>{
         _instance.setStatus(StatusType.ACTIVE.toString());
         _instance.setActivationTime(Dates.now());
         _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
+        _instance.setOrganizationType(Organization.Type.PRIVATE);
         _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
-    
+
     public long count() {
-        return super.count(Organization.class); 
+        return super.count(Organization.class);
     }
-    
+
     public List<Organization> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
@@ -72,4 +78,20 @@ public class OrganizationService extends BussinesEntityHome<Organization>{
         query.select(from).orderBy(builder.desc(from.get(Organization_.name)));
         return getResultList(query, maxresults, firstresult);
     }
+
+    public Organization findByOwner(Subject owner) {
+        List<Organization> organizations = this.findByNamedQuery("Organization.findByOwner", owner);
+        if (!organizations.isEmpty()) {
+            return organizations.get(0);
+        } else { //Es posible que la organizacin tenga el mismo RUC que el usuario
+            if (Strings.validateTaxpayerDocument(owner.getRuc())) {
+                organizations = this.findByNamedQuery("Organization.findByRuc", owner.getRole());
+                if (!organizations.isEmpty()) {
+                    return organizations.get(0);
+                }
+            }
+        }
+        return null; //No existe organización alguna
+    }
+
 }

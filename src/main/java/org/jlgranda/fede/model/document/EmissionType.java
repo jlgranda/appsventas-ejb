@@ -35,5 +35,5 @@ public enum EmissionType {
     CREDIT_SALE,
     CASH_SALE,
     CASH_DISCOUNT,
-    PERCENTAGE_DISCOUNT
+    PERCENTAGE_DISCOUNT,
 }

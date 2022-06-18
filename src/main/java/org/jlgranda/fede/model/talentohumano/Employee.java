@@ -34,13 +34,14 @@ import org.jpapi.model.Organization;
 import org.jpapi.model.DeletableObject;
 
 /**
- *
+ * Especialización por organización de la entidad Subject, el campo owner indica a que Subject pertenece.
  * @author jlgranda
  */
 @Entity
 @Table(name = "EMPLOYEE")
 @NamedQueries({
     @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.deleted = false"),
+    @NamedQuery(name = "Employee.findByOwnerAndOrganization", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.organization = ?2 and e.deleted = false"),
     @NamedQuery(name = "Employee.findByOwnerCodeAndName", query = "SELECT e FROM Employee e WHERE lower(e.owner.code) like lower(:code) or lower(e.owner.firstname) like lower(:firstname) or lower(e.owner.surname) like lower(:surname)")
 })
 public class Employee extends DeletableObject implements Comparable<Employee>, Serializable {
@@ -95,7 +96,7 @@ public class Employee extends DeletableObject implements Comparable<Employee>, S
     
     @Override
     public String toString() {
-        return String.valueOf(getId());
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
     
 }

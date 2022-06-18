@@ -22,24 +22,31 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
+import org.jpapi.model.Organization;
 
 /**
- *
+ * Instancia de proceso de trámite
  * @author jlgranda
  */
 @Entity
 @Table(name = "instancia_proceso")
 @NamedQueries({
     @NamedQuery(name = "instanciaProceso.findLast", query = "select p FROM InstanciaProceso p where p.owner=?1 ORDER BY p.id DESC"),})
-public class InstanciaProceso extends BussinesEntity implements Serializable {
+public class InstanciaProceso extends DeletableObject<InstanciaProceso> implements Comparable<InstanciaProceso>, Serializable {
 
     private static final long serialVersionUID = 931470573990535517L;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true)
+    private Organization organization;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "instanciaProceso", fetch = FetchType.LAZY)
     @OrderBy("id ASC")
@@ -66,5 +73,18 @@ public class InstanciaProceso extends BussinesEntity implements Serializable {
     public void addTarea(Tarea t){
         t.setInstanciaProceso(this);
         this.tareas.add(t);
+    }
+    
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    @Override
+    public int compareTo(InstanciaProceso other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
 }

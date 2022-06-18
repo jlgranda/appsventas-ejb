@@ -19,37 +19,50 @@ package org.jlgranda.fede.model.accounting;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Organization;
-import org.jpapi.model.PersistentObject;
 
 /**
  * Basado en documentación: https://youtu.be/eyZ-p9UCKOY?t=841
+ *
  * @author jlgranda
  */
 @Entity
 @Table(name = "General_Journal")
-@NamedQueries({ @NamedQuery(name = "Journal.findByName", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "Journal.findByNameAndOwner", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
-@NamedQuery(name = "Journal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.createdOn >= ?1 and s.createdOn<= ?2 and s.organization = ?3 ORDER BY 1"),
+@NamedQueries({
+    @NamedQuery(name = "GeneralJournal.findByName", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner is null AND s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "GeneralJournal.findByNameAndOwner", query = "select s FROM GeneralJournal s WHERE s.name = ?1 and s.owner = ?2 AND s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrg", query = "select s FROM GeneralJournal s WHERE s.emissionDate >= ?1 and s.emissionDate<= ?2 and s.organization = ?3 AND s.deleted = false ORDER BY s.id DESC"),
+    @NamedQuery(name = "GeneralJournal.findByCreatedOnAndOrganization", query = "SELECT s FROM GeneralJournal s WHERE s.emissionDate >= ?1 AND s.emissionDate <= ?2 AND s.organization = ?3 AND s.deleted = false ORDER BY 1"),
+    @NamedQuery(name = "GeneralJournal.findByEmissionDateAndOrganization", query = "SELECT s FROM GeneralJournal s WHERE s.emissionDate >= ?1 AND s.emissionDate <= ?2 AND s.organization = ?3 AND s.deleted = false ORDER BY 1"),
 })
-public class GeneralJournal extends PersistentObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
-    
+public class GeneralJournal extends DeletableObject<GeneralJournal> implements Comparable<GeneralJournal>, Serializable {
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "organization_id", insertable = true, updatable = true, nullable = true)
     private Organization organization;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "journal", fetch = FetchType.LAZY)
-    List<Record> records = new ArrayList<>();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "emissionDate")
+    private Date emissionDate;
+
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "journal", fetch = FetchType.LAZY)
+    @Transient
+    private List<Record> records = new ArrayList<>();
 
     public Organization getOrganization() {
         return organization;
@@ -59,6 +72,14 @@ public class GeneralJournal extends PersistentObject<GeneralJournal> implements 
         this.organization = organization;
     }
 
+    public Date getEmissionDate() {
+        return emissionDate;
+    }
+
+    public void setEmissionDate(Date emissionDate) {
+        this.emissionDate = emissionDate;
+    }
+
     public List<Record> getRecords() {
         return records;
     }
@@ -66,25 +87,52 @@ public class GeneralJournal extends PersistentObject<GeneralJournal> implements 
     public void setRecords(List<Record> records) {
         this.records = records;
     }
-    
-    public Record addRecord(Record record){
-        record.setJournal(this);
-        if(this.records.contains(record)){
+
+    public Record addRecord(Record record) {
+        record.setGeneralJournalId(this.getId());
+        if (this.records.contains(record)) {
             replaceRecord(record);
-        }else{
+        } else {
             this.records.add(record);
         }
         return record;
     }
-    
-    public Record replaceRecord(Record record){
+
+    public Record replaceRecord(Record record) {
         getRecords().set(getRecords().indexOf(record), record);
         return record;
     }
 
     @Override
-    public int compareTo(GeneralJournal t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+        hcb.append(getId());
+
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        GeneralJournal other = (GeneralJournal) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+
+        eb.append(getId(), other.getId());
+        return eb.isEquals();
+    }
+
+    @Override
+    public int compareTo(GeneralJournal other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
     }
 
 }

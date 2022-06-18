@@ -21,38 +21,90 @@ package org.jlgranda.fede.model.accounting;
  *
  * @author jlgranda
  */
-
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import org.jpapi.model.PersistentObject;
+import javax.persistence.Transient;
+import org.jpapi.model.DeletableObject;
 
+//@Entity
+//@Table(name = "Record_Detail")
+//@NamedQueries({
+//    @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null  and s.deleted = false ORDER BY s.record.emissionDate ASC"),
+//    @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2  and s.deleted = false ORDER BY s.record.emissionDate ASC"),
+//    @NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s WHERE s.record =?1 and s.account = ?2  and s.deleted = false ORDER BY s.record.emissionDate ASC"),
+//    @NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate <=?2 and s.record.generalJournalId = j.id and j.organization = ?3 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY s.record.emissionDate ASC"),
+//    @NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select s.record.emissionDate, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate >=?2 and s.record.emissionDate <=?3 and s.record.generalJournalId = j.id and j.organization = ?4 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+//    @NamedQuery(name = "RecordDetail.findByAccountAndEmissionOnAndOrganization", query = "select s FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.record.emissionDate >=?2 and s.record.emissionDate <=?3 and s.deleted = false and s.record.deleted = false and s.record.generalJournalId = j.id and j.organization = ?4  and j.deleted = false ORDER BY s.record.emissionDate ASC"),
+//    @NamedQuery(name = "RecordDetail.findTotalByAccountAndTypeTo", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate <=?3 and s.record.generalJournalId = j.id and j.organization = ?4 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+//    @NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate >=?3 and s.record.emissionDate <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+//    @NamedQuery(name = "RecordDetail.findTotalByAccountAndTypeAndNotClassInvoiceFacturaElectronica", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.account = ?1 and s.recordDetailType= ?2 and s.record.emissionDate >=?3 and s.record.emissionDate <=?4 and s.record.generalJournalId = j.id and j.organization = ?5 and (s.record.bussinesEntityType IS NULL or (s.record.bussinesEntityType<>'Invoice' and s.record.bussinesEntityType<>'FacturaElectronica')) and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+//    @NamedQuery(name = "RecordDetail.findTotalByGeneralJournalAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal j WHERE s.record.generalJournalId = j.id and j.id = ?1 and s.recordDetailType= ?2 and j.organization = ?3 and s.deleted = false and s.record.deleted = false and j.deleted=false ORDER BY 1 ASC"),
+//})
 @Entity
 @Table(name = "Record_Detail")
-@NamedQueries({ @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-@NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public class RecordDetail extends PersistentObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
+@NamedQueries({
+    @NamedQuery(name = "RecordDetail.findByName", query = "select s FROM RecordDetail s, GeneralJournal g WHERE s.name = ?1 and s.owner is null and s.record.generalJournalId = g.id and s.deleted = false and g.deleted = false ORDER BY g.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByNameAndOwner", query = "select s FROM RecordDetail s, GeneralJournal g WHERE s.name = ?1 and s.owner = ?2 and s.record.generalJournalId = g.id and s.deleted = false and g.deleted = false ORDER BY g.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByRecordAndAccount", query = "select s FROM RecordDetail s, GeneralJournal g WHERE s.record =?1 and s.account = ?2 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY g.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByTopAccountAndOrg", query = "select s FROM RecordDetail s, GeneralJournal g WHERE s.account = ?1 and g.emissionDate <=?2 and g.organization = ?3 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY g.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findByTopAccAndOrg", query = "select g.emissionDate, s.record.description, s.amount, s.recordDetailType, s.id FROM RecordDetail s, GeneralJournal g WHERE s.account = ?1 and g.emissionDate >=?2 and g.emissionDate <=?3 and g.organization = ?4 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY 1 ASC"),
+    @NamedQuery(name = "RecordDetail.findByAccountAndEmissionOnAndOrganization", query = "select s FROM RecordDetail s, GeneralJournal g WHERE s.account = ?1 and g.emissionDate >=?2 and g.emissionDate <=?3 and g.organization = ?4 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY g.emissionDate ASC"),
+    @NamedQuery(name = "RecordDetail.findTotalByAccountAndTypeTo", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal g WHERE s.account = ?1 and s.recordDetailType= ?2 and g.emissionDate <=?3 and g.organization = ?4 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY 1 ASC"),
+    @NamedQuery(name = "RecordDetail.findTotalByAccountAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal g WHERE s.account = ?1 and s.recordDetailType= ?2 and g.emissionDate >=?3 and g.emissionDate <=?4 and g.organization = ?5 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY 1 ASC"),
+    @NamedQuery(name = "RecordDetail.findTotalByAccountAndTypeAndNotClassInvoiceFacturaElectronica", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal g WHERE s.account = ?1 and s.recordDetailType= ?2 and g.emissionDate >=?3 and g.emissionDate <=?4 and g.organization = ?5 and (s.record.bussinesEntityType IS NULL or (s.record.bussinesEntityType<>'Invoice' and s.record.bussinesEntityType<>'FacturaElectronica')) and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY 1 ASC"),
+    @NamedQuery(name = "RecordDetail.findTotalByGeneralJournalAndType", query = "select sum(s.amount) FROM RecordDetail s, GeneralJournal g WHERE g.id = ?1 and s.recordDetailType= ?2 and s.record.generalJournalId = g.id and s.deleted = false and s.record.deleted = false and g.deleted = false ORDER BY 1 ASC"),})
+public class RecordDetail extends DeletableObject<RecordDetail> implements Comparable<RecordDetail>, Serializable {
 
-    String recordType;
-    
+    /*
+    Tipo de recordDetail
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RecordDetail.RecordTDetailType recordDetailType;
+
+    /**
+     * Id de la entidad de negocio involucrada en el detalle de registro
+     */
     Long bussineEntityId;
-    
+
     BigDecimal amount;
-    
+
     @ManyToOne(optional = true)
-    @JoinColumn(name = "account_id", insertable=true, updatable=true, nullable=true)
+    @JoinColumn(name = "account_id", insertable = true, updatable = true, nullable = true)
     private Account account;
-    
-    @ManyToOne (optional = false, cascade = {CascadeType.ALL})
-    @JoinColumn (name = "record_id", insertable = true, updatable = true, nullable = true)
+
+    @ManyToOne(optional = false, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "record_id", insertable = true, updatable = true, nullable = true)
     Record record;
+
+    //Campos para instanciación desde Rules
+    @Transient
+    private String accountId;
+
+    @Transient
+    private String accountCode;
+
+    @Transient
+    private String accountName;
+
+    @Transient
+    private BigDecimal accumulatedBalance;
+
+    public enum RecordTDetailType {
+        DEBE,
+        HABER;
+    }
 
     public Account getAccount() {
         return account;
@@ -61,13 +113,17 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
     public void setAccount(Account account) {
         this.account = account;
     }
-    
-    public String getRecordType() {
-        return recordType;
+
+    public RecordTDetailType getRecordDetailType() {
+        return recordDetailType;
     }
 
-    public void setRecordType(String recordType) {
-        this.recordType = recordType;
+    public void setRecordDetailType(RecordTDetailType recordDetailType) {
+        this.recordDetailType = recordDetailType;
+    }
+
+    public void setRecordDetailTypeFromName(String recordDetailTypeName) {
+        this.recordDetailType = RecordTDetailType.valueOf(recordDetailTypeName);
     }
 
     public Long getBussineEntityId() {
@@ -94,9 +150,90 @@ public class RecordDetail extends PersistentObject<RecordDetail> implements Comp
         this.record = record;
     }
 
-    @Override
-    public int compareTo(RecordDetail t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getAccountId() {
+        return accountId;
     }
-    
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public BigDecimal getAccumulatedBalance() {
+        return accumulatedBalance;
+    }
+
+    public void setAccumulatedBalance(BigDecimal accumulatedBalance) {
+        this.accumulatedBalance = accumulatedBalance;
+    }
+
+    public String getAccountCode() {
+        if (this.account != null) {
+            accountCode = this.account.getCode();
+        }
+        return accountCode;
+    }
+
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.recordDetailType);
+        hash = 53 * hash + Objects.hashCode(this.account);
+        hash = 53 * hash + Objects.hashCode(this.accountName);
+        hash = 53 * hash + Objects.hashCode(this.accountCode);
+        hash = 53 * hash + Objects.hashCode(this.getId());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RecordDetail other = (RecordDetail) obj;
+        if (this.recordDetailType != other.recordDetailType) {
+            return false;
+        }
+        if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
+
+        if (!Objects.equals(this.getId(), other.getId())) {
+            return false;
+        }
+
+        if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
+        if (!Objects.equals(this.accountName, other.accountName)) {
+            return false;
+        }
+        if (!Objects.equals(this.accountCode, other.accountCode)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(RecordDetail other) {
+        return this.createdOn.compareTo(other.getCreatedOn());
+    }
+
 }

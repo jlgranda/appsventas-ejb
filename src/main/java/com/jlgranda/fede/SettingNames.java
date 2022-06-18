@@ -38,9 +38,19 @@ public class SettingNames {
     
     //Edición de clientes
     public static String POPUP_FORMULARIO_PROFILE = "popup_profile";
+    public static String POPUP_FORMULARIO_PROVEEDOR_COMPRA = "popup_proveedor_compra";
+    public static String POPUP_FORMULARIO_PROVEEDOR_GASTO = "popup_proveedor_compra";
+    public static String POPUP_FORMULARIO_PROVEEDOR_INGRESO = "popup_proveedor_compra";
+    public static String POPUP_FORMULARIO_PROVEEDOR = "popup_proveedor";
     
     //Edición de records
-    public static String POPUP_FORMULARIO_RECORD = "popup_record";
+    public static String POPUP_FORMULARIO_RECORD = "popup_record_journal";
+    //Popup Libro Mayor
+    public static String POPUP_FORMULARIO_GENERALLEDGER = "popup_general_ledger";
+    public static String POPUP_FORMULARIO_GENERALLEDGER_RECORD = "popup_record_ledger";
+    public static String POPUP_FORMULARIO_RECORDTEMPLATE_EDICION = "popup_recordtemplate";
+    public static String POPUP_FORMULARIO_GENERALJOURNAL= "popup_journal";
+    
 
     //XML
     public static final String TAG_FECHA_AUTORIZACION = "fede.xml.tag.numeroAutorizacion";
@@ -73,5 +83,9 @@ public class SettingNames {
     public static String ACCOUNT_TOP_RANGE = "fede.sales.account.top.range";
     public static String JOURNAL_TOP_RANGE = "fede.sales.journal.top.range";
     public static String JOURNAL_REPORT_DEFAULT_RANGE = "fede.report.journal.default.range";
+    
+    public static String DOCUMENTS_REPLY = "app.documents.task.reply";
+    public static String DOCUMENTS_FORWARD = "app.documents.task.forward";
+    public static String DOCUMENTS_END = "app.documents.task.finalize";
 
 }

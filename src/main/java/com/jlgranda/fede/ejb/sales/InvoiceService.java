@@ -18,7 +18,6 @@
 package com.jlgranda.fede.ejb.sales;
 
 import java.util.List;
-import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

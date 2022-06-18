@@ -61,8 +61,9 @@ public class FacturaElectronicaURLReader {
     /**
      * Obtiene la lista de objetos factura para el sujeto en fede
      *
-     * @param urls URLs hacia los archivo XML o ZIP a leer
+     * @param url
      * @return una lista de instancias FacturaReader
+     * @throws java.lang.Exception
      */
     public static FacturaReader getFacturaElectronica(String url) throws Exception {
         FacturaReader facturaReader = null;

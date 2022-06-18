@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 kellypaulinc
+ * Copyright (C) 2021 author
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,9 @@
  */
 package com.jlgranda.fede.ejb;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,24 +29,23 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.jlgranda.fede.model.accounting.GeneralJournal;
 import org.jlgranda.fede.model.accounting.GeneralJournal_;
-import org.jlgranda.fede.model.accounting.Record;
-import org.jlgranda.fede.model.accounting.RecordDetail;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.Organization;
 import org.jpapi.model.StatusType;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author kellypaulinc
+ * @author author
  */
-
 @Stateless
 public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
 
     private static final long serialVersionUID = -6428094275651428620L;
-    
+
     Logger logger = LoggerFactory.getLogger(GeneralJournalService.class);
 
     @PersistenceContext
@@ -56,7 +57,7 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
         setEntityClass(GeneralJournal.class);
     }
 
-    @Override                                     
+    @Override
     public GeneralJournal createInstance() {
 
         GeneralJournal _instance = new GeneralJournal();
@@ -68,20 +69,51 @@ public class GeneralJournalService extends BussinesEntityHome<GeneralJournal> {
 //        _instance.setAuthor(null); //Establecer al usuario actual
         return _instance;
     }
-    
+
     //soporte para Lazy Data Model
     public long count() {
         return super.count(GeneralJournal.class);
     }
 
     public List<GeneralJournal> find(int maxresults, int firstresult) {
-        
+
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<GeneralJournal> query = builder.createQuery(GeneralJournal.class);
 
         Root<GeneralJournal> from = query.from(GeneralJournal.class);
         query.select(from).orderBy(builder.desc(from.get(GeneralJournal_.name)));
         return getResultList(query, maxresults, firstresult);
+    }
+
+    /**
+     * Servicio para encontrar o construir la instancia de
+     * <tt>GeneralJournal</tt> de la organización para la fecha indicada
+     *
+     * @param emissionDate
+     * @param organization
+     * @param owner
+     * @param generalJournalPrefix
+     * @param timestampPattern
+     * @return
+     */
+    public GeneralJournal find(Date emissionDate, Organization organization, Subject owner, String generalJournalPrefix, String timestampPattern) {
+        //Buscar el registro hasta antes del fin del emissionDate
+        GeneralJournal generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByEmissionDateAndOrganization", Dates.minimumDate(emissionDate), Dates.maximumDate(emissionDate), organization);
+
+        if (generalJournal == null) {//Crear el libro diario para la fecha
+            generalJournal = this.createInstance();
+            generalJournal.setEmissionDate(emissionDate);
+            generalJournal.setCode(UUID.randomUUID().toString());
+            generalJournal.setName(generalJournalPrefix + ": " + Dates.toString(emissionDate, timestampPattern));
+            generalJournal.setDescription(generalJournal.getName() + "\n" + organization.getInitials() + "\n" + owner.getFullName());
+            generalJournal.setOrganization(organization);
+            generalJournal.setOwner(owner);
+            generalJournal.setAuthor(owner);
+            this.save(generalJournal);
+            generalJournal = this.findUniqueByNamedQuery("GeneralJournal.findByEmissionDateAndOrganization", Dates.minimumDate(emissionDate), Dates.maximumDate(emissionDate), organization);
+        }
+
+        return generalJournal;
     }
 
 }

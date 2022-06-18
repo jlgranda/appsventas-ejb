@@ -18,7 +18,9 @@
 package com.jlgranda.fede.ejb;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -57,6 +59,19 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         setEntityManager(em);
         setEntityClass(FacturaElectronica.class);
     }
+    
+    @Override
+    public FacturaElectronica save(FacturaElectronica facturaElectronica) {
+        super.save(facturaElectronica);
+        if (facturaElectronica.getId() != null) {
+            this.setId(facturaElectronica.getId());
+        } else {
+            Map<String, Object> filters = new HashMap<>();
+            filters.put("code", facturaElectronica.getCode()); //Recuperar por código
+            facturaElectronica = this.find(filters).getResult().get(0); //debe ser único
+        }
+        return facturaElectronica;
+    }
 
 
     @Override
@@ -72,16 +87,28 @@ public class FacturaElectronicaService extends BussinesEntityHome<FacturaElectro
         _instance.setAuthor(null); //Establecer al usuario actual
         _instance.setEmissionType(EmissionType.PURCHASE_CASH); //Establecer al usuario actual
         _instance.setTotalDescuento(BigDecimal.ZERO);
+        _instance.setTotalIVA12(BigDecimal.ZERO);
+        _instance.setTotalSinImpuestos(BigDecimal.ZERO);
+        _instance.setImporteTotal(BigDecimal.ZERO);
+        _instance.setDocumentType(FacturaElectronica.DocumentType.FACTURA);
         return _instance;
     }
+    
+//    @Override
+//    public FacturaElectronica save(FacturaElectronica facturaElectronica){
+//        super.save(facturaElectronica);
+//        Long id = (Long) getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(facturaElectronica);
+//        this.setId(id);
+//        return this.find(); //Recarga el objeto
+//    }
     
     public FacturaElectronica find(final long id, boolean lazily) {
         FacturaElectronica f = null;
         f = super.find(id);
-        if (lazily){
-            f.getMemberships().size(); //Forza la carga de memberships
-            f.getAttributes().size();
-        }
+//        if (lazily){
+//            f.getMemberships().size(); //Forza la carga de memberships
+//            f.getAttributes().size();
+//        }
         
         return f;
     }
