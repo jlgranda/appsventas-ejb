@@ -41,7 +41,7 @@ import javax.persistence.TemporalType;
 @PrimaryKeyJoinColumn(name = "digital_cert_id")
 @NamedQueries({})
 
-public class SriDigitalCert implements Serializable {
+public class SRIDigitalCert implements Serializable {
 
     
     @Id

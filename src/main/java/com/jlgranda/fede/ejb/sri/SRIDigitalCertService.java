@@ -25,8 +25,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.sri.SriDigitalCert;
-import org.jlgranda.fede.model.sri.SriDigitalCert_;
+import org.jlgranda.fede.model.sri.SRIDigitalCert;
+import org.jlgranda.fede.model.sri.SRIDigitalCert_;
 import org.jpapi.controller.BussinesEntityHome;
 
 /**
@@ -34,7 +34,7 @@ import org.jpapi.controller.BussinesEntityHome;
  * @author TOSHIBA
  */
 @Stateless
-public class SriDigitalCertService extends BussinesEntityHome<SriDigitalCert> {
+public class SRIDigitalCertService extends BussinesEntityHome<SRIDigitalCert> {
 
     private static final long serialVersionUID = -4487467890746594655L;
     @PersistenceContext
@@ -43,20 +43,20 @@ public class SriDigitalCertService extends BussinesEntityHome<SriDigitalCert> {
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(SriDigitalCert.class);
+        setEntityClass(SRIDigitalCert.class);
     }
 
     public long count() {
-        return super.count(SriDigitalCert.class);
+        return super.count(SRIDigitalCert.class);
     }
 
-    public List<SriDigitalCert> find(int maxresults, int firstresult) {
+    public List<SRIDigitalCert> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<SriDigitalCert> query = builder.createQuery(SriDigitalCert.class);
+        CriteriaQuery<SRIDigitalCert> query = builder.createQuery(SRIDigitalCert.class);
 
-        Root<SriDigitalCert> from = query.from(SriDigitalCert.class);
-        query.select(from).orderBy(builder.desc(from.get(SriDigitalCert_.ACTIVE)));
+        Root<SRIDigitalCert> from = query.from(SRIDigitalCert.class);
+        query.select(from).orderBy(builder.desc(from.get(SRIDigitalCert_.ACTIVE)));
         return getResultList(query, maxresults, firstresult);
     }
 }

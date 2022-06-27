@@ -33,6 +33,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,6 +41,7 @@ import javax.persistence.Transient;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
+import org.jlgranda.fede.model.sri.SRIInvoice;
 import org.jpapi.model.Organization;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.TaxType;
@@ -121,11 +123,10 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "emissionpoint_id", insertable = false, updatable = false, nullable = true)
     private EmissionPoint emissionPoint;
-
+    
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Detail> details = new ArrayList<>();
 
-    private String sequencial;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();
@@ -144,7 +145,22 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
      */
     @Column(name = "record_id", nullable = true)
     private Long recordId;
-
+    
+    //////////////////////////////////////////////////////////////////////////
+    // SRI
+    //////////////////////////////////////////////////////////////////////////
+    @Column(name = "sequencial")
+    private String sequencial;
+    
+    @Column(name = "sri_clave_acceso", nullable = true)
+    private String claveAcceso;
+    
+    @Column(name = "estab", nullable = true)
+    private String estab;
+    
+    @Column(name = "pto_emi", nullable = true)
+    private String ptoEmi;
+    
     public String getBoardNumber() {
         return boardNumber;
     }
@@ -292,6 +308,30 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
 
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
+    }
+
+    public String getClaveAcceso() {
+        return claveAcceso;
+    }
+
+    public void setClaveAcceso(String claveAcceso) {
+        this.claveAcceso = claveAcceso;
+    }
+
+    public String getEstab() {
+        return estab;
+    }
+
+    public void setEstab(String estab) {
+        this.estab = estab;
+    }
+
+    public String getPtoEmi() {
+        return ptoEmi;
+    }
+
+    public void setPtoEmi(String ptoEmi) {
+        this.ptoEmi = ptoEmi;
     }
 
     @Transient
