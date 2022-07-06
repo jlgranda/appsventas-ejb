@@ -32,9 +32,9 @@ import org.jpapi.model.BussinesEntity;
  */
 @Entity
 @Table(name = "EMISSION_POINT")
-@DiscriminatorValue(value = "EMPT")
-@PrimaryKeyJoinColumn(name = "emissionPointId")
-public class EmissionPoint  extends BussinesEntity {
+//@DiscriminatorValue(value = "EMPT")
+//@PrimaryKeyJoinColumn(name = "emissionPointId")
+public class EmissionPoint  extends DeletableObject<EmissionPoint> implements Serializable {
 
     private static final long serialVersionUID = 2921099283173813039L;
     

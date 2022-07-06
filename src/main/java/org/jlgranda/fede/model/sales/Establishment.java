@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "ESTABLISHMENT")
-@DiscriminatorValue(value = "ESTB")
-@PrimaryKeyJoinColumn(name = "establishmentId")
-public class Establishment extends BussinesEntity {
+//@DiscriminatorValue(value = "ESTB")
+//@PrimaryKeyJoinColumn(name = "establishmentId")
+public class Establishment extends DeletableObject<Establishment> implements Serializable {
     
     private static Logger log = LoggerFactory.getLogger(Establishment.class);
     
