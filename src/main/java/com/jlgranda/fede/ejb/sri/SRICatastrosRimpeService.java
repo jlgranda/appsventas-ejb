@@ -26,8 +26,8 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.sri.SRICatastrosRuc;
-import org.jlgranda.fede.model.sri.SRICatastrosRuc_;
+import org.jlgranda.fede.model.sri.SRICatastrosRimpe;
+import org.jlgranda.fede.model.sri.SRICatastrosRimpe_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.profile.Subject;
 
@@ -36,7 +36,7 @@ import org.jpapi.model.profile.Subject;
  * @author TOSHIBAextends BussinesEntityHome<Subject> 
  */
 @Stateless
-public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRuc> {
+public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRimpe> {
 
     private static final long serialVersionUID = -4487467890746594655L;
     @PersistenceContext
@@ -45,12 +45,12 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRuc
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(SRICatastrosRuc.class);
+        setEntityClass(SRICatastrosRimpe.class);
     }
 
 
     public boolean usersExist() {
-        Query q = em.createQuery("SELECT U FROM sri_catastros_ruc U");
+        Query q = em.createQuery("SELECT U FROM sri_catastros_rimpe U");
         return !q.getResultList().isEmpty();
     }
     
@@ -100,7 +100,7 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRuc
 //        return _instance;
 //    }
     public long count() {
-        return super.count(SRICatastrosRuc.class);
+        return super.count(SRICatastrosRimpe.class);
     }
 
     
@@ -119,13 +119,13 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRuc
 //        return _instance;
 //    }
     
-    public List<SRICatastrosRuc> find(int maxresults, int firstresult) {
+    public List<SRICatastrosRimpe> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<SRICatastrosRuc> query = builder.createQuery(SRICatastrosRuc.class);
+        CriteriaQuery<SRICatastrosRimpe> query = builder.createQuery(SRICatastrosRimpe.class);
 
-        Root<SRICatastrosRuc> from = query.from(SRICatastrosRuc.class);
-        query.select(from).orderBy(builder.desc(from.get(SRICatastrosRuc_.NOMBRE_FANTASIA_COMERCIAL)));
+        Root<SRICatastrosRimpe> from = query.from(SRICatastrosRimpe.class);
+        query.select(from).orderBy(builder.desc(from.get(SRICatastrosRimpe_.NUMERO_RUC)));
         return getResultList(query, maxresults, firstresult);
     }
 

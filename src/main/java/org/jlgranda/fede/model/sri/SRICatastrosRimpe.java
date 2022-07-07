@@ -19,126 +19,60 @@ package org.jlgranda.fede.model.sri;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.jpapi.model.profile.Subject;
 
 /**
  *
  * @author TOSHIBA
  */
 @Entity
-@Table(name = "sri_catastros_ruc")
-@PrimaryKeyJoinColumn(name = "catastro_id")
+@Table(name = "sri_catastros_rimpe")
+@PrimaryKeyJoinColumn(name = "catastro_rimpe_id")
 @NamedQueries({})
 public class SRICatastrosRimpe implements Serializable {
-   
+
 //    @Id
 //    @Basic(optional = false)
 //    @NotNull
 //    @Size(min = 1, max = 20)
 //    @Column(name = "digital_cert_id")
 //    private String digitalCertId;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "catastro_id", updatable = false, nullable = false)
-    private Long catastroId;
-    
+    @Column(name = "catastro_rimpe_id", updatable = false, nullable = false)
+    private Long catastroRimpeId;
+
 //    @Column(length = 1024,  name = "digital_cert", nullable = false)
 //    @Basic(fetch = FetchType.LAZY)
 //    private byte[] digitalCert;
-    
     @Column(name = "numero_ruc", nullable = false)
     private String numeroRuc;
-    
+
     @Column(name = "razon_social", nullable = false)
     private String razonSocial;
-    
-    @Column(name = "nombre_comercia", nullable = false)
-    private String nombreComercia;
-    
-    @Column(name = "estado_contribuyente", nullable = false)
-    private String estadoContribuyente;
-    
-    @Column(name = "clase_contribuyente", nullable = false)
-    private String claseContribuyente;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_inicio_actividades")
-    private Date fechaInicioActividades;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_actualizacion")
-    private Date fechaActualizacion;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fecha_suspencion_definitiva")
-    private Date fechaSuspencionDefinitiva;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "fechar_reinicio_actividades")
-    private Date fecharReinicioActividades;
-    
-    @Column(name = "obligado", nullable = false)
-    private String obligado;
-    
-    @Column(name = "tipo_contribuyente", nullable = false)
-    private String tipoContribuyente;
-    
-    @Column(name = "numero_establecimiento", nullable = false)
-    private String numeroEstablecimiento;
-    
-    @Column(name = "nombre_fantasia_comercial", nullable = false)
-    private String nombreFantasiaComercial;
-    
-    @Column(name = "estado_establecimiento", nullable = false)
-    private String estadoEstablecimiento;
-    
-    @Column(name = "descripcion_provincia", nullable = false)
-    private String descripcionProvincia;
-    
-    @Column(name = "descripcion_canton", nullable = false)
-    private String descripcionCanton;
-    
-    @Column(name = "descripcion_parroquia", nullable = false)
-    private String descripcionParroquia;
-    
-    @Column(name = "codigo_ciu", nullable = false)
-    private String codigoCiu;
-    
-    @Column(name = "actividad_economica", nullable = false)
-    private String actividadEconomica;
 
-//
-//    @ManyToOne(optional = true)
-//    @JoinColumn(name = "owner", nullable = true)
-//    private Subject owner;
-//
-//    @Column(nullable = true)
-//    protected Boolean active;
+    @Column(name = "zona", nullable = false)
+    private String zona;
 
-    public Long getCatastroId() {
-        return catastroId;
+    @Column(name = "regimen", nullable = false)
+    private String regimen;
+
+    @Column(name = "negocio_popular", nullable = false)
+    private String negocioPopular;
+
+    public Long getCatastroRimpeId() {
+        return catastroRimpeId;
     }
 
-    public void setCatastroId(Long catastroId) {
-        this.catastroId = catastroId;
+    public void setCatastroRimpeId(Long catastroRimpeId) {
+        this.catastroRimpeId = catastroRimpeId;
     }
 
     public String getNumeroRuc() {
@@ -157,140 +91,28 @@ public class SRICatastrosRimpe implements Serializable {
         this.razonSocial = razonSocial;
     }
 
-    public String getNombreComercia() {
-        return nombreComercia;
+    public String getZona() {
+        return zona;
     }
 
-    public void setNombreComercia(String nombreComercia) {
-        this.nombreComercia = nombreComercia;
+    public void setZona(String zona) {
+        this.zona = zona;
     }
 
-    public String getEstadoContribuyente() {
-        return estadoContribuyente;
+    public String getRegimen() {
+        return regimen;
     }
 
-    public void setEstadoContribuyente(String estadoContribuyente) {
-        this.estadoContribuyente = estadoContribuyente;
+    public void setRegimen(String regimen) {
+        this.regimen = regimen;
     }
 
-    public String getClaseContribuyente() {
-        return claseContribuyente;
+    public String getNegocioPopular() {
+        return negocioPopular;
     }
 
-    public void setClaseContribuyente(String claseContribuyente) {
-        this.claseContribuyente = claseContribuyente;
-    }
-
-    public Date getFechaInicioActividades() {
-        return fechaInicioActividades;
-    }
-
-    public void setFechaInicioActividades(Date fechaInicioActividades) {
-        this.fechaInicioActividades = fechaInicioActividades;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Date getFechaSuspencionDefinitiva() {
-        return fechaSuspencionDefinitiva;
-    }
-
-    public void setFechaSuspencionDefinitiva(Date fechaSuspencionDefinitiva) {
-        this.fechaSuspencionDefinitiva = fechaSuspencionDefinitiva;
-    }
-
-    public Date getFecharReinicioActividades() {
-        return fecharReinicioActividades;
-    }
-
-    public void setFecharReinicioActividades(Date fecharReinicioActividades) {
-        this.fecharReinicioActividades = fecharReinicioActividades;
-    }
-
-    public String getObligado() {
-        return obligado;
-    }
-
-    public void setObligado(String obligado) {
-        this.obligado = obligado;
-    }
-
-    public String getNumeroEstablecimiento() {
-        return numeroEstablecimiento;
-    }
-
-    public void setNumeroEstablecimiento(String numeroEstablecimiento) {
-        this.numeroEstablecimiento = numeroEstablecimiento;
-    }
-
-    public String getNombreFantasiaComercial() {
-        return nombreFantasiaComercial;
-    }
-
-    public void setNombreFantasiaComercial(String nombreFantasiaComercial) {
-        this.nombreFantasiaComercial = nombreFantasiaComercial;
-    }
-
-    public String getEstadoEstablecimiento() {
-        return estadoEstablecimiento;
-    }
-
-    public void setEstadoEstablecimiento(String estadoEstablecimiento) {
-        this.estadoEstablecimiento = estadoEstablecimiento;
-    }
-
-    public String getDescripcionProvincia() {
-        return descripcionProvincia;
-    }
-
-    public void setDescripcionProvincia(String descripcionProvincia) {
-        this.descripcionProvincia = descripcionProvincia;
-    }
-
-    public String getDescripcionCanton() {
-        return descripcionCanton;
-    }
-
-    public void setDescripcionCanton(String descripcionCanton) {
-        this.descripcionCanton = descripcionCanton;
-    }
-
-    public String getDescripcionParroquia() {
-        return descripcionParroquia;
-    }
-
-    public void setDescripcionParroquia(String descripcionParroquia) {
-        this.descripcionParroquia = descripcionParroquia;
-    }
-
-    public String getCodigoCiu() {
-        return codigoCiu;
-    }
-
-    public String getTipoContribuyente() {
-        return tipoContribuyente;
-    }
-
-    public void setTipoContribuyente(String tipoContribuyente) {
-        this.tipoContribuyente = tipoContribuyente;
-    }
-
-    public void setCodigoCiu(String codigoCiu) {
-        this.codigoCiu = codigoCiu;
-    }
-
-    public String getActividadEconomica() {
-        return actividadEconomica;
-    }
-
-    public void setActividadEconomica(String actividadEconomica) {
-        this.actividadEconomica = actividadEconomica;
+    public void setNegocioPopular(String negocioPopular) {
+        this.negocioPopular = negocioPopular;
     }
 
     public void setCreatedOn(Date now) {
@@ -320,6 +142,5 @@ public class SRICatastrosRimpe implements Serializable {
     public void setAuthor(Object object) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
 
 }
