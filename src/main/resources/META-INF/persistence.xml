@@ -109,6 +109,8 @@
     <class>org.jlgranda.fede.model.reportes.Reporte</class>
     <class>org.jlgranda.fede.model.compras.Proveedor</class>
     <class>org.jlgranda.fede.model.sri.SRIDigitalCert</class>
+    <class>org.jlgranda.fede.model.sri.SRICatastrosRuc</class>
+    <class>org.jlgranda.fede.model.sri.SRICatastrosRimpe</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) create-drop, update-->
