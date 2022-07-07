@@ -17,6 +17,7 @@
  */
 package org.jlgranda.fede.model.sales;
 
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 
 /**
  *
