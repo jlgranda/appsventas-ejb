@@ -26,8 +26,8 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.sri.SRICatastrosRimpe;
-import org.jlgranda.fede.model.sri.SRICatastrosRimpe_;
+import org.jlgranda.fede.model.sri.SRICatastrosEmpreFantasma;
+import org.jlgranda.fede.model.sri.SRICatastrosEmpreFantasma_;
 import org.jpapi.controller.BussinesEntityHome;
 import org.jpapi.model.StatusType;
 import org.jpapi.model.profile.Subject;
@@ -38,7 +38,7 @@ import org.jpapi.util.Dates;
  * @author TOSHIBAextends BussinesEntityHome<Subject> 
  */
 @Stateless
-public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRimpe> {
+public class SRICatastrosEmpreFantasmaService extends BussinesEntityHome<SRICatastrosEmpreFantasma> {
 
     private static final long serialVersionUID = -4487467890746594655L;
     @PersistenceContext
@@ -47,12 +47,12 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRim
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(SRICatastrosRimpe.class);
+        setEntityClass(SRICatastrosEmpreFantasma.class);
     }
 
 
     public boolean usersExist() {
-        Query q = em.createQuery("SELECT U FROM sri_catastros_rimpe U");
+        Query q = em.createQuery("SELECT U FROM sri_catastros_empre_fantasma U");
         return !q.getResultList().isEmpty();
     }
     
@@ -102,15 +102,15 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRim
 //        return _instance;
 //    }
     public long count() {
-        return super.count(SRICatastrosRimpe.class);
+        return super.count(SRICatastrosEmpreFantasma.class);
     }
 
     
     
     @Override
-    public SRICatastrosRimpe createInstance() {
+    public SRICatastrosEmpreFantasma createInstance() {
 
-        SRICatastrosRimpe _instance = new SRICatastrosRimpe();
+        SRICatastrosEmpreFantasma _instance = new SRICatastrosEmpreFantasma();
         _instance.setCreatedOn(Dates.now());
         _instance.setLastUpdate(Dates.now());
         _instance.setStatus(StatusType.ACTIVE.toString());
@@ -134,17 +134,17 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRim
 //        return _instance;
 //    }
     
-    public List<SRICatastrosRimpe> find(int maxresults, int firstresult) {
+    public List<SRICatastrosEmpreFantasma> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<SRICatastrosRimpe> query = builder.createQuery(SRICatastrosRimpe.class);
+        CriteriaQuery<SRICatastrosEmpreFantasma> query = builder.createQuery(SRICatastrosEmpreFantasma.class);
 
-        Root<SRICatastrosRimpe> from = query.from(SRICatastrosRimpe.class);
-        query.select(from).orderBy(builder.desc(from.get(SRICatastrosRimpe_.NUMERO_RUC)));
+        Root<SRICatastrosEmpreFantasma> from = query.from(SRICatastrosEmpreFantasma.class);
+        query.select(from).orderBy(builder.desc(from.get(SRICatastrosEmpreFantasma_.NUMERO_RUC)));
         return getResultList(query, maxresults, firstresult);
     }
 
-    public void save(Long id, SRICatastrosRimpe_ _subject) {
+    public void save(Long id, SRICatastrosEmpreFantasma _subject) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
