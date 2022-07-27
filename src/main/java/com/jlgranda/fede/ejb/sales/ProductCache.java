@@ -127,7 +127,7 @@ public class ProductCache {
      */
     public List<Product> lookup(String key, ProductType productType, Organization organization, int attempt) {
         List<Product> matches = new ArrayList<>();
-        products.values().stream().filter(product -> (product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
+        products.values().stream().filter(product -> (!Strings.isNullOrEmpty(product.getName()) && product.getName().toLowerCase().matches(Strings.toRegex(key.toLowerCase()))
                 && productType.equals(product.getProductType()) && organization.equals(product.getOrganization()))).forEachOrdered(product -> {
             matches.add(product);
         });
