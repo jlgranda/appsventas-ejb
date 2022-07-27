@@ -22,19 +22,22 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.sri.SRICatastrosRimpe;
-import org.jlgranda.fede.model.sri.SRICatastrosRimpe_;
+import org.jlgranda.fede.model.sri.SRICatastrosEmpresaFantasma;
+import org.jlgranda.fede.model.sri.SRICatastrosEmpresaFantasma_;
 import org.jpapi.controller.BussinesEntityHome;
+import org.jpapi.model.StatusType;
+import org.jpapi.util.Dates;
 
 /**
  *
  * @author TOSHIBAextends BussinesEntityHome<Subject> 
  */
 @Stateless
-public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRimpe> {
+public class SRICatastrosEmpresaFantasmaService extends BussinesEntityHome<SRICatastrosEmpresaFantasma> {
 
     private static final long serialVersionUID = -4487467890746594655L;
     @PersistenceContext
@@ -43,30 +46,39 @@ public class SRICatastrosRimpeService extends BussinesEntityHome<SRICatastrosRim
     @PostConstruct
     private void init() {
         setEntityManager(em);
-        setEntityClass(SRICatastrosRimpe.class);
+        setEntityClass(SRICatastrosEmpresaFantasma.class);
+    }
+
+
+    public boolean usersExist() {
+        Query q = em.createQuery("SELECT U FROM sri_catastros_empresa_fantasma U");
+        return !q.getResultList().isEmpty();
     }
 
     public long count() {
-        return super.count(SRICatastrosRimpe.class);
+        return super.count(SRICatastrosEmpresaFantasma.class);
     }
-
-    
     
     @Override
-    public SRICatastrosRimpe createInstance() {
+    public SRICatastrosEmpresaFantasma createInstance() {
 
-        SRICatastrosRimpe _instance = new SRICatastrosRimpe();
+        SRICatastrosEmpresaFantasma _instance = new SRICatastrosEmpresaFantasma();
         return _instance;
     }
 
     
-    public List<SRICatastrosRimpe> find(int maxresults, int firstresult) {
+    public List<SRICatastrosEmpresaFantasma> find(int maxresults, int firstresult) {
 
         CriteriaBuilder builder = getCriteriaBuilder();
-        CriteriaQuery<SRICatastrosRimpe> query = builder.createQuery(SRICatastrosRimpe.class);
+        CriteriaQuery<SRICatastrosEmpresaFantasma> query = builder.createQuery(SRICatastrosEmpresaFantasma.class);
 
-        Root<SRICatastrosRimpe> from = query.from(SRICatastrosRimpe.class);
-        query.select(from).orderBy(builder.desc(from.get(SRICatastrosRimpe_.NUMERO_RUC)));
+        Root<SRICatastrosEmpresaFantasma> from = query.from(SRICatastrosEmpresaFantasma.class);
+        query.select(from).orderBy(builder.desc(from.get(SRICatastrosEmpresaFantasma_.NUMERO_RUC)));
         return getResultList(query, maxresults, firstresult);
     }
+
+    public void save(Long id, SRICatastrosEmpresaFantasma _subject) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

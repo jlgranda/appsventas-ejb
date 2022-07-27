@@ -22,17 +22,12 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.jlgranda.fede.model.document.EnvironmentType;
 import org.jlgranda.fede.model.sri.SRICatastrosRuc;
 import org.jlgranda.fede.model.sri.SRICatastrosRuc_;
 import org.jpapi.controller.BussinesEntityHome;
-import org.jpapi.model.StatusType;
-import org.jpapi.model.profile.Subject;
-import org.jpapi.util.Dates;
 
 /**
  *
@@ -50,73 +45,18 @@ public class SRICatastrosRucService extends BussinesEntityHome<SRICatastrosRuc> 
         setEntityManager(em);
         setEntityClass(SRICatastrosRuc.class);
     }
-
-
-    public boolean usersExist() {
-        Query q = em.createQuery("SELECT U FROM sri_catastros_ruc U");
-        return !q.getResultList().isEmpty();
-    }
-    
-//    @Override
-//    public SRICatastrosRuc createInstance() {
-//
-//        SRICatastrosRuc _instance = new SRICatastrosRuc();
-//        _instance.setCreatedOn(Dates.now());
-//        _instance.setLastUpdate(Dates.now());
-//        _instance.setStatus(StatusType.ACTIVE.toString());
-//        _instance.setConfirmed(true);
-//        _instance.setActivationTime(Dates.now());
-//        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
-//        return _instance;
-//    }
     
     @Override
     public SRICatastrosRuc createInstance() {
 
         SRICatastrosRuc _instance = new SRICatastrosRuc();
-        _instance.setCreatedOn(Dates.now());
-        _instance.setLastUpdate(Dates.now());
-        _instance.setStatus(StatusType.ACTIVE.toString());
-        _instance.setActivationTime(Dates.now());
-        //_instance.setExpirationTime();
-        _instance.setAuthor(null); //Establecer al usuario actual
-        
         return _instance;
     }
-//    public SriDigitalCert createInstance(DocumentType documentType, EnvironmentType environmentType){
-//
-//        SriDigitalCert _instance = new SriDigitalCert();
-//        _instance.setCreatedOn(Dates.now());
-//        _instance.setLastUpdate(Dates.now());
-//        _instance.setStatus(StatusType.ACTIVE.toString());
-//        _instance.setActivationTime(Dates.now());
-//        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
-//        _instance.setEnvironmentType(environmentType);
-//        _instance.setEmissionType(EmissionType.SALE);
-//        _instance.setDocumentType(documentType);
-//        return _instance;
-//    }
+
     public long count() {
         return super.count(SRICatastrosRuc.class);
     }
 
-    
-    
-//    @Override
-//    public SRICatastrosRuc createInstance() {
-//
-//        SRICatastrosRuc _instance = new SRICatastrosRuc();
-//        _instance.setCreatedOn(Dates.now());
-//        _instance.setLastUpdate(Dates.now());
-//        _instance.setStatus(StatusType.ACTIVE.toString());
-//        _instance.setConfirmed(true);
-//        _instance.setActivationTime(Dates.now());
-//        _instance.setExpirationTime(Dates.addDays(Dates.now(), 364));
-//        _instance.setAuthor(null); //Establecer al usuario actual
-//        return _instance;
-//    }
     
     public List<SRICatastrosRuc> find(int maxresults, int firstresult) {
 
@@ -127,9 +67,4 @@ public class SRICatastrosRucService extends BussinesEntityHome<SRICatastrosRuc> 
         query.select(from).orderBy(builder.desc(from.get(SRICatastrosRuc_.NOMBRE_FANTASIA_COMERCIAL)));
         return getResultList(query, maxresults, firstresult);
     }
-
-    public void save(Long id, Subject _subject) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }

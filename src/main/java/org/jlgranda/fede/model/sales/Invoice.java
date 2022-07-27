@@ -33,7 +33,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,7 +40,6 @@ import javax.persistence.Transient;
 import org.jlgranda.fede.model.document.DocumentType;
 import org.jlgranda.fede.model.document.EmissionType;
 import org.jlgranda.fede.model.document.EnvironmentType;
-import org.jlgranda.fede.model.sri.SRIInvoice;
 import org.jpapi.model.Organization;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.TaxType;
@@ -115,14 +113,6 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
     private DocumentType documentType;
 
     private DocumentType documentTypeSource;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "establishment_id", insertable = false, updatable = false, nullable = true)
-    private Establishment establishment;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "emissionpoint_id", insertable = false, updatable = false, nullable = true)
-    private EmissionPoint emissionPoint;
     
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "invoice", fetch = FetchType.LAZY)
     private List<Detail> details = new ArrayList<>();
@@ -207,22 +197,6 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
 
     public void setDocumentTypeSource(DocumentType documentTypeSource) {
         this.documentTypeSource = documentTypeSource;
-    }
-
-    public Establishment getEstablishment() {
-        return establishment;
-    }
-
-    public void setEstablishment(Establishment establishment) {
-        this.establishment = establishment;
-    }
-
-    public EmissionPoint getEmissionPoint() {
-        return emissionPoint;
-    }
-
-    public void setEmissionPoint(EmissionPoint emissionPoint) {
-        this.emissionPoint = emissionPoint;
     }
 
     public Date getEmissionOn() {
@@ -438,7 +412,8 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
         int hash = 5;
         hash = 59 * hash + Objects.hashCode(this.documentType);
         hash = 59 * hash + Objects.hashCode(this.documentTypeSource);
-        hash = 59 * hash + Objects.hashCode(this.emissionPoint);
+        hash = 59 * hash + Objects.hashCode(this.estab);
+        hash = 59 * hash + Objects.hashCode(this.ptoEmi);
         hash = 59 * hash + Objects.hashCode(this.sequencial);
         hash = 59 * hash + Objects.hashCode(this.getId());
         return hash;
@@ -456,9 +431,13 @@ public class Invoice extends DeletableObject<Invoice> implements Serializable {
         if (this.documentType != other.documentType) {
             return false;
         }
-        if (!Objects.equals(this.emissionPoint, other.emissionPoint)) {
+        if (!Objects.equals(this.estab, other.estab)) {
             return false;
         }
+        if (!Objects.equals(this.ptoEmi, other.ptoEmi)) {
+            return false;
+        }
+        
         if (!Objects.equals(this.sequencial, other.sequencial)) {
             return false;
         }

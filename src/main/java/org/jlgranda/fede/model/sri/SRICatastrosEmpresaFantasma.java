@@ -35,32 +35,22 @@ import javax.persistence.TemporalType;
  * @author TOSHIBA
  */
 @Entity
-@Table(name = "sri_catastros_empre_fantasma")
-@PrimaryKeyJoinColumn(name = "catastro_empre_id")
+@Table(name = "sri_catastros_empresa_fantasma")
 @NamedQueries({})
-public class SRICatastrosEmpreFantasma implements Serializable {
+public class SRICatastrosEmpresaFantasma implements Serializable {
 
-//    @Id
-//    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 20)
-//    @Column(name = "digital_cert_id")
-//    private String digitalCertId;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "catastro_empre_id", updatable = false, nullable = false)
+    @Column(name = "catastro_empresa_fantasma_id", updatable = false, nullable = false)
     private Long catastroRimpeId;
 
-//    @Column(length = 1024,  name = "digital_cert", nullable = false)
-//    @Basic(fetch = FetchType.LAZY)
-//    private byte[] digitalCert;
     @Column(name = "numero", nullable = false)
     private String numero;
     
     @Column(name = "numero_ruc", nullable = false)
     private String numeroRuc;
     
-    @Column(name = "razon_social", nullable = false)
+    @Column(name = "razon_social", nullable = false, length = 1024)
     private String razonSocial;
     
     @Column(name = "tipo_contribuyente", nullable = false)
@@ -299,31 +289,5 @@ public class SRICatastrosEmpreFantasma implements Serializable {
     public void setEstadoInpugna(String estadoInpugna) {
         this.estadoInpugna = estadoInpugna;
     }
-    
-    
-    
-    
-    
-
-    public void setCreatedOn(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setLastUpdate(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setStatus(String toString) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setActivationTime(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setAuthor(Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 
 }

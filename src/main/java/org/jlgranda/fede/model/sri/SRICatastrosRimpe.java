@@ -18,7 +18,6 @@
 package org.jlgranda.fede.model.sri;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,8 +26,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -40,24 +37,15 @@ import javax.persistence.TemporalType;
 @NamedQueries({})
 public class SRICatastrosRimpe implements Serializable {
 
-//    @Id
-//    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 20)
-//    @Column(name = "digital_cert_id")
-//    private String digitalCertId;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "catastro_rimpe_id", updatable = false, nullable = false)
     private Long catastroRimpeId;
 
-//    @Column(length = 1024,  name = "digital_cert", nullable = false)
-//    @Basic(fetch = FetchType.LAZY)
-//    private byte[] digitalCert;
     @Column(name = "numero_ruc", nullable = false)
     private String numeroRuc;
 
-    @Column(name = "razon_social", nullable = false)
+    @Column(name = "razon_social", nullable = false, length = 1024)
     private String razonSocial;
 
     @Column(name = "zona", nullable = false)
@@ -116,26 +104,5 @@ public class SRICatastrosRimpe implements Serializable {
     public void setNegocioPopular(String negocioPopular) {
         this.negocioPopular = negocioPopular;
     }
-
-    public void setCreatedOn(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setLastUpdate(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setStatus(String toString) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setActivationTime(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setAuthor(Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 
 }

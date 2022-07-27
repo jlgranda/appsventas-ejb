@@ -40,29 +40,18 @@ import javax.persistence.TemporalType;
 @NamedQueries({})
 public class SRICatastrosRuc implements Serializable {
    
-//    @Id
-//    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 20)
-//    @Column(name = "digital_cert_id")
-//    private String digitalCertId;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "catastro_id", updatable = false, nullable = false)
     private Long catastroId;
     
-//    @Column(length = 1024,  name = "digital_cert", nullable = false)
-//    @Basic(fetch = FetchType.LAZY)
-//    private byte[] digitalCert;
-    
     @Column(name = "numero_ruc", nullable = false)
     private String numeroRuc;
     
-    @Column(name = "razon_social", nullable = false)
+    @Column(name = "razon_social", nullable = false, length = 1024)
     private String razonSocial;
     
-    @Column(name = "nombre_comercia", nullable = false)
+    @Column(name = "nombre_comercia", nullable = false, length = 1024)
     private String nombreComercia;
     
     @Column(name = "estado_contribuyente", nullable = false)
@@ -96,7 +85,7 @@ public class SRICatastrosRuc implements Serializable {
     @Column(name = "numero_establecimiento", nullable = false)
     private String numeroEstablecimiento;
     
-    @Column(name = "nombre_fantasia_comercial", nullable = false)
+    @Column(name = "nombre_fantasia_comercial", nullable = false, length = 1024)
     private String nombreFantasiaComercial;
     
     @Column(name = "estado_establecimiento", nullable = false)
@@ -108,22 +97,14 @@ public class SRICatastrosRuc implements Serializable {
     @Column(name = "descripcion_canton", nullable = false)
     private String descripcionCanton;
     
-    @Column(name = "descripcion_parroquia", nullable = false)
+    @Column(name = "descripcion_parroquia", nullable = false, length = 1024)
     private String descripcionParroquia;
     
     @Column(name = "codigo_ciu", nullable = false)
     private String codigoCiu;
     
-    @Column(name = "actividad_economica", nullable = false)
+    @Column(name = "actividad_economica", nullable = false, length = 4098)
     private String actividadEconomica;
-
-//
-//    @ManyToOne(optional = true)
-//    @JoinColumn(name = "owner", nullable = true)
-//    private Subject owner;
-//
-//    @Column(nullable = true)
-//    protected Boolean active;
 
     public Long getCatastroId() {
         return catastroId;
@@ -284,34 +265,4 @@ public class SRICatastrosRuc implements Serializable {
     public void setActividadEconomica(String actividadEconomica) {
         this.actividadEconomica = actividadEconomica;
     }
-
-    public void setCreatedOn(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setLastUpdate(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setStatus(String toString) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setConfirmed(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setActivationTime(Date now) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setExpirationTime(Date addDays) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setAuthor(Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-
 }

@@ -38,7 +38,7 @@ import org.jpapi.model.DeletableObject;
  * @author jlgranda
  */
 @Entity
-@Table(name = "EMPLOYEE")
+@Table(name = "employee")
 @NamedQueries({
     @NamedQuery(name = "Employee.findByOwner", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.deleted = false"),
     @NamedQuery(name = "Employee.findByOwnerAndOrganization", query = "SELECT e FROM Employee e WHERE e.owner = ?1 and e.organization = ?2 and e.deleted = false"),
