@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Organization;
 
@@ -31,7 +30,7 @@ import org.jpapi.model.Organization;
  * @author Jorge
  */
 @Entity
-@Table(name = "tarea")
+@Table(name = "tarea_proceso")
 @NamedQueries({
     @NamedQuery(name = "Tarea.findLast", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
     @NamedQuery(name = "Tarea.findLasts", query = "select i FROM Tarea i where i.owner=?1 ORDER BY i.id DESC"),
@@ -52,20 +51,22 @@ public class Tarea extends DeletableObject<Tarea> implements Comparable<Tarea>, 
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fechaEnvio;
+    
     @Basic(optional = false)
-    @NotNull
     private String departamento;
+    
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private UrgenciaTipo urgenciaTipo;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private EstadoTipo estadoTipo;
+    
     @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Documento> documentos;
 
     @JoinColumn(name = "proceso_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private InstanciaProceso instanciaProceso;
 
     public Tarea() {
