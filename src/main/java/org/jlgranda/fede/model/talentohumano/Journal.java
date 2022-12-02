@@ -36,6 +36,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import org.jpapi.model.Organization;
 import org.jpapi.model.PersistentObject;
 import org.jpapi.util.Dates;
 
@@ -66,6 +67,10 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
     
     @Column(name = "employee_id", insertable=true, updatable=true, nullable=false)
     private Long employeeId;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
     
     private String day;
 
@@ -99,6 +104,14 @@ public class Journal  extends PersistentObject implements Comparable<Journal>, S
 
     public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     @Transient
